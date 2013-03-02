@@ -1,0 +1,9 @@
+1. Download the zero temperature and zero proton fraction tables from Shen's
+    website: http://user.numazu-ct.ac.jp/~sumi/eos/ (hyperons or otherwise)
+2. Merge these files with mergeT0YP0.py
+3. Add leptons to this file with an executable built with the main in 
+    ShenZeroTemperature.java this will add hyperon columns if they weren't
+    there already and an electron chemical potential  (units MeV).
+4. Take the logarithm of this final equation of state using LogShenT0.java
+5. Find beta equilibrium using ShenZeroTemperatureBetaEquilibrium
+6. Add ShearModulus.
