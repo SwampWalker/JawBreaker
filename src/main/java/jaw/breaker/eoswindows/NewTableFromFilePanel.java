@@ -5,9 +5,14 @@
 package jaw.breaker.eoswindows;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ScrollPaneConstants;
+import jaw.breaker.equationsOfState.TableReader;
 import jaw.breaker.equationsOfState.TabulatedHermite;
 
 /**
@@ -38,14 +43,15 @@ public class NewTableFromFilePanel extends javax.swing.JPanel implements Tabulat
         jScrollPane1 = new javax.swing.JScrollPane();
         filenameTextArea = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        nameTextField = new javax.swing.JTextField();
+        useFilenameCheckbox = new javax.swing.JCheckBox();
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setText("Filename:");
         jLabel3.setToolTipText("Full path to file.");
 
-        jButton1.setText("Select File");
+        jButton1.setText("Browse");
+        jButton1.setToolTipText("");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -58,7 +64,7 @@ public class NewTableFromFilePanel extends javax.swing.JPanel implements Tabulat
         filenameTextArea.setColumns(20);
         filenameTextArea.setLineWrap(true);
         filenameTextArea.setRows(5);
-        filenameTextArea.setText("c:");
+        filenameTextArea.setText("F:\\Projects\\elasticity\\data\\eos\\eos2.shear.betaEquilibrium.2.t00");
         filenameTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(filenameTextArea);
 
@@ -66,12 +72,14 @@ public class NewTableFromFilePanel extends javax.swing.JPanel implements Tabulat
         jLabel4.setText("EOS name:");
         jLabel4.setToolTipText("Full path to file.");
 
-        jTextField1.setText("Table from file");
+        nameTextField.setEditable(false);
+        nameTextField.setText("Table from file");
 
-        jCheckBox1.setText("Use relative filename as EOS name.");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        useFilenameCheckbox.setSelected(true);
+        useFilenameCheckbox.setText("Use relative filename as EOS name.");
+        useFilenameCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                useFilenameCheckboxActionPerformed(evt);
             }
         });
 
@@ -83,10 +91,10 @@ public class NewTableFromFilePanel extends javax.swing.JPanel implements Tabulat
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jTextField1)
+                    .addComponent(nameTextField)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox1)
+                            .addComponent(useFilenameCheckbox)
                             .addComponent(jLabel3)
                             .addComponent(jButton1)
                             .addComponent(jLabel4))
@@ -105,9 +113,9 @@ public class NewTableFromFilePanel extends javax.swing.JPanel implements Tabulat
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox1)
+                .addComponent(useFilenameCheckbox)
                 .addContainerGap(35, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -120,26 +128,38 @@ public class NewTableFromFilePanel extends javax.swing.JPanel implements Tabulat
             filenameTextArea.setText(chooser.getSelectedFile().getAbsolutePath());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        jTextField1.setEditable(!jCheckBox1.isSelected());
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-
+    
+    private void useFilenameCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useFilenameCheckboxActionPerformed
+        nameTextField.setEditable(!useFilenameCheckbox.isSelected());
+    }//GEN-LAST:event_useFilenameCheckboxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup delimiterGroup;
     private javax.swing.JTextArea filenameTextArea;
     private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField nameTextField;
+    private javax.swing.JCheckBox useFilenameCheckbox;
     // End of variables declaration//GEN-END:variables
 
     public TabulatedHermite getTabulatedEOS() {
         File eosFile = new File(filenameTextArea.getText());
         if (eosFile.exists()) {
-            
+            try {
+                TabulatedHermite eos = TableReader.readTableFromFile(eosFile);
+                if (useFilenameCheckbox.isSelected()) {
+                    eos.setIdentifier(eosFile.getName());
+                } else {
+                    eos.setIdentifier(nameTextField.getText());
+                }
+                return eos;
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(NewTableFromFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(NewTableFromFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            JOptionPane.showMessageDialog(this, "Could not read file: " + eosFile.getAbsolutePath(), "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "Could not open file: " + eosFile.getAbsolutePath(), "Error", JOptionPane.ERROR_MESSAGE);
         }

@@ -18,6 +18,8 @@ import org.jfree.data.xy.AbstractXYDataset;
 public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeInfo {
 
     private ArrayList<double[][]> dataSets = null;
+    private ArrayList<Boolean> activated = null;
+    private ArrayList<String> names = null;
     private int iX = 1;
     private int iY = 2;
 
@@ -49,6 +51,8 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
 
     public EOSDataset() {
         dataSets = new ArrayList<double[][]>();
+        activated = new ArrayList<Boolean>();
+        names = new ArrayList<String>();
     }
     private String[] dataNames = {"Number Density", "Pressure", "Total Energy Density"};
 
@@ -77,43 +81,71 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
     /**
      * Adds an equation of state to this data set.
      *
+     * @param index the index into the datasets to add the table
      * @param eos the equation of state to add.
      */
-    public void add(TabulatedHermite eos) {
+    public void add(int index, TabulatedHermite eos) {
         double[][] table = new double[3][];
         eos.cloneTable(table);
-        dataSets.add(table);
+        dataSets.add(index, table);
+        activated.add(index, Boolean.TRUE);
+        names.add(eos.getIdentifier());
+    }
+    
+    /**
+     * Gets the index into dataSets given the series number. Necessary since
+     * not all dataSets will be activated.
+     * 
+     * @param series the number of the series
+     * @return the index into the dataSets.
+     */
+    private int getDatasetIndex(int series) {
+        int index = -1;
+        int count = -1;
+        while (count < series) {
+            index++;
+            if (activated.get(index)) {
+                count++;
+            }
+        }
+        return index;
     }
 
     @Override
     public int getSeriesCount() {
-        return dataSets.size();
+        int count = 0;
+        for (Boolean active: activated) {
+            if (active) {
+                count++;
+            }
+        }
+        return count;
     }
 
     @Override
     public Comparable getSeriesKey(int series) {
-        return "EOS " + series;
+        return names.get(getDatasetIndex(series));
     }
 
     public int getItemCount(int series) {
-        return this.dataSets.get(series)[0].length;
+        return this.dataSets.get(getDatasetIndex(series))[0].length;
     }
 
     public Number getX(int series, int item) {
-        return dataSets.get(series)[iX][item];
+        return dataSets.get(getDatasetIndex(series))[iX][item];
     }
 
     public Number getY(int series, int item) {
-        return dataSets.get(series)[iY][item];
+        return dataSets.get(getDatasetIndex(series))[iY][item];
     }
 
     public double getDomainLowerBound(boolean includeInterval) {
         double lb = 0;
         if (!dataSets.isEmpty()) {
             lb = Double.MAX_VALUE;
-            for (int series = 0; series < dataSets.size(); series++) {
-                if (dataSets.get(series)[iX][0] < lb) {
-                    lb = dataSets.get(series)[iX][0];
+            for (int iDataSet = 0; iDataSet < dataSets.size(); iDataSet++) {
+                if (activated.get(iDataSet) && dataSets.get(iDataSet)[iX][0] < lb) {
+                    lb = dataSets.get(iDataSet)[iX][0];
                 }
             }
         }
@@ -124,10 +156,10 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
         double ub = 1;
         if (!dataSets.isEmpty()) {
             ub = Double.MIN_VALUE;
-            for (int series = 0; series < dataSets.size(); series++) {
-                int last = dataSets.get(series)[iX].length - 1;
-                if (dataSets.get(series)[iX][last] > ub) {
-                    ub = dataSets.get(series)[iX][last];
+            for (int iDataSet = 0; iDataSet < dataSets.size(); iDataSet++) {
+                int last = dataSets.get(iDataSet)[iX].length - 1;
+                if (activated.get(iDataSet) && dataSets.get(iDataSet)[iX][last] > ub) {
+                    ub = dataSets.get(iDataSet)[iX][last];
                 }
             }
         }
@@ -141,9 +173,9 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
     public double getRangeLowerBound(boolean includeInterval) {
         if (!dataSets.isEmpty()) {
             double lb = Double.MAX_VALUE;
-            for (int series = 0; series < dataSets.size(); series++) {
-                if (dataSets.get(series)[iY][0] < lb) {
-                    lb = dataSets.get(series)[iY][0];
+            for (int iDataSet = 0; iDataSet < dataSets.size(); iDataSet++) {
+                if (activated.get(iDataSet) && dataSets.get(iDataSet)[iY][0] < lb) {
+                    lb = dataSets.get(iDataSet)[iY][0];
                 }
             }
             return lb;
@@ -154,10 +186,10 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
     public double getRangeUpperBound(boolean includeInterval) {
         if (!dataSets.isEmpty()) {
             double ub = Double.MIN_VALUE;
-            for (int series = 0; series < dataSets.size(); series++) {
-                int last = dataSets.get(series)[iY].length - 1;
-                if (dataSets.get(series)[iY][last] > ub) {
-                    ub = dataSets.get(series)[iY][last];
+            for (int iDataSet = 0; iDataSet < dataSets.size(); iDataSet++) {
+                int last = dataSets.get(iDataSet)[iY].length - 1;
+                if (activated.get(iDataSet) && dataSets.get(iDataSet)[iY][last] > ub) {
+                    ub = dataSets.get(iDataSet)[iY][last];
                 }
             }
             return ub;
@@ -167,5 +199,15 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
 
     public Range getRangeBounds(boolean includeInterval) {
         return new Range(getRangeLowerBound(includeInterval), getRangeUpperBound(includeInterval));
+    }
+    
+    /**
+     * Sets the series as activated or not.
+     * 
+     * @param index The index of the eos to activate/disactivate.
+     * @param activated the state to set.
+     */
+    public void setActivated(int index, boolean activated) {
+        this.activated.set(index, activated);
     }
 }

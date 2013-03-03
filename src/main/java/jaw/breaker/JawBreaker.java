@@ -4,17 +4,7 @@
  */
 package jaw.breaker;
 
-import java.awt.Color;
-import javax.swing.JPanel;
 import jaw.breaker.datasets.EOSDataset;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.xy.XYDataset;
 
 /**
  *
@@ -29,52 +19,6 @@ public class JawBreaker extends javax.swing.JFrame {
      */
     public JawBreaker() {
         initComponents();
-        eos = new EOSDataset();
-        eos.add(getDemo());
-        jTabbedPane2.addTab("EOS", null, createDemoPanel(), "Equations of State");
-    }
-
-    private static JFreeChart createChart(XYDataset dataset) {
-        JFreeChart chart = ChartFactory.createScatterPlot("Scatter Plot Demo 1",
-                "X", "Y", dataset, PlotOrientation.VERTICAL, true, false, false);
-        XYPlot plot = (XYPlot) chart.getPlot();
-        plot.setNoDataMessage("NO DATA");
-        plot.setDomainZeroBaselineVisible(true);
-        plot.setRangeZeroBaselineVisible(true);
-        
-        XYLineAndShapeRenderer renderer 
-                = (XYLineAndShapeRenderer) plot.getRenderer();
-        renderer.setSeriesOutlinePaint(0, Color.black);
-        renderer.setUseOutlinePaint(true);
-        NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
-        domainAxis.setAutoRangeIncludesZero(false);
-        domainAxis.setTickMarkInsideLength(2.0f);
-        domainAxis.setTickMarkOutsideLength(0.0f);
-        
-        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setTickMarkInsideLength(2.0f);
-        rangeAxis.setTickMarkOutsideLength(0.0f);
-        
-        return chart;
-    }
-    
-    /**
-     * Creates a panel for the demo (used by SuperDemo.java).
-     * 
-     * @return A panel.
-     */
-    public static JPanel createDemoPanel() {
-        JFreeChart chart = createChart(eos);
-        ChartPanel chartPanel = new ChartPanel(chart);
-        //chartPanel.setVerticalAxisTrace(true);
-        //chartPanel.setHorizontalAxisTrace(true);
-        // popup menu conflicts with axis trace
-        //chartPanel.setPopupMenu(null);
-        
-        chartPanel.setDomainZoomable(true);
-        chartPanel.setRangeZoomable(true);
-        chartPanel.setMouseWheelEnabled(true);
-        return chartPanel;
     }
 
     /**
@@ -87,12 +31,12 @@ public class JawBreaker extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane2 = new javax.swing.JTabbedPane();
-        eOSPanel1 = new jaw.breaker.eoswindows.EOSPanel();
+        eosPanel1 = new jaw.breaker.eoswindows.EOSPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jTabbedPane2.addTab("EOS", eOSPanel1);
+        jTabbedPane2.addTab("EOS", eosPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -145,17 +89,7 @@ public class JawBreaker extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private jaw.breaker.eoswindows.EOSPanel eOSPanel1;
+    private jaw.breaker.eoswindows.EOSPanel eosPanel1;
     private javax.swing.JTabbedPane jTabbedPane2;
     // End of variables declaration//GEN-END:variables
-
-    private double[][] getDemo() {
-        double [][] data = new double[3][11];
-        for (int i = 0; i < 11; i++) {
-            data[0][i] = 0.1*i;
-            data[1][i] = 0.1*i + 0.1;
-            data[2][i] = 0.01*i*i;
-        }
-        return data;
-    }
 }

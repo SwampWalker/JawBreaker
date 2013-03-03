@@ -63,6 +63,7 @@ public class NewEOSDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setAlwaysOnTop(true);
         setMaximumSize(new java.awt.Dimension(345, 368));
         setMinimumSize(new java.awt.Dimension(345, 368));
         setPreferredSize(new java.awt.Dimension(345, 368));
@@ -95,7 +96,7 @@ public class NewEOSDialog extends javax.swing.JDialog {
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
-                .addContainerGap())
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

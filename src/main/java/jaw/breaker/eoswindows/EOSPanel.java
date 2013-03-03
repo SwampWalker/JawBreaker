@@ -7,6 +7,8 @@ package jaw.breaker.eoswindows;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,10 +20,10 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.LogarithmicAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.StandardTickUnitSource;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.xy.XYDataset;
 
 /**
  *
@@ -40,9 +42,10 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         initComponents();
         jPanelLeft.setLayout(new BorderLayout());
         jPanelLeft.add(createChartPanel(), BorderLayout.CENTER);
+        plotPropertyChangeHandler(null);
     }
 
-    private static JFreeChart createChart(XYDataset dataset, JFreeChart chart) {
+    private static JFreeChart createChart(JFreeChart chart) {
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.setNoDataMessage("NO DATA");
         plot.setDomainZeroBaselineVisible(true);
@@ -51,15 +54,6 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
         renderer.setSeriesOutlinePaint(0, Color.black);
         renderer.setUseOutlinePaint(true);
-        NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
-        domainAxis.setAutoRange(true);
-        domainAxis.setAutoRangeIncludesZero(false);
-        domainAxis.setTickMarkInsideLength(2.0f);
-        domainAxis.setTickMarkOutsideLength(0.0f);
-
-        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setTickMarkInsideLength(2.0f);
-        rangeAxis.setTickMarkOutsideLength(0.0f);
 
         return chart;
     }
@@ -69,8 +63,8 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
      *
      * @return A panel.
      */
-    public JPanel createChartPanel() {
-        chart = createChart(eos, ChartFactory.createScatterPlot("Equations of State", eos.getDomainName(), eos.getRangeName(), eos, PlotOrientation.VERTICAL, true, false, false));
+    private JPanel createChartPanel() {
+        chart = createChart(ChartFactory.createScatterPlot("Equations of State", eos.getDomainName(), eos.getRangeName(), eos, PlotOrientation.VERTICAL, true, false, false));
         ChartPanel chartPanel = new ChartPanel(chart);
         //chartPanel.setVerticalAxisTrace(true);
         //chartPanel.setHorizontalAxisTrace(true);
@@ -103,7 +97,6 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             public void run() {
                 JFrame aFrame = new JFrame();
                 aFrame.getContentPane().setLayout(new BorderLayout());
@@ -165,7 +158,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         domainComboBox.setSelectedIndex(1);
         domainComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PlotPropertyChangeHandler(evt);
+                plotPropertyChangeHandler(evt);
             }
         });
 
@@ -177,21 +170,23 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         rangeComboBox.setSelectedIndex(2);
         rangeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PlotPropertyChangeHandler(evt);
+                plotPropertyChangeHandler(evt);
             }
         });
 
+        logarithmDomain.setSelected(true);
         logarithmDomain.setText("Log scale in domain");
         logarithmDomain.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PlotPropertyChangeHandler(evt);
+                plotPropertyChangeHandler(evt);
             }
         });
 
+        logarithmRange.setSelected(true);
         logarithmRange.setText("Log scale in range");
         logarithmRange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PlotPropertyChangeHandler(evt);
+                plotPropertyChangeHandler(evt);
             }
         });
 
@@ -210,7 +205,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
                             .addComponent(logarithmDomain)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
-                        .addGap(0, 189, Short.MAX_VALUE)))
+                        .addGap(0, 157, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -248,7 +243,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
                 .addContainerGap()
                 .addComponent(newEOSButton)
                 .addGap(18, 18, 18)
-                .addComponent(eosDisplayOuterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
+                .addComponent(eosDisplayOuterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -273,7 +268,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1224, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -291,7 +286,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         newEOSDialog.setVisible(true);
     }//GEN-LAST:event_newEOSButtonActionPerformed
 
-    private void PlotPropertyChangeHandler(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PlotPropertyChangeHandler
+    private void plotPropertyChangeHandler(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotPropertyChangeHandler
         int iX = domainComboBox.getSelectedIndex();
         int iY = rangeComboBox.getSelectedIndex();
         eos.setDomainVariable(iX);
@@ -299,18 +294,25 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         String domainName = eos.getDomainName();
         String rangeName = eos.getRangeName();
         if (logarithmDomain.isSelected()) {
-            chart.getXYPlot().setDomainAxis(new LogarithmicAxis("Log(" + domainName + ")"));
+            LogarithmicAxis axis = new LogarithmicAxis("Log(" + domainName + ")");
+            axis.setStandardTickUnits(new StandardTickUnitSource());
+            chart.getXYPlot().setDomainAxis(axis);
         } else {
-            chart.getXYPlot().setDomainAxis(new NumberAxis(domainName));
+            NumberAxis axis = new NumberAxis(domainName);
+            axis.setStandardTickUnits(new StandardTickUnitSource());
+            chart.getXYPlot().setDomainAxis(axis);
         }
         if (logarithmRange.isSelected()) {
-            chart.getXYPlot().setRangeAxis(new LogarithmicAxis("Log(" + rangeName + ")"));
+            LogarithmicAxis axis = new LogarithmicAxis("Log(" + rangeName + ")");
+            axis.setStandardTickUnits(new StandardTickUnitSource());
+            chart.getXYPlot().setRangeAxis(axis);
         } else {
-            chart.getXYPlot().setRangeAxis(new NumberAxis(rangeName));
+            NumberAxis axis = new NumberAxis(rangeName);
+            axis.setStandardTickUnits(new StandardTickUnitSource());
+            chart.getXYPlot().setRangeAxis(axis);
         }
         chart.getXYPlot().datasetChanged(null);
-    }//GEN-LAST:event_PlotPropertyChangeHandler
-
+    }//GEN-LAST:event_plotPropertyChangeHandler
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox domainComboBox;
     private javax.swing.JPanel eosDisplayOuterPanel;
@@ -327,16 +329,17 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
     private javax.swing.JComboBox rangeComboBox;
     // End of variables declaration//GEN-END:variables
 
-    public void add(TabulatedHermite eos) {
-        // Order eos by identifier.
-        String id = eos.getIdentifier();
+    public void add(TabulatedHermite eosTable) {
+        // Order eos by identifier, ignoring case.
+        String id = eosTable.getIdentifier();
+        String comparator = id.toLowerCase();
         int index = 0;
         boolean duplicate = false;
         for (int i = 0; i < eosStorage.size() && !duplicate; i++) {
-            int compareTo = eosStorage.get(i).getIdentifier().compareTo(id);
-            if (compareTo == 0) {
+            int compareTo = eosStorage.get(i).getIdentifier().toLowerCase().compareTo(comparator);
+            if (compareTo == 0 && eosStorage.get(i).getIdentifier().compareTo(id) == 0) {
                 duplicate = true;
-            } else if (compareTo < 0) {
+            } else if (compareTo <= 0) {
                 index = i + 1;
             } // Could terminate after we get > 0...
         }
@@ -344,10 +347,18 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         // Add eos.
         if (!duplicate) {
             JCheckBox eosBox = new JCheckBox(id);
+            eosBox.addActionListener(new ActionListener(){
+
+                public void actionPerformed(ActionEvent e) {
+                    int index = eosCheckBoxes.indexOf(e.getSource());
+                    eos.setActivated(index, eosCheckBoxes.get(index).isSelected());
+                    chart.getXYPlot().datasetChanged(null);
+                }
+            });
             eosBox.setSelected(true);
             eosCheckBoxes.add(index, eosBox);
-            eosStorage.add(index, eos);
-            this.eos.add(eos);
+            eosStorage.add(index, eosTable);
+            this.eos.add(index, eosTable);
 
             renderEOSDisplay();
         }
