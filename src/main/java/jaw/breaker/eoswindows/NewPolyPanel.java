@@ -4,10 +4,6 @@
  */
 package jaw.breaker.eoswindows;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jaw.breaker.equationsOfState.Polytrope;
 import jaw.breaker.equationsOfState.TabulatedHermite;
 
@@ -87,7 +83,7 @@ public class NewPolyPanel extends javax.swing.JPanel implements TabulatedEOSGene
                 new java.text.DecimalFormat("0.00#############E0#")
             )
         ));
-        logNminField.setText("-3.00E0");
+        logNminField.setText("-1.00E1");
 
         logNmaxField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
             new javax.swing.text.NumberFormatter(

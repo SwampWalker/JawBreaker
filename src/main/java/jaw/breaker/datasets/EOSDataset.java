@@ -29,7 +29,7 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
      * @param iY the index of the variable to use for the range
      */
     public void setRangeVariable(int iY) {
-        if (iY < dataNames.length) {
+        if (iY < variableNames.length) {
             this.iY = iY;
         } else {
             throw new IllegalArgumentException("Range variable index (" + iY + ") larger than number of variables supported");
@@ -42,7 +42,7 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
      * @param iX the index of the variable to use for the domain
      */
     public void setDomainVariable(int iX) {
-        if (iX < dataNames.length) {
+        if (iX < variableNames.length) {
             this.iX = iX;
         } else {
             throw new IllegalArgumentException("Domain variable index (" + iX + ") larger than number of variables supported");
@@ -54,10 +54,11 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
         activated = new ArrayList<Boolean>();
         names = new ArrayList<String>();
     }
-    private String[] dataNames = {"Number Density", "Pressure", "Total Energy Density"};
+    
+    private String[] variableNames = {"Number Density", "Pressure", "Total Energy Density"};
 
     public String[] getVariableNames() {
-        return dataNames;
+        return variableNames;
     }
 
     /**
@@ -66,7 +67,7 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
      * @return The name of the data being used for the range.
      */
     public String getRangeName() {
-        return dataNames[iY];
+        return variableNames[iY];
     }
 
     /**
@@ -75,7 +76,7 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
      * @return The name of the data being used for the domain.
      */
     public String getDomainName() {
-        return dataNames[iX];
+        return variableNames[iX];
     }
 
     /**
@@ -209,5 +210,15 @@ public class EOSDataset extends AbstractXYDataset implements DomainInfo, RangeIn
      */
     public void setActivated(int index, boolean activated) {
         this.activated.set(index, activated);
+    }
+
+    /**
+     * Removes the indexed dataset.
+     * @param index The index of the dataset to remove. 
+     */
+    public void remove(int index) {
+        dataSets.remove(index);
+        activated.remove(index);
+        names.remove(index);
     }
 }

@@ -5,7 +5,6 @@
 package jaw.breaker.eoswindows;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,15 +14,11 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import jaw.breaker.datasets.EOSDataset;
 import jaw.breaker.equationsOfState.TabulatedHermite;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.LogarithmicAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.StandardTickUnitSource;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 
 /**
  *
@@ -41,40 +36,10 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         eos = new EOSDataset();
         initComponents();
         jPanelLeft.setLayout(new BorderLayout());
-        jPanelLeft.add(createChartPanel(), BorderLayout.CENTER);
+        ChartPanel panel = ChartPanelCreator.createChartPanel("Equations of State", eos.getDomainName(), eos.getRangeName(), eos);
+        chart = panel.getChart();
+        jPanelLeft.add(panel, BorderLayout.CENTER);
         plotPropertyChangeHandler(null);
-    }
-
-    private static JFreeChart createChart(JFreeChart chart) {
-        XYPlot plot = (XYPlot) chart.getPlot();
-        plot.setNoDataMessage("NO DATA");
-        plot.setDomainZeroBaselineVisible(true);
-        plot.setRangeZeroBaselineVisible(true);
-
-        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
-        renderer.setSeriesOutlinePaint(0, Color.black);
-        renderer.setUseOutlinePaint(true);
-
-        return chart;
-    }
-
-    /**
-     * Creates a chart panel for plotting the EOSs.
-     *
-     * @return A panel.
-     */
-    private JPanel createChartPanel() {
-        chart = createChart(ChartFactory.createScatterPlot("Equations of State", eos.getDomainName(), eos.getRangeName(), eos, PlotOrientation.VERTICAL, true, false, false));
-        ChartPanel chartPanel = new ChartPanel(chart);
-        //chartPanel.setVerticalAxisTrace(true);
-        //chartPanel.setHorizontalAxisTrace(true);
-        // popup menu conflicts with axis trace
-        //chartPanel.setPopupMenu(null);
-
-        chartPanel.setDomainZoomable(true);
-        chartPanel.setRangeZoomable(true);
-        chartPanel.setMouseWheelEnabled(true);
-        return chartPanel;
     }
 
     /**
@@ -131,6 +96,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         rangeComboBox = new javax.swing.JComboBox();
         logarithmDomain = new javax.swing.JCheckBox();
         logarithmRange = new javax.swing.JCheckBox();
+        deleteUnselectedButton = new javax.swing.JButton();
         jPanelLeft = new javax.swing.JPanel();
 
         setMaximumSize(new java.awt.Dimension(1224, 768));
@@ -225,16 +191,26 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        deleteUnselectedButton.setText("Delete unselected");
+        deleteUnselectedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUnselectedButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelRightLayout = new javax.swing.GroupLayout(jPanelRight);
         jPanelRight.setLayout(jPanelRightLayout);
         jPanelRightLayout.setHorizontalGroup(
             jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRightLayout.createSequentialGroup()
+            .addGroup(jPanelRightLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(newEOSButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(eosDisplayOuterPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE))
+                .addGroup(jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(newEOSButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(eosDisplayOuterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
+                    .addGroup(jPanelRightLayout.createSequentialGroup()
+                        .addComponent(deleteUnselectedButton)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelRightLayout.setVerticalGroup(
@@ -243,8 +219,10 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
                 .addContainerGap()
                 .addComponent(newEOSButton)
                 .addGap(18, 18, 18)
-                .addComponent(eosDisplayOuterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(eosDisplayOuterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteUnselectedButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -313,7 +291,19 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         }
         chart.getXYPlot().datasetChanged(null);
     }//GEN-LAST:event_plotPropertyChangeHandler
+
+    private void deleteUnselectedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUnselectedButtonActionPerformed
+        for (int i = eosCheckBoxes.size() - 1; i >= 0; i--) {
+            if (!eosCheckBoxes.get(i).isSelected()) {
+                eosCheckBoxes.remove(i);
+                eosStorage.remove(i);
+                eos.remove(i);
+            }
+        }
+        renderEOSDisplay();
+    }//GEN-LAST:event_deleteUnselectedButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton deleteUnselectedButton;
     private javax.swing.JComboBox domainComboBox;
     private javax.swing.JPanel eosDisplayOuterPanel;
     private javax.swing.JPanel eosDisplayPanel;
@@ -347,8 +337,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         // Add eos.
         if (!duplicate) {
             JCheckBox eosBox = new JCheckBox(id);
-            eosBox.addActionListener(new ActionListener(){
-
+            eosBox.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     int index = eosCheckBoxes.indexOf(e.getSource());
                     eos.setActivated(index, eosCheckBoxes.get(index).isSelected());
