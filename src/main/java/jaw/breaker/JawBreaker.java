@@ -19,6 +19,7 @@ public class JawBreaker extends javax.swing.JFrame {
      */
     public JawBreaker() {
         initComponents();
+        tovBuilderPanel.setEOSStorage(eosPanel);
     }
 
     /**
@@ -31,12 +32,14 @@ public class JawBreaker extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane2 = new javax.swing.JTabbedPane();
-        eosPanel1 = new jaw.breaker.eoswindows.EOSPanel();
+        eosPanel = new jaw.breaker.eoswindows.EOSPanel();
+        tovBuilderPanel = new jaw.breaker.tovwindows.TOVBuilderPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jTabbedPane2.addTab("EOS", eosPanel1);
+        jTabbedPane2.addTab("EOS", eosPanel);
+        jTabbedPane2.addTab("TOV Builder", tovBuilderPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -49,7 +52,7 @@ public class JawBreaker extends javax.swing.JFrame {
             .addComponent(jTabbedPane2)
         );
 
-        jTabbedPane2.getAccessibleContext().setAccessibleName("EOS");
+        jTabbedPane2.getAccessibleContext().setAccessibleName("TOV Builder");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -81,7 +84,8 @@ public class JawBreaker extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private jaw.breaker.eoswindows.EOSPanel eosPanel1;
+    private jaw.breaker.eoswindows.EOSPanel eosPanel;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private jaw.breaker.tovwindows.TOVBuilderPanel tovBuilderPanel;
     // End of variables declaration//GEN-END:variables
 }

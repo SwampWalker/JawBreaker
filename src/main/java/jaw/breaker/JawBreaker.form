@@ -37,16 +37,25 @@
   <SubComponents>
     <Container class="javax.swing.JTabbedPane" name="jTabbedPane2">
       <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="EOS"/>
+        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="TOV Builder"/>
       </AccessibilityProperties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
-        <Component class="jaw.breaker.eoswindows.EOSPanel" name="eosPanel1">
+        <Component class="jaw.breaker.eoswindows.EOSPanel" name="eosPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="EOS">
                 <Property name="tabTitle" type="java.lang.String" value="EOS"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="jaw.breaker.tovwindows.TOVBuilderPanel" name="tovBuilderPanel">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="TOV Builder">
+                <Property name="tabTitle" type="java.lang.String" value="TOV Builder"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

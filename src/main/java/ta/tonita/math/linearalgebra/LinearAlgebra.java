@@ -1,4 +1,4 @@
-package linearAlgebra;
+package ta.tonita.math.linearalgebra;
 
 public final class LinearAlgebra {
 

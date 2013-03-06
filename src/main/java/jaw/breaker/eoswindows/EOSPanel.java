@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import jaw.breaker.datasets.EOSDataset;
 import jaw.breaker.equationsOfState.TabulatedHermite;
 import org.jfree.chart.ChartPanel;
@@ -27,6 +29,7 @@ import org.jfree.chart.axis.StandardTickUnitSource;
 public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
 
     private EOSDataset eos = null;
+    private ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
     private JFreeChart chart;
 
     /**
@@ -351,6 +354,10 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
 
             renderEOSDisplay();
         }
+        
+        for (ChangeListener cl: changeListeners) {
+            cl.stateChanged(new ChangeEvent(this));
+        }
     }
 
     /**
@@ -376,5 +383,25 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         }
 
         chart.getXYPlot().datasetChanged(null);
+    }
+
+    public int nEOS() {
+        return eosStorage.size();
+    }
+
+    public String[] getNames() {
+        String[] names = new String[nEOS()];
+        for (int i = 0; i < nEOS(); i++) {
+            names[i] = eosStorage.get(i).getIdentifier();
+        }
+        return names;
+    }
+
+    public TabulatedHermite getEos(int i) {
+        return eosStorage.get(i);
+    }
+
+    public void addChangeListener(ChangeListener cl) {
+        changeListeners.add(cl);
     }
 }

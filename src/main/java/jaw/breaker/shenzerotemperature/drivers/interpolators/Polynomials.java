@@ -1,6 +1,6 @@
 package jaw.breaker.shenzerotemperature.drivers.interpolators;
 
-import linearAlgebra.LinearAlgebra;
+import ta.tonita.math.linearalgebra.LinearAlgebra;
 
 public class Polynomials {
 
