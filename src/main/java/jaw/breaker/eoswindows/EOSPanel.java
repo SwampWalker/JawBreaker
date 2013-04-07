@@ -16,6 +16,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jaw.breaker.datasets.EOSDataset;
 import jaw.breaker.equationsOfState.TabulatedHermite;
+import jaw.breaker.models.JawBreakerModel;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.LogarithmicAxis;
@@ -26,20 +27,24 @@ import org.jfree.chart.axis.StandardTickUnitSource;
  *
  * @author tonita
  */
-public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
+public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
 
-    private EOSDataset eos = null;
+    private EOSDataset eosDataset = null;
+    private JawBreakerModel model = null;
     private ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
     private JFreeChart chart;
 
     /**
      * Creates new form EOSPanel
      */
-    public EOSPanel() {
-        eos = new EOSDataset();
+    public EOSPanel(JawBreakerModel model) {
+        this.model = model;
+        model.addEOSChangeListener(this);
+        eosDataset = model.getEOSDataset();
+        
         initComponents();
         jPanelLeft.setLayout(new BorderLayout());
-        ChartPanel panel = ChartPanelCreator.createChartPanel("Equations of State", eos.getDomainName(), eos.getRangeName(), eos);
+        ChartPanel panel = ChartPanelCreator.createChartPanel("Equations of State", eosDataset.getDomainName(), eosDataset.getRangeName(), eosDataset);
         chart = panel.getChart();
         jPanelLeft.add(panel, BorderLayout.CENTER);
         plotPropertyChangeHandler(null);
@@ -69,7 +74,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
                 JFrame aFrame = new JFrame();
                 aFrame.getContentPane().setLayout(new BorderLayout());
                 aFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-                EOSPanel eosPanel = new EOSPanel();
+                EOSPanel eosPanel = new EOSPanel(new JawBreakerModel());
                 aFrame.add(eosPanel, BorderLayout.CENTER);
                 aFrame.setVisible(true);
                 aFrame.setSize(1024, 768);
@@ -123,7 +128,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot Properties"));
 
-        domainComboBox.setModel(new DefaultComboBoxModel(eos.getVariableNames()));
+        domainComboBox.setModel(new DefaultComboBoxModel(eosDataset.getVariableNames()));
         domainComboBox.setSelectedIndex(1);
         domainComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,7 +140,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
 
         jLabel2.setText("Range (y) variable:");
 
-        rangeComboBox.setModel(new DefaultComboBoxModel(eos.getVariableNames()));
+        rangeComboBox.setModel(new DefaultComboBoxModel(eosDataset.getVariableNames()));
         rangeComboBox.setSelectedIndex(2);
         rangeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -262,7 +267,7 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
 
     private void newEOSButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEOSButtonActionPerformed
         if (newEOSDialog == null) {
-            newEOSDialog = new NewEOSDialog(null, false, this);
+            newEOSDialog = new NewEOSDialog(null, false, model);
         }
         newEOSDialog.setVisible(true);
     }//GEN-LAST:event_newEOSButtonActionPerformed
@@ -270,10 +275,10 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
     private void plotPropertyChangeHandler(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotPropertyChangeHandler
         int iX = domainComboBox.getSelectedIndex();
         int iY = rangeComboBox.getSelectedIndex();
-        eos.setDomainVariable(iX);
-        eos.setRangeVariable(iY);
-        String domainName = eos.getDomainName();
-        String rangeName = eos.getRangeName();
+        eosDataset.setDomainVariable(iX);
+        eosDataset.setRangeVariable(iY);
+        String domainName = eosDataset.getDomainName();
+        String rangeName = eosDataset.getRangeName();
         if (logarithmDomain.isSelected()) {
             LogarithmicAxis axis = new LogarithmicAxis("Log(" + domainName + ")");
             axis.setStandardTickUnits(new StandardTickUnitSource());
@@ -299,11 +304,9 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         for (int i = eosCheckBoxes.size() - 1; i >= 0; i--) {
             if (!eosCheckBoxes.get(i).isSelected()) {
                 eosCheckBoxes.remove(i);
-                eosStorage.remove(i);
-                eos.remove(i);
+                model.removeEOS(i);
             }
         }
-        renderEOSDisplay();
     }//GEN-LAST:event_deleteUnselectedButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteUnselectedButton;
@@ -322,46 +325,8 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
     private javax.swing.JComboBox rangeComboBox;
     // End of variables declaration//GEN-END:variables
 
-    public void add(TabulatedHermite eosTable) {
-        // Order eos by identifier, ignoring case.
-        String id = eosTable.getIdentifier();
-        String comparator = id.toLowerCase();
-        int index = 0;
-        boolean duplicate = false;
-        for (int i = 0; i < eosStorage.size() && !duplicate; i++) {
-            int compareTo = eosStorage.get(i).getIdentifier().toLowerCase().compareTo(comparator);
-            if (compareTo == 0 && eosStorage.get(i).getIdentifier().compareTo(id) == 0) {
-                duplicate = true;
-            } else if (compareTo <= 0) {
-                index = i + 1;
-            } // Could terminate after we get > 0...
-        }
-
-        // Add eos.
-        if (!duplicate) {
-            JCheckBox eosBox = new JCheckBox(id);
-            eosBox.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    int index = eosCheckBoxes.indexOf(e.getSource());
-                    eos.setActivated(index, eosCheckBoxes.get(index).isSelected());
-                    chart.getXYPlot().datasetChanged(null);
-                }
-            });
-            eosBox.setSelected(true);
-            eosCheckBoxes.add(index, eosBox);
-            eosStorage.add(index, eosTable);
-            this.eos.add(index, eosTable);
-
-            renderEOSDisplay();
-        }
-        
-        for (ChangeListener cl: changeListeners) {
-            cl.stateChanged(new ChangeEvent(this));
-        }
-    }
-
     /**
-     * Adds all the equations of state to the eosDisplayPanel.
+     * Adds all the equations of state check boxes to the eosDisplayPanel.
      */
     private void renderEOSDisplay() {
         // Empty...
@@ -385,23 +350,50 @@ public class EOSPanel extends javax.swing.JPanel implements EOSStorage {
         chart.getXYPlot().datasetChanged(null);
     }
 
-    public int nEOS() {
-        return eosStorage.size();
-    }
-
-    public String[] getNames() {
-        String[] names = new String[nEOS()];
-        for (int i = 0; i < nEOS(); i++) {
-            names[i] = eosStorage.get(i).getIdentifier();
+    /**
+     * Receives notifications of changes to the equations of state stored by the
+     * data model and updates the GUI accordingly.
+     * @param e unused
+     */
+    public void stateChanged(ChangeEvent e) {
+        String[] eosNames = model.getEOSNames();
+        // Get currently active eosModels.
+        ArrayList<String> inactive = new ArrayList<String>();
+        for (int i = 0; i < eosCheckBoxes.size(); i++) {
+            if (!eosCheckBoxes.get(i).isSelected()) {
+                inactive.add(eosCheckBoxes.get(i).getText());
+            }
         }
-        return names;
+        // Empty and refill eosCheckBoxes.
+        eosCheckBoxes.clear();
+        for (int i = 0; i < eosNames.length; i++) {
+            JCheckBox eosBox = createEOSCheckBox(eosNames[i]);
+            if (inactive.contains(eosNames[i])) {
+                eosBox.setSelected(false);
+            } else {
+                eosBox.setSelected(true);
+            }
+            eosCheckBoxes.add(eosBox);
+        }
+        renderEOSDisplay();
     }
 
-    public TabulatedHermite getEos(int i) {
-        return eosStorage.get(i);
-    }
-
-    public void addChangeListener(ChangeListener cl) {
-        changeListeners.add(cl);
+    /**
+     * Creates an equation of state check box adding this as an action listener.
+     *
+     * @param id the name of the equation of state.
+     * @return the created checkbox
+     */
+    private JCheckBox createEOSCheckBox(String id) {
+        JCheckBox eosBox = new JCheckBox(id);
+        eosBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int index = eosCheckBoxes.indexOf(e.getSource());
+                eosDataset.setActivated(index, eosCheckBoxes.get(index).isSelected());
+                chart.getXYPlot().datasetChanged(null);
+            }
+        });
+        eosBox.setSelected(true);
+        return eosBox;
     }
 }

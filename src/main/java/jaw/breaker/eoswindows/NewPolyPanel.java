@@ -212,6 +212,7 @@ public class NewPolyPanel extends javax.swing.JPanel implements TabulatedEOSGene
             energyPerParticle[i] = poly.energyPerParticle(n);
         }
         TabulatedHermite eos = new TabulatedHermite(logn, logp, energyPerParticle, particleMass);
+        // TODO: add table parameters to name.
         eos.setIdentifier("Polytrope: Γ = " + gamma + ", k = " + kappa);
         return eos;
     }

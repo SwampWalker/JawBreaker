@@ -72,17 +72,18 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="jPanel1" max="32767" attributes="0"/>
                           <Component id="eosComboBox" alignment="1" max="32767" attributes="0"/>
                           <Component id="rkPanel" alignment="1" max="32767" attributes="0"/>
                           <Component id="centralPressureField" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="eosLabel" min="-2" max="-2" attributes="0"/>
                                   <Component id="centralPressureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButton1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="createTOVButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -103,10 +104,12 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="centralPressureField" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                      <Component id="rkPanel" min="-2" pref="253" max="-2" attributes="0"/>
+                      <Component id="rkPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="342" max="32767" attributes="0"/>
+                      <Component id="createTOVButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jPanel1" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -140,18 +143,16 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="stepSizeField" max="32767" attributes="0"/>
-                              <Component id="maxStepsField" alignment="0" max="32767" attributes="0"/>
-                              <Component id="maxRadiusField" alignment="1" max="32767" attributes="0"/>
+                              <Component id="minPressureField" alignment="1" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="stepSizeLabel" min="-2" max="-2" attributes="0"/>
-                                      <Component id="maxStepsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="maxRadiusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="minPressureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="outputEveryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="141" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="155" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="minPressureField" alignment="1" max="32767" attributes="0"/>
+                              <Component id="outputEveryField" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -163,18 +164,14 @@
                           <Component id="stepSizeLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="stepSizeField" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                          <Component id="maxStepsLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="maxStepsField" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          <Component id="maxRadiusLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="maxRadiusField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="minPressureLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="minPressureField" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="outputEveryLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="outputEveryField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -194,32 +191,6 @@
                     <Property name="text" type="java.lang.String" value="1.0E-3"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="maxStepsLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Maximum number of steps:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JFormattedTextField" name="maxStepsField">
-                  <Properties>
-                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                      <Format subtype="1" type="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="10000"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="maxRadiusLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Maximum radius:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JFormattedTextField" name="maxRadiusField">
-                  <Properties>
-                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="new javax.swing.text.DefaultFormatterFactory(&#xd;&#xa;    new javax.swing.text.NumberFormatter(&#xd;&#xa;        new java.text.DecimalFormat(&quot;0.00#############E0#&quot;)&#xd;&#xa;    )&#xd;&#xa;)" type="code"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="1.5E1"/>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JLabel" name="minPressureLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Minimum pressure:"/>
@@ -231,6 +202,19 @@
                       <Connection code="new javax.swing.text.DefaultFormatterFactory(&#xd;&#xa;    new javax.swing.text.NumberFormatter(&#xd;&#xa;        new java.text.DecimalFormat(&quot;0.00#############E0#&quot;)&#xd;&#xa;    )&#xd;&#xa;)" type="code"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="1.5E-8"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="outputEveryLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Save data every N steps:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="outputEveryField">
+                  <Properties>
+                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                      <Format format="###0" subtype="-1" type="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="1"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -248,14 +232,160 @@
                 <Property name="text" type="java.lang.String" value="7.5e-2"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="createTOVButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Make Model"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createTOVButtonActionPerformed"/>
               </Events>
             </Component>
+            <Container class="javax.swing.JPanel" name="jPanel1">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="Properties"/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="rangeComboBox" max="32767" attributes="0"/>
+                              <Component id="domainComboBox" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="massLabel" min="-2" max="-2" attributes="0"/>
+                                      <Component id="MassField" max="32767" attributes="0"/>
+                                      <Component id="radiusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="radiusField" alignment="0" pref="126" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="domainLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="logarithmDomain" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="rangeLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="logarithmRange" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="massLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="MassField" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="radiusLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="radiusField" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="77" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="domainLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="logarithmDomain" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="domainComboBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="rangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="logarithmRange" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="rangeComboBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="massLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Gravitational Mass"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="MassField">
+                  <Properties>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="radiusLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Radius"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="radiusField">
+                  <Properties>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="rangeComboBox">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="new DefaultComboBoxModel(tovDataset.getVariableNames())" type="code"/>
+                    </Property>
+                    <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="1" type="code"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rangeComboBoxActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="rangeLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Range Variable:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="domainComboBox">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="new DefaultComboBoxModel(tovDataset.getVariableNames())" type="code"/>
+                    </Property>
+                    <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="0" type="code"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="domainComboBoxActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="domainLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Domain Variable:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="logarithmDomain">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="logarithmic"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logarithmDomainActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="logarithmRange">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="logarithmic"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logarithmRangeActionPerformed"/>
+                  </Events>
+                </Component>
+              </SubComponents>
+            </Container>
           </SubComponents>
         </Container>
       </SubComponents>

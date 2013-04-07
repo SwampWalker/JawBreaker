@@ -167,7 +167,7 @@
                 <Component class="javax.swing.JComboBox" name="domainComboBox">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="new DefaultComboBoxModel(eos.getVariableNames())" type="code"/>
+                      <Connection code="new DefaultComboBoxModel(eosDataset.getVariableNames())" type="code"/>
                     </Property>
                     <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="1" type="code"/>
@@ -190,7 +190,7 @@
                 <Component class="javax.swing.JComboBox" name="rangeComboBox">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="new DefaultComboBoxModel(eos.getVariableNames())" type="code"/>
+                      <Connection code="new DefaultComboBoxModel(eosDataset.getVariableNames())" type="code"/>
                     </Property>
                     <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="2" type="code"/>

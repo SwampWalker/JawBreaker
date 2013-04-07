@@ -5,21 +5,23 @@
 package jaw.breaker;
 
 import jaw.breaker.datasets.EOSDataset;
+import jaw.breaker.eoswindows.EOSPanel;
+import jaw.breaker.models.JawBreakerModel;
+import jaw.breaker.tovwindows.TOVBuilderPanel;
 
 /**
  *
  * @author atonita
  */
 public class JawBreaker extends javax.swing.JFrame {
-    
-    private static EOSDataset eos = null;
+        private final JawBreakerModel model;
 
     /**
      * Creates new form JawBreaker
      */
     public JawBreaker() {
+        model = new JawBreakerModel();
         initComponents();
-        tovBuilderPanel.setEOSStorage(eosPanel);
     }
 
     /**
@@ -32,8 +34,8 @@ public class JawBreaker extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane2 = new javax.swing.JTabbedPane();
-        eosPanel = new jaw.breaker.eoswindows.EOSPanel();
-        tovBuilderPanel = new jaw.breaker.tovwindows.TOVBuilderPanel();
+        eosPanel = new EOSPanel(model);
+        tovBuilderPanel = new TOVBuilderPanel(model);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));

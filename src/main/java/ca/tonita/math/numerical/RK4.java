@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package ca.tonita.math.numerical;
 
 import java.util.ArrayList;
@@ -60,21 +56,49 @@ public class RK4 {
      * @param h The step size to use.
      * @param outputEvery The number of steps to evolve before outputting. A
      * value of 1 meaning output every step.
-     * @param tMax The maximum time to evolve to.
      * @param maxSteps The maximum number of steps to take from the last value
      * of t in yOfT.
      */
-    public static void evolve(ArrayList<double[]> y, ArrayList<Double> t, QuasiLinearODESystem ode, double h, int outputEvery, double tMax, int maxSteps) {
+    public static void evolve(ArrayList<double[]> y, ArrayList<Double> t, QuasiLinearODESystem ode, double h, int outputEvery, int maxSteps) {
         double t0 = t.get(y.size() - 1);
         double[] y0 = new double[y.get(0).length];
         System.arraycopy(y.get(y.size() - 1), 0, y0, 0, y0.length);
-        for (int i = 0; i < maxSteps && t0 + h <= tMax; i++) {
+        for (int i = 0; i < maxSteps; i++) {
             y0 = step(y0, t0, ode, h);
             t0 = t0 + h;
             if (outputEvery > 0 && i % outputEvery == 0) {
                 y.add(y0);
                 t.add(t0);
             }
+        }
+    }
+
+    /**
+     * Evolves the ODE system. New values are added to the
+     * <code>ArrayList</code> y.
+     *
+     * @param y The values. Should include y0 as the last element.
+     * @param t The values of t for the corresponding y. Should contain t0.
+     * @param ode The ode system to evolve.
+     * @param h The step size to use.
+     * @param outputEvery The number of steps to evolve before outputting. A
+     * value of 1 meaning output every step.
+     * @param terminator a <code>EvolutionTerminator</code> to control the end
+     * of evolution
+     */
+    public static void evolve(ArrayList<double[]> y, ArrayList<Double> t, QuasiLinearODESystem ode, double h, int outputEvery, EvolutionTerminator terminator) {
+        double t0 = t.get(y.size() - 1);
+        double[] y0 = new double[y.get(0).length];
+        System.arraycopy(y.get(y.size() - 1), 0, y0, 0, y0.length);
+        boolean terminate = terminator.terminate(y0, t0, 0);
+        for (int i = 0; !terminate; i++) {
+            y0 = step(y0, t0, ode, h);
+            t0 = t0 + h;
+            if (outputEvery > 0 && (i+1) % outputEvery == 0) {
+                y.add(y0);
+                t.add(t0);
+            }
+            terminate = terminator.terminate(y0, t0, i);
         }
     }
 }

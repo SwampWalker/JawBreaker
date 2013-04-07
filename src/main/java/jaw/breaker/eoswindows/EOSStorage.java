@@ -24,7 +24,7 @@ public interface EOSStorage {
      * Returns the names of the equations of state.
      * @return 
      */
-    public String[] getNames();
+    public String[] getEOSNames();
     
     /**
      * Returns the indexed equation of state.
@@ -37,5 +37,11 @@ public interface EOSStorage {
      * Receive notifications of additional equations of state.
      * @param cl the change listener.
      */
-    public void addChangeListener(ChangeListener cl);
+    public void addEOSChangeListener(ChangeListener cl);
+    
+    /**
+     * Removes the indexed equation of state.
+     * @param i the index of the equation of state to remove.
+     */
+    public void removeEOS(int i);
 }

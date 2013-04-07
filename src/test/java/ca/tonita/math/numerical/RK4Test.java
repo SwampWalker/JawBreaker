@@ -80,7 +80,7 @@ public class RK4Test extends TestCase implements QuasiLinearODESystem {
         int outputEvery = 1;
         double tMax = 0.5;
         int maxSteps = 5;
-        RK4.evolve(y, t, ode, h, outputEvery, tMax, maxSteps);
+        RK4.evolve(y, t, ode, h, outputEvery, maxSteps);
 
         if (t.size() != y.size() && y.size() != 6) {
             fail("Incorrect number of steps taken.");

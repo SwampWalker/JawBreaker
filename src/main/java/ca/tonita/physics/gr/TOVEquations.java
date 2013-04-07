@@ -36,7 +36,7 @@ public class TOVEquations implements QuasiLinearODESystem {
      */
     public double dmdr(double r, double[] y) {
         double rho = eos.energyDensity(y[0]);
-        return  4 * Math.PI * rho * r * r;
+        return 4 * Math.PI * rho * r * r;
     }
 
     /**
@@ -47,6 +47,9 @@ public class TOVEquations implements QuasiLinearODESystem {
      * @return the derivative of lambda wrt r
      */
     private double dlambdadr(double r, double[] y) {
+        if (r == 0.0) {
+            return 0;
+        }
         double mass = y[1];
         double pressure = y[0];
         return (mass + 4 * Math.PI * Math.pow(r, 3) * pressure)
@@ -61,6 +64,9 @@ public class TOVEquations implements QuasiLinearODESystem {
      * @return the derivative of pressure wrt r
      */
     private double dpdr(double r, double[] y) {
+        if (r == 0.0) {
+            return 0;
+        }
         double mass = y[1];
         double pressure = y[0];
         double dlambdadr = (mass + 4 * Math.PI * Math.pow(r, 3) * pressure)

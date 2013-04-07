@@ -26,9 +26,8 @@ public class TOVDataset extends AbstractXYDataset implements DomainInfo, RangeIn
     public void setTOV(TOVData tov) {
         this.tov = tov;
     }
-    private ArrayList<String> names = null;
     private int iX = 0;
-    private int iY = 2;
+    private int iY = 1;
 
     /**
      * Sets the variable being used for the range.
@@ -57,11 +56,10 @@ public class TOVDataset extends AbstractXYDataset implements DomainInfo, RangeIn
     }
 
     public TOVDataset() {
-        names = new ArrayList<String>();
     }
-    private String[] variableNames = {"Radius", "Number Density", "Pressure", "Total Energy Density"};
+    private static final String[] variableNames = {"Radius", "Pressure", "Gravitational Mass", "Lambda", "Number Density", "Energy Density"};
 
-    public String[] getVariableNames() {
+    public static String[] getVariableNames() {
         return variableNames;
     }
 
@@ -85,7 +83,7 @@ public class TOVDataset extends AbstractXYDataset implements DomainInfo, RangeIn
 
     @Override
     public int getSeriesCount() {
-        if (tov != null) {
+        if (tov != null && tov.getNPoints() != 0) {
             return 1;
         }
         return 0;
@@ -93,7 +91,7 @@ public class TOVDataset extends AbstractXYDataset implements DomainInfo, RangeIn
 
     @Override
     public Comparable getSeriesKey(int series) {
-        if (series == 0 && tov != null) {
+        if (series == 0 && tov != null && tov.getNPoints() != 0) {
             return tov.getIdentifier();
         }
         return null;
@@ -108,30 +106,30 @@ public class TOVDataset extends AbstractXYDataset implements DomainInfo, RangeIn
 
     public Number getX(int series, int item) {
         if (series == 0) {
-            return tov.getVariables(item)[iX];
+            return getVariable(item, iX);
         }
         return null;
     }
 
     public Number getY(int series, int item) {
         if (series == 0) {
-            return tov.getVariables(item)[iY];
+            return getVariable(item, iY);
         }
         return null;
     }
 
     public double getDomainLowerBound(boolean includeInterval) {
         double lb = 0.0;
-        if (tov != null) {
-            lb = tov.getVariables(0)[iX];
+        if (tov != null && tov.getNPoints() != 0) {
+            lb = getVariable(0, iX);
         }
         return lb;
     }
 
     public double getDomainUpperBound(boolean includeInterval) {
         double ub = 1;
-        if (tov != null) {
-            ub = tov.getVariables(tov.getNPoints() - 1)[iX];
+        if (tov != null && tov.getNPoints() != 0) {
+            ub = getVariable(tov.getNPoints()-1, iX);
         }
         return ub;
     }
@@ -142,21 +140,39 @@ public class TOVDataset extends AbstractXYDataset implements DomainInfo, RangeIn
 
     public double getRangeLowerBound(boolean includeInterval) {
         double lb = 0.0;
-        if (tov != null) {
-            lb = tov.getVariables(0)[iY];
+        if (tov != null && tov.getNPoints() != 0) {
+            lb = getVariable(0, iY);
         }
         return lb;
     }
 
     public double getRangeUpperBound(boolean includeInterval) {
         double ub = 1;
-        if (tov != null) {
-            ub = tov.getVariables(tov.getNPoints() - 1)[iY];
+        if (tov != null && tov.getNPoints() != 0) {
+            ub = getVariable(tov.getNPoints()-1, iY);
         }
         return ub;
     }
 
     public Range getRangeBounds(boolean includeInterval) {
         return new Range(getRangeLowerBound(includeInterval), getRangeUpperBound(includeInterval));
+    }
+
+    /**
+     * Returns the specified data element.
+     * @param iPoint the index of the point to get the variable of
+     * @param iY the variable to get, as specified by the variableNames field
+     * @return the variable at the specified point
+     */
+    private double getVariable(int iPoint, int iY) {
+        double variable;
+        if (iY == 0) {
+            variable = tov.getRadius(iPoint);
+        } else if (iY < 4) {
+            variable = tov.getVariables(iPoint)[iY - 1];
+        } else {
+            variable = tov.getSecondaries(iPoint)[iY - 4];
+        }
+        return variable;
     }
 }

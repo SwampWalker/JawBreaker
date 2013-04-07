@@ -11,7 +11,7 @@ public class TabulatedHermite {
      * An identifier to differentiate this table from others.
      */
     private String identifier;
-
+    
     /**
      * Returns the identifier of this equation of state.
      * @return the identifier
@@ -57,12 +57,28 @@ public class TabulatedHermite {
     private double[][] energyDensityA;
     
     /**
+     * The coefficient of the number density polynomial in pressure.
+     * The array energyDensityA[i] is the coefficients of {p^0,p^1,p^2,p^3}
+     * that lead to continuity of value and derivative through piecewise
+     * Hermite interpolation.
+     */
+    private double[][] numberDensityA;
+    
+    /**
      * Coefficients for extrapolating the energy density. The array
      * energyDensityExtrap[0] gives the 2 coefficients {g, c, 1/g, 1/(g-1)} that
      * continuously fit the value and derivative of the input energy density to
      * a polytrope having energy density: rho = c*p^(1/g) + p/(g-1)
      */
     private double[][] energyDensityExtrap;
+    
+    /**
+     * Coefficients for extrapolating the number density. The array
+     * numberDensityExtrap[0] gives the 2 coefficients {g, c, 1/g} that
+     * continuously fit the value and derivative of the input energy density to
+     * a polytrope having number density: n = c*p^(1/g)
+     */
+    private double[][] numberDensityExtrap;
     
     /**
      * The number of points.
@@ -102,40 +118,13 @@ public class TabulatedHermite {
             numberDensity[i] = Math.pow(10, logn[i]);
             rho[i] = numberDensity[i]*(particleMass + energyPerParticle[i]);
         }
-        // drho/dpressure
-        double[] drho = new double[N];
-        drho[0] = (rho[1] - rho[0])/(pressure[1] - pressure[0]);
-        drho[1] = Polynomials.differentiate(
-                Polynomials.interpolatingCoefficients(
-                new double[] {rho[0], rho[1], rho[2]}, 
-                new double[] {pressure[0], pressure[1], pressure[2]}), pressure[1]);
-        for (int i = 2; i < N-2; i++) {
-            int nSpline = 5;
-            double[] localRho = new double[nSpline];
-            double[] localPressure = new double[nSpline];
-            for (int j = 0; j < nSpline; j++) {
-                int iSpline = i - nSpline/2 + j;
-                localRho[j] = rho[iSpline];
-                localPressure[j] = pressure[iSpline];
-            }
-            drho[i] = Polynomials.differentiate(
-                    Polynomials.interpolatingCoefficients(
-                    localRho, localPressure), pressure[i]);
-        }
-        drho[N-2] = Polynomials.differentiate(
-                Polynomials.interpolatingCoefficients(
-                new double[] {rho[N-3], rho[N-2], rho[N-1]}, 
-                new double[] {pressure[N-3], pressure[N-2], pressure[N-1]}), pressure[N-2]);
-        drho[N-1] = (rho[N-1] - rho[N-2])/(pressure[N-1] - pressure[N-2]);
         
+        // The derivatives.
+        double[] drho = dvariable(rho);
+        double[] dn = dvariable(numberDensity);
         // Now we compute the interpolating coefficients.
-        energyDensityA = new double[N-1][];
-        for (int i = 0; i < N-1; i++) {
-            double[] localRho = {rho[i], rho[i+1]};
-            double[] localDrho = {drho[i], drho[i+1]};
-            double[] localPressure = {pressure[i], pressure[i+1]};
-            energyDensityA[i] = Polynomials.interpolatingCoefficients(localRho, localDrho, localPressure);
-        }
+        energyDensityA = computeHermiteCoefficients(rho, drho);
+        numberDensityA = computeHermiteCoefficients(numberDensity, dn);
         
         // Compute the extrapolating coefficients.
         energyDensityExtrap = new double[2][4];
@@ -147,6 +136,13 @@ public class TabulatedHermite {
         energyDensityExtrap[1][3] = 1/(energyDensityExtrap[1][0] - 1);
         energyDensityExtrap[0][1] = -energyDensityExtrap[0][0]*energyDensityExtrap[0][3]*(pressure[0]*drho[0] - rho[0])*Math.pow(pressure[0], -energyDensityExtrap[0][2]);
         energyDensityExtrap[1][1] = -energyDensityExtrap[1][0]*energyDensityExtrap[1][3]*(pressure[N-1]*drho[N-1] - rho[N-1])*Math.pow(pressure[N-1], -energyDensityExtrap[1][2]);
+        numberDensityExtrap = new double[2][3];
+        numberDensityExtrap[0][0] = energyDensityExtrap[0][0];
+        numberDensityExtrap[0][2] = energyDensityExtrap[0][2];
+        numberDensityExtrap[0][1] = numberDensity[0]/Math.pow(pressure[0], numberDensityExtrap[0][2]);
+        numberDensityExtrap[1][0] = energyDensityExtrap[1][0];
+        numberDensityExtrap[1][2] = energyDensityExtrap[1][2];
+        numberDensityExtrap[1][1] = numberDensity[N-1]/Math.pow(pressure[N-1], numberDensityExtrap[1][2]);
     }
 
     /**
@@ -217,6 +213,72 @@ public class TabulatedHermite {
                 }
             }
         }
+    }
+
+    /**
+     * Returns the number density as a function of pressure.
+     * @param p the pressure
+     * @return the number density
+     */
+    public double numberDensity(double p) {
+        memoize(p);
+        if (memoIndex == -1) {
+            return numberDensityExtrap[0][1]*Math.pow(p, numberDensityExtrap[0][2]);
+        } else if (memoIndex == N-1) {
+            return numberDensityExtrap[1][1]*Math.pow(p, numberDensityExtrap[1][2]);
+        }
+        return Polynomials.interpolate(numberDensityA[memoIndex], p);
+    }
+
+    /**
+     * Computes the derivative of the input variable using splines.
+     * @param variable the variable to differentiate
+     * @return the derivative of the variable at the same points.
+     */
+    private double[] dvariable(double[] variable) {
+        // drho/dpressure
+        double[] dvariable = new double[N];
+        dvariable[0] = (variable[1] - variable[0])/(pressure[1] - pressure[0]);
+        dvariable[1] = Polynomials.differentiate(
+                Polynomials.interpolatingCoefficients(
+                new double[] {variable[0], variable[1], variable[2]}, 
+                new double[] {pressure[0], pressure[1], pressure[2]}), pressure[1]);
+        for (int i = 2; i < N-2; i++) {
+            int nSpline = 5;
+            double[] localRho = new double[nSpline];
+            double[] localPressure = new double[nSpline];
+            for (int j = 0; j < nSpline; j++) {
+                int iSpline = i - nSpline/2 + j;
+                localRho[j] = variable[iSpline];
+                localPressure[j] = pressure[iSpline];
+            }
+            dvariable[i] = Polynomials.differentiate(
+                    Polynomials.interpolatingCoefficients(
+                    localRho, localPressure), pressure[i]);
+        }
+        dvariable[N-2] = Polynomials.differentiate(
+                Polynomials.interpolatingCoefficients(
+                new double[] {variable[N-3], variable[N-2], variable[N-1]}, 
+                new double[] {pressure[N-3], pressure[N-2], pressure[N-1]}), pressure[N-2]);
+        dvariable[N-1] = (variable[N-1] - variable[N-2])/(pressure[N-1] - pressure[N-2]);
+        return dvariable;
+    }
+
+    /**
+     * Computes the hermite interpolating coefficients of the variable.
+     * @param variable the variable to get interpolating coefficients of
+     * @param dvariable the derivative of the variable
+     * @return the interpolating coefficients in each interval
+     */
+    private double[][] computeHermiteCoefficients(double[] variable, double[] dvariable) {
+        double[][] coefficients = new double[N-1][];
+        for (int i = 0; i < N-1; i++) {
+            double[] localVariable = {variable[i], variable[i+1]};
+            double[] localDVariable = {dvariable[i], dvariable[i+1]};
+            double[] localPressure = {pressure[i], pressure[i+1]};
+            coefficients[i] = Polynomials.interpolatingCoefficients(localVariable, localDVariable, localPressure);
+        }
+        return coefficients;
     }
 }
 
