@@ -1,5 +1,7 @@
 package ca.tonita.math.polynomials;
 
+import ca.tonita.math.numerical.LinearAlgebra;
+
 /**
  * The basis of Chebyshev polynomials using the extrema as the collocation
  * points. Because of some limits, this object represents a truncated basis.
@@ -23,9 +25,15 @@ public class ChebyshevExtrema {
      */
     private double[][] coefficientsToValues;
     /**
+     * Returns the matrix which takes coefficients of a function to coefficients
+     * of the functions derivative.
+     */
+    private double[][] coefficientDifferentiationMatrix;
+    /**
      * The maximum rank of this truncated basis.
      */
     private int rank;
+    private double[][] differentiate;
 
     /**
      * Creates a new ChebyshevExtrema basis.
@@ -104,21 +112,28 @@ public class ChebyshevExtrema {
                 valuesToCoefficients[i][0] *= 0.5; // Weight on end point (not an extrema) is halved.
                 valuesToCoefficients[i][rank - 1] *= 0.5; // As other end point because trapezoid rule...
                 valuesToCoefficients[rank - 1][i] *= 0.5; // I have no explanation for this. :( It is implied by Boyd's equation 4.49. Likely an artifact of the truncation.
-                // This last factor implies that Chebyshev-Lobatto Quadrature is exact only up to rank-2 order polynomials. =/
+                // This last factor implies that Chebyshev-Lobatto Quadrature is exact for polynomials of order less than (rank-1)^2.
             }
         }
         return valuesToCoefficients;
     }
-    
+
+    /**
+     * If u is the vector of values at the abscissas and a the vector of
+     * coefficients, this function returns the function M^{-1} such that the
+     * equation M^{-1}u = a holds. See Boyd pg 5.41.
+     *
+     * @return
+     */
     public double[][] getCoefficientsToValuesMatrix() {
         if (coefficientsToValues == null) {
             coefficientsToValues = new double[rank][rank];
             double[] x = getAbscissas();
-            for (int iRow = 0; iRow < rank; iRow++ ) {
+            for (int iRow = 0; iRow < rank; iRow++) {
                 coefficientsToValues[iRow][0] = 1;
                 coefficientsToValues[iRow][1] = x[iRow];
                 for (int iCol = 2; iCol < rank; iCol++) {
-                    coefficientsToValues[iRow][iCol] = 2*x[iRow]*coefficientsToValues[iRow][iCol-1] - coefficientsToValues[iRow][iCol - 2];
+                    coefficientsToValues[iRow][iCol] = 2 * x[iRow] * coefficientsToValues[iRow][iCol - 1] - coefficientsToValues[iRow][iCol - 2];
                 }
             }
         }
@@ -148,5 +163,41 @@ public class ChebyshevExtrema {
             }
         }
         return t1;
+    }
+
+    /**
+     * Returns the matrix which converts the coefficients of a function to the
+     * coefficients of the derivative of that function.
+     *
+     * @return The coefficient differentiation matrix.
+     */
+    public double[][] getCoefficientDifferentiationMatrix() {
+        if (coefficientDifferentiationMatrix == null) {
+            coefficientDifferentiationMatrix = new double[rank][rank];
+            for (int i = 0; i < rank; i++) {
+                for (int j = 0; j < rank; j++) {
+                    coefficientDifferentiationMatrix[i][j] = 0;
+                }
+            }
+            // From formula A.15 of Boyd.
+            for (int iRow = rank - 2; iRow >= 0; iRow--) {
+                coefficientDifferentiationMatrix[iRow][iRow + 1] = 2 * (iRow + 1);
+                for (int iCol = iRow + 3; iCol < rank; iCol++) {
+                    coefficientDifferentiationMatrix[iRow][iCol] += coefficientDifferentiationMatrix[iRow + 2][iCol];
+                }
+            }
+            // C_k factor.
+            for (int iCol = 0; iCol < rank; iCol++) {
+                coefficientDifferentiationMatrix[0][iCol] *= 0.5;
+            }
+        }
+        return coefficientDifferentiationMatrix;
+    }
+    
+    public double[][] getDifferentiationMatrix() {
+        if (differentiate == null) {
+            differentiate = LinearAlgebra.matrixMultiply(getCoefficientDifferentiationMatrix(), LinearAlgebra.matrixMultiply(getCoefficientDifferentiationMatrix(), getValuesToCoefficientsMatrix()));
+        }
+        return differentiate;
     }
 }
