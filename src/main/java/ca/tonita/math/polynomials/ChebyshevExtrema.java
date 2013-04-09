@@ -34,6 +34,10 @@ public class ChebyshevExtrema {
      */
     private int rank;
     private double[][] differentiate;
+    /**
+     * Quadrature weights, with the function sqrt(1-x^2) multiplied in.
+     */
+    private double[] weights;
 
     /**
      * Creates a new ChebyshevExtrema basis.
@@ -54,6 +58,11 @@ public class ChebyshevExtrema {
         }
         this.rank = rank;
         this.abscissas = null;
+        this.coefficientDifferentiationMatrix = null;
+        this.differentiate = null;
+        this.valuesToCoefficients = null;
+        this.coefficientsToValues = null;
+        this.weights = null;
     }
 
     /**
@@ -193,11 +202,63 @@ public class ChebyshevExtrema {
         }
         return coefficientDifferentiationMatrix;
     }
-    
+
+    /**
+     * Returns the differentiation matrix D such that for a function u, Du is
+     * the approximation of the derivative.
+     *
+     * @return the differentiation operator
+     */
     public double[][] getDifferentiationMatrix() {
         if (differentiate == null) {
-            differentiate = LinearAlgebra.matrixMultiply(getCoefficientDifferentiationMatrix(), LinearAlgebra.matrixMultiply(getCoefficientDifferentiationMatrix(), getValuesToCoefficientsMatrix()));
+            differentiate = LinearAlgebra.matrixMultiply(getCoefficientsToValuesMatrix(), LinearAlgebra.matrixMultiply(getCoefficientDifferentiationMatrix(), getValuesToCoefficientsMatrix()));
         }
         return differentiate;
+    }
+
+    /**
+     * Returns the rank of the truncated basis.
+     *
+     * @return the rank
+     */
+    public int getRank() {
+        return rank;
+    }
+
+    /**
+     * Computes the integral of a function using Guassian quadrature.
+     *
+     * @param integrand The integrand to integrate, must be at least length
+     * rank.
+     * @return the integrated function.
+     */
+    public double integrate(double[] integrand) {
+        double[] weights = getWeights();
+        double integral = 0;
+        for (int i = 0; i < rank; i++) {
+            integral += weights[i] * integrand[i];
+        }
+        return integral;
+    }
+
+    /**
+     * Returns the quadrature weights for integrating a raw function, that is
+     * the weights so that \int f(x) dx = sum(f[i]*w[i])
+     *
+     * @return the quadrature weights.
+     */
+    private double[] getWeights() {
+        if (weights == null) {
+            weights = new double[rank];
+            double[] x = getAbscissas();
+            double factor = Math.PI / (rank - 1);
+            weights = new double[rank];
+            for (int i = 0; i < rank; i++) {
+                weights[i] = Math.sqrt(1 - x[i] * x[i])*factor;
+            }
+            weights[0] = 0;
+            weights[rank-1] = 0;
+        }
+        return weights;
     }
 }
