@@ -8,7 +8,7 @@ import ca.tonita.math.numerical.LinearAlgebra;
  *
  * @author atonita
  */
-public class ChebyshevExtrema {
+public class ChebyshevExtrema implements PolynomialBasis {
 
     /**
      * The locations of the collocation points.
@@ -52,6 +52,7 @@ public class ChebyshevExtrema {
      *
      * @param rank the maximum rank of this truncated basis.
      */
+    @Override
     public void setRank(int rank) {
         if (rank <= 0) {
             throw new IllegalArgumentException("Rank must be greater than 0.");
@@ -85,6 +86,7 @@ public class ChebyshevExtrema {
      *
      * @return the abscissas
      */
+    @Override
     public double[] getAbscissas() {
         if (abscissas == null) {
             abscissas = getAbscissas(rank);
@@ -209,6 +211,7 @@ public class ChebyshevExtrema {
      *
      * @return the differentiation operator
      */
+    @Override
     public double[][] getDifferentiationMatrix() {
         if (differentiate == null) {
             differentiate = LinearAlgebra.matrixMultiply(getCoefficientsToValuesMatrix(), LinearAlgebra.matrixMultiply(getCoefficientDifferentiationMatrix(), getValuesToCoefficientsMatrix()));
@@ -221,6 +224,7 @@ public class ChebyshevExtrema {
      *
      * @return the rank
      */
+    @Override
     public int getRank() {
         return rank;
     }
@@ -232,6 +236,7 @@ public class ChebyshevExtrema {
      * rank.
      * @return the integrated function.
      */
+    @Override
     public double integrate(double[] integrand) {
         double[] weights = getWeights();
         double integral = 0;
@@ -260,5 +265,9 @@ public class ChebyshevExtrema {
             weights[rank-1] = 0;
         }
         return weights;
+    }
+
+    public double[] getDomain() {
+        return new double[]{-1,1};
     }
 }
