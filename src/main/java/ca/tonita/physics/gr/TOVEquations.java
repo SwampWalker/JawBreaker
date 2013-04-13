@@ -1,7 +1,7 @@
 package ca.tonita.physics.gr;
 
 import ca.tonita.math.numerical.QuasiLinearODESystem;
-import jaw.breaker.equationsOfState.TabulatedHermite;
+import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 
 /**
  *

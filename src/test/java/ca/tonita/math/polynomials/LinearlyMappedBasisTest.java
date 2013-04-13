@@ -85,17 +85,17 @@ public class LinearlyMappedBasisTest extends TestCase {
      */
     public void testIntegrate() {
         System.out.println("integrate");
-        int rank = 20;
+        int rank = 30;
         LinearlyMappedBasis instance =  new LinearlyMappedBasis(new ChebyshevExtrema());
         instance.setRank(rank);
         double[] integrand = new double[rank];
-        double[] x = new double[instance.getRank()];
+        double[] x = instance.getAbscissas();
         for (int i = 0; i < rank; i++) {
             integrand[i] = Math.exp(x[i]);
         }
-        double expResult = Math.exp(1) - 1;
+        double expResult = Math.exp(1) - Math.exp(0);
         double result = instance.integrate(integrand);
-        assertEquals(expResult, result, tolerance);
+        assertEquals(expResult, result, 0.01);
     }
 
     /**

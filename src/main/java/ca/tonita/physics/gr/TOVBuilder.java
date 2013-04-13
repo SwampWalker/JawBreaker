@@ -6,8 +6,8 @@ package ca.tonita.physics.gr;
 
 import ca.tonita.math.numerical.RK4;
 import java.util.ArrayList;
-import jaw.breaker.equationsOfState.TabulatedHermite;
-import jaw.breaker.models.TOVData;
+import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
+import ca.tonita.jawbreaker.models.TOVData;
 
 /**
  *
