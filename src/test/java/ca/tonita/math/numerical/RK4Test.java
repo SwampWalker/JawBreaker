@@ -11,7 +11,7 @@ import junit.framework.TestCase;
  *
  * @author atonita
  */
-public class RK4Test extends TestCase implements QuasiLinearODESystem {
+public class RK4Test extends TestCase implements QuasiLinearFirstOrderODESystem {
 
     public RK4Test(String testName) {
         super(testName);
@@ -34,7 +34,7 @@ public class RK4Test extends TestCase implements QuasiLinearODESystem {
         System.out.println("step");
         double[] y0 = {0, 0};
         double t = 0.0;
-        QuasiLinearODESystem ode = this;
+        QuasiLinearFirstOrderODESystem ode = this;
         double h = 0.1;
         double[] y1 = {0.5382550, 0.3196263};
         double[] w1 = RK4.step(y0, t, ode, h);
@@ -75,7 +75,7 @@ public class RK4Test extends TestCase implements QuasiLinearODESystem {
         y.add(new double[]{0, 0});
         ArrayList<Double> t = new ArrayList<Double>();
         t.add(0.);
-        QuasiLinearODESystem ode = this;
+        QuasiLinearFirstOrderODESystem ode = this;
         double h = 0.1;
         int outputEvery = 1;
         double tMax = 0.5;

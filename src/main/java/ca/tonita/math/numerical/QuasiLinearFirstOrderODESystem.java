@@ -7,7 +7,7 @@ package ca.tonita.math.numerical;
  * 
  * @author atonita
  */
-public interface QuasiLinearODESystem {
+public interface QuasiLinearFirstOrderODESystem {
     /**
      * Computes the right hand side of the system.
      * @param t the independent variable

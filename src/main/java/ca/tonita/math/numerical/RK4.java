@@ -18,12 +18,12 @@ public class RK4 {
      *
      * @param y0 The initial condition.
      * @param t The current value of the independent variable.
-     * @param ode The <code>QuasiLinearODESystem</code> being approximately
+     * @param ode The <code>QuasiLinearFirstOrderODESystem</code> being approximately
      * solved.
      * @param h The step size to take.
      * @return The approximate value of y at t + h.
      */
-    public static double[] step(double[] y0, double t, QuasiLinearODESystem ode, double h) {
+    public static double[] step(double[] y0, double t, QuasiLinearFirstOrderODESystem ode, double h) {
         int n = y0.length;
         double[] k1 = ode.rightHandSide(t, y0);
         double[] yNext = new double[n];
@@ -59,7 +59,7 @@ public class RK4 {
      * @param maxSteps The maximum number of steps to take from the last value
      * of t in yOfT.
      */
-    public static void evolve(ArrayList<double[]> y, ArrayList<Double> t, QuasiLinearODESystem ode, double h, int outputEvery, int maxSteps) {
+    public static void evolve(ArrayList<double[]> y, ArrayList<Double> t, QuasiLinearFirstOrderODESystem ode, double h, int outputEvery, int maxSteps) {
         double t0 = t.get(y.size() - 1);
         double[] y0 = new double[y.get(0).length];
         System.arraycopy(y.get(y.size() - 1), 0, y0, 0, y0.length);
@@ -86,7 +86,7 @@ public class RK4 {
      * @param terminator a <code>EvolutionTerminator</code> to control the end
      * of evolution
      */
-    public static void evolve(ArrayList<double[]> y, ArrayList<Double> t, QuasiLinearODESystem ode, double h, int outputEvery, EvolutionTerminator terminator) {
+    public static void evolve(ArrayList<double[]> y, ArrayList<Double> t, QuasiLinearFirstOrderODESystem ode, double h, int outputEvery, EvolutionTerminator terminator) {
         double t0 = t.get(y.size() - 1);
         double[] y0 = new double[y.get(0).length];
         System.arraycopy(y.get(y.size() - 1), 0, y0, 0, y0.length);

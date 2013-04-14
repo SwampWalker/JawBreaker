@@ -1,18 +1,28 @@
 package ca.tonita.physics.gr;
 
-import ca.tonita.math.numerical.QuasiLinearODESystem;
+import ca.tonita.math.numerical.NonLinearFirstOrderODESystem;
+import ca.tonita.math.numerical.QuasiLinearFirstOrderODESystem;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
+import ca.tonita.math.numerical.NonLinearFirstOrderODEBean;
 
 /**
  *
  * @author atonita
  */
-public class TOVEquations implements QuasiLinearODESystem {
+public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFirstOrderODESystem {
 
     private TabulatedHermite eos;
+    private NonLinearFirstOrderODEBean bean;
+    private int iPressure = 0;
+    private int iMass = 1;
+    private int iLambda = 2;
+    private int nEquations = 3;
 
     TOVEquations(TabulatedHermite eos) {
         this.eos = eos;
+        bean = new NonLinearFirstOrderODEBean();
+        bean.setResidue(new double[3]);
+        bean.setJacobian(new double[3][6]);
     }
 
     public TabulatedHermite getEos() {
@@ -73,5 +83,80 @@ public class TOVEquations implements QuasiLinearODESystem {
                 / (r * (r - 2 * mass));
         double rho = eos.energyDensity(pressure);
         return -(pressure + rho) * dlambdadr;
+    }
+
+    /**
+     * Returns the residue and Jacobian for the TOV equations.
+     *
+     * @param r the areal radial coordinate
+     * @param y an array containing {mass, pressure, lambda}
+     * @param dy an array of the derivatives of the variables
+     * @param parameters parameters of the problem
+     * @return the residue and Jacobian
+     */
+    @Override
+    public NonLinearFirstOrderODEBean equations(double r, double[] y, double[] dy, double[] parameters, int type) {
+        if (type == NonLinearFirstOrderODESystem.LEFTBOUNDARY) {
+            double[] residue = bean.getResidue();
+            double[][] jacobian = bean.getJacobian();
+            for (int i = 0; i < residue.length; i++) {
+                residue[i] = dy[i];
+                for (int j = 0; j < jacobian[0].length; j++) {
+                    jacobian[i][j] = 0;
+                }
+                jacobian[i][residue.length + i] = 1;
+            }
+        } else {
+            // Residue.
+            double[] residue = bean.getResidue();
+            double mass = y[1];
+            double pressure = y[0];
+            double dlambdadr = (mass + 4 * Math.PI * Math.pow(r, 3) * pressure)
+                    / (r * (r - 2 * mass));
+            double rho = eos.energyDensity(pressure);
+            residue[iPressure] = dy[iPressure] + (pressure + rho) * dlambdadr;
+            residue[iMass] = dy[iMass] - 4 * Math.PI * rho * r * r;
+            residue[iLambda] = dy[iLambda] - dlambdadr;
+
+            // Jacobian.
+            double[][] jacobian = bean.getJacobian();
+            double drho = eos.denergyDensity(pressure);
+            double d2lambdadrdp = (mass + 4 * Math.PI * Math.pow(r, 3))
+                    / (r * (r - 2 * mass));
+            double d2lambdadrdm = 2 * (r - mass + 4 * Math.PI * Math.pow(r, 3) * pressure)
+                    / (r * (r - 2 * mass) * (r - 2 * mass));
+            // Pressure equation.
+            jacobian[iPressure][iPressure] = (1 + drho) * dlambdadr + (pressure + rho) * d2lambdadrdp;
+            jacobian[iPressure][iMass] = (pressure + rho) * d2lambdadrdm;
+            jacobian[iPressure][iLambda] = 0;
+            jacobian[iPressure][nEquations + iPressure] = 1;
+            jacobian[iPressure][nEquations + iMass] = 0;
+            jacobian[iPressure][nEquations + iLambda] = 0;
+            jacobian[iPressure][2*nEquations] = 0;
+            // Mass equation.
+            jacobian[iMass][iPressure] = - 4 * Math.PI * drho * r * r;
+            jacobian[iMass][iMass] = 0;
+            jacobian[iMass][iLambda] = 0;
+            jacobian[iMass][nEquations + iPressure] = 0;
+            jacobian[iMass][nEquations + iMass] = 1;
+            jacobian[iMass][nEquations + iLambda] = 0;
+            jacobian[iMass][2*nEquations] = 0;
+            // Lambda equation.
+            jacobian[iLambda][iPressure] = -d2lambdadrdp;
+            jacobian[iLambda][iMass] = -d2lambdadrdm;
+            jacobian[iLambda][iLambda] = 0;
+            jacobian[iLambda][nEquations + iPressure] = 0;
+            jacobian[iLambda][nEquations + iMass] = 0;
+            jacobian[iLambda][nEquations + iLambda] = 1;
+            jacobian[iLambda][2*nEquations] = 0;
+        }
+        return bean;
+    }
+
+    public void computeConstraints(double[] x, double[][] variables, double[][] dvariables, double[] parameters, double[] dconstraint, int iConstraint) {
+        for (int i = 0; i < dconstraint.length; i++) {
+            dconstraint[i] = 0;
+        }
+        throw new UnsupportedOperationException("Not implemented yet.");
     }
 }
