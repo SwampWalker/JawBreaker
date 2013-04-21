@@ -70,7 +70,7 @@ public class TOVData {
     public double[] getVariables(int i) {
         return variables.get(i);
     }
-    
+
     public void computeSecondaries(TabulatedHermite eos) {
         secondaries = new ArrayList<double[]>();
         for (double[] y : variables) {
@@ -80,11 +80,20 @@ public class TOVData {
             secondaries.add(z);
         }
     }
-    
+
     public double[] getSecondaries(int i) {
         if (secondaries == null) {
             throw new UnsupportedOperationException("Secondaries not computed.");
         }
         return secondaries.get(i);
+    }
+
+    /**
+     * Returns the radius of the star (actually the last radius computed).
+     *
+     * @return the last radius where the star was computed.
+     */
+    public double getRadius() {
+        return radii.get(radii.size() - 1);
     }
 }

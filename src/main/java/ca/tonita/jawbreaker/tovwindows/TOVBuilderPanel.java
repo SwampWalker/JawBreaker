@@ -27,7 +27,7 @@ import org.jfree.chart.axis.StandardTickUnitSource;
 public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListener {
 
     JFreeChart chart = null;
-    private TOVData tov = new TOVData();
+    private TOVData rk4TOV = new TOVData();
     private JawBreakerModel model;
     private final TOVDataset tovDataset;
 
@@ -39,7 +39,6 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         this.model = model;
         model.addEOSChangeListener(this);
         tovDataset = new TOVDataset();
-        tovDataset.setTOV(tov);
 
         // Set up GUI components.
         initComponents();
@@ -365,8 +364,9 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         double stepSize = Double.valueOf(stepSizeField.getText());
         int outputEvery = Integer.valueOf(outputEveryField.getText());
         double minPressure = Double.valueOf(minPressureField.getText());
-        TOVBuilder.evolve(tov, eos, centralPressure, stepSize, outputEvery, minPressure);
-        tov.computeSecondaries(eos);
+        TOVBuilder.evolve(rk4TOV, eos, centralPressure, stepSize, outputEvery, minPressure);
+        rk4TOV.computeSecondaries(eos);
+        tovDataset.add(0, rk4TOV);
         chart.getXYPlot().datasetChanged(null);
     }//GEN-LAST:event_createTOVButtonActionPerformed
 
