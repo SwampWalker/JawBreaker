@@ -1,0 +1,119 @@
+\section{Finding the strained neutron star solutions}
+
+The nonlinearity of the equations poses a fundamental challenge to finding realistic solutions. Here I want to go about formulating a method for approximating those solutions. To begin with, I will set up a series of iterative linear problems via the Newton-Kantorovich method. Under some assumptions these iterates will converge to the solution to the PDE, assuming it exists. There are 6 functional unknowns and 3 positive real number unknowns. They can be stuck in a vector 
+\begin{equation}
+V \equiv \left[
+\begin{array}{c}
+	m \\
+	\lambda_1 \\
+	p \\
+	\sigma \\
+	\lambda_2 \\
+	\xi \\
+	p_c \\
+	r_c \\
+	r_s
+\end{array}
+\right]
+\end{equation}
+then the equations can be collected in a grand-unified vector of their own (collecting boundary conditions into corresponding functionals)
+\begin{equation}
+\mathcal{L}[V] = \left[
+\begin{array}{l}
+	\mathcal{T}[m,m',p,r_c] \\
+	\mathcal{O}[m,p,p',p_c,r_c] \\
+	\mathcal{V}[\lambda_1',m,p,r_c] \\
+	\mathcal{D}[\sigma,\sigma',\xi,\xi',r_c,r_s] \\
+	\mathcal{E}[\sigma,\lambda_2',\xi,\xi',r_c,r_s] \\
+	\mathcal{F}[\sigma,\sigma',\lambda_2',\xi,\xi',\xi'',r_c,r_s] \\
+	\mathcal{N}[m,p,r_c] \\
+	\mathcal{M}[\sigma,\xi,\xi',r_c,r_s] \\
+	\mathcal{P}[\sigma,\xi,\xi',r_c,r_s]
+\end{array}
+\right] = 0.
+\end{equation}
+Note that the three crust equations depend on the two boundary values $r_c$ and $r_s$ since these determine the mapping and therefore scale the derivative $\xi'$. Now we assume that we have some approximate solution to the problem at hand, $V^{(n)}$ and we want to find a closer solution $V^{(n+1)} = V^{(n)}+\delta V$. The update $\delta V$ satisfies a linear differential equation which can be derived in an analogous fashion to a normal Newton iteration
+\begin{equation}
+\mathcal{L}[V^{(n)}-\delta V] \approx \mathcal{L}[V^{(n)}] - d\mathcal{L}[V^{(n)};\delta V] = 0. 
+\end{equation}
+The G\^ateaux derivative $d\mathcal{L}[V^{(n)};\delta V]$ is indeed
+linear in $\delta V$, a basic property of any derivative operator. Which will subsequently be shown, first I write down this Jacobian. For a fixed $r$, the majority of the equations can be written as functions, whose arguments are supplied by the functions of $V$ at the point in question. The integral relations require more care. For the differential equations then, I will write the G\^ateaux derivative as a partial derivative. Since I will not need to take further derivatives of the equations, I will drop the functional dependence, kept until now in order to flag which derivatives are trivial and which are non-trivial. The derivative can be written
+\begin{equation}
+\left[
+\begin{array}{ccccccccc}
+	\frac{\partial \mathcal{T}}{\partial m} + \frac{\partial \mathcal{T}}{\partial m'}D & 0 & \frac{\partial \mathcal{T}}{\partial p}
+	& 0 & 0 & 0 & 0 & \frac{\partial \mathcal{T}}{\partial r_c} & 0 \\
+	
+	\frac{\partial \mathcal{O}}{\partial m} & 0 & \frac{\partial \mathcal{O}}{\partial p} + \frac{\partial \mathcal{O}}{\partial P}D
+	& 0 & 0 & 0 & \frac{\partial \mathcal{O}}{\partial p_c} & \frac{\partial \mathcal{O}}{\partial r_c} & 0 \\
+	
+	\frac{\partial \mathcal{V}}{\partial m} & \frac{\partial \mathcal{V}}{\partial \lambda_1'}D & \frac{\partial \mathcal{V}}{\partial p} & 0 & 0 & 0 & 0 & \frac{\partial \mathcal{V}}{\partial r_c} & 0 \\
+	
+	0 & 0 & 0 & \frac{\partial \mathcal{D}}{\partial \sigma} + \frac{\partial \mathcal{D}}{\partial \sigma'}D &  0 & 
+	\frac{\partial \mathcal{D}}{\partial \xi} + \frac{\partial \mathcal{D}}{\partial \xi'}D & 0 & \frac{\partial \mathcal{D}}{\partial r_c} & \frac{\partial \mathcal{D}}{\partial r_s} \\
+	
+	0 & 0 & 0 & \frac{\partial \mathcal{E}}{\partial \sigma} & \frac{\partial \mathcal{E}}{\partial \lambda_2'}D & \frac{\partial \mathcal{E}}{\partial \xi} + \frac{\partial \mathcal{E}}{\partial \xi}D & 0 & \frac{\partial \mathcal{E}}{\partial r_c} & \frac{\partial \mathcal{E}}{\partial r_s} \\
+	
+	0 & 0 & 0 & \frac{\partial \mathcal{F}}{\partial \sigma} + \frac{\partial \mathcal{F}}{\partial \sigma'}D & \frac{\partial \mathcal{F}}{\partial \lambda'}D & \frac{\partial \mathcal{F}}{\partial \xi} + \frac{\partial \mathcal{F}}{\partial \xi'}D + \frac{\partial \mathcal{F}}{\partial \xi''}D^2 & 0 & \frac{\partial \mathcal{F}}{\partial r_c} & \frac{\partial \mathcal{F}}{\partial r_s} \\
+	
+	d\mathcal{N}[m] & 0 & d\mathcal{N}[p] & 0 & 0 & 0 & 0 & d\mathcal{N}[r_c] & 0 \\
+	
+	0 & 0 & 0 & \frac{\partial \mathcal{M}}{\partial \sigma} & 0 & \frac{\partial \mathcal{M}}{\partial \xi} + \frac{\partial \mathcal{M}}{\partial \xi'}D & 0 & \frac{\partial \mathcal{M}}{\partial r_c} & \frac{\partial \mathcal{M}}{\partial r_s} \\
+	
+	0 & 0 & 0 & \frac{\partial \mathcal{P}}{\partial \sigma} & 0 & \frac{\partial \mathcal{P}}{\partial \xi} + \frac{\partial \mathcal{P}}{\partial \xi'}D & 0 & \frac{\partial \mathcal{P}}{\partial r_c} & \frac{\partial \mathcal{P}}{\partial r_s}
+	
+\end{array}
+\right]\left[
+\begin{array}{c}
+	\delta m \\
+	\delta \lambda_1 \\
+	\delta p \\
+	\delta \sigma \\
+	\delta \lambda_2 \\
+	\delta \xi \\
+	\delta p_c \\
+	\delta r_c \\
+	\delta r_s
+\end{array}
+\right]
+\end{equation}
+with $D$ being a derivative operator and those remaining G\^ateaux derivatives being on the integral conditions. These are linear functionals, but the operators are slightly complicated. These form linear inhomogeneous differential equations for the updates $\delta V$, the source term being the residual $\mathcal{L}[V^{(n)}]$. There ought to be some bounding conditions on the Jacobian such that this method is guaranteed to converge, but I will simply take the cavalier attitude that it works, and proceed accordingly.
+
+Now begins the horrid quest to write out these derivatives. Hopefully I don't run out of derivatives before it is done.
+\subsection{Derivatives of $\mathcal{T}$}
+\begin{equation}
+d\mathcal{T}[m] = D
+\end{equation}
+\begin{equation}
+d\mathcal{T}[p] = -4\pi \frac{d\rho}{dp}r^2
+\end{equation}
+
+\subsection{derivatives of $\mathcal{O}$}
+\begin{equation}
+d\mathcal{O}[m] = \frac{p+\rho}{r(r-2m)} + 2 (p+\rho)\frac{m+4\pi r^3 p}{r(r-2m)^2}
+\end{equation}
+The following is wrong
+\begin{equation}
+d\mathcal{O}[p] = D + \frac{m+4\pi r^3 p}{r(r-2m)} + \frac{4\pi r^3}{r(r-2m)} =  D + \frac{m+4\pi r^3 (p + 1)}{r(r-2m)}
+\end{equation}
+
+\subsection{Derivatives of $\mathcal{V}$}
+\begin{equation}
+d\mathcal{V}[m] = -\frac{1}{r(r-2m)} - 2 \frac{m+4\pi r^3 p}{r(r-2m)^2}
+\end{equation}
+\begin{equation}
+d\mathcal{V}[\lambda_1] = D
+\end{equation}
+\begin{equation}
+d\mathcal{V}[p] = -\frac{4\pi r^3}{r(r-2m)}
+\end{equation}
+
+\subsection{Derivatives of $\mathcal{D}$}
+\begin{equation}
+d\mathcal{D}[\sigma] = D + \frac{e^{2\sigma}}{r} + 4\pi r\ d\rho[\sigma] e^{2\sigma} + 8\pi r\ \rho e^{2\sigma}
+\end{equation}
+\begin{equation}
+d\mathcal{D}[\xi] = 4\pi r \left(d\rho[\xi] + d\rho[\xi']D\right)
+\end{equation}
+
+\subsection{Derivatives of $\mathcal{E}$}

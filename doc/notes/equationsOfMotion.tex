@@ -1,0 +1,186 @@
+\section{Equations of motion}
+The Euler-Lagrange equations stemming from the action \eqref{eqn:action} are given by
+\begin{equation}
+\frac{1}{\sqrt{-g}}\partial_a \left(\sqrt{-g}\frac{\partial \rho}{\partial f^A{}_a}\right) - \frac{\partial \rho}{\partial f^A} = 0.
+\end{equation}
+which can be expanded via the chain rule
+\begin{equation}
+\frac{\partial^2 \rho}{\partial f^B{}_b \partial f^A{}_a} \partial_a f^B{}_b + \frac{\partial^2 \rho}{\partial f^B \partial f^A{}_a} \partial_a f^B + \frac{\partial^2 \rho}{\partial g^{bc} \partial f^A{}_a } \partial_a g^{bc} = \frac{\partial \rho}{\partial f^A} - \frac{\partial_a \sqrt{-g}}{\sqrt{-g}}\frac{\partial \rho}{\partial f^A{}_a}.
+\end{equation}
+The only occurrence of $f^A{}_a$ in $\rho$ is through $H^{AB}=h^{ab}f^{A}{}_af^{B}{}_b=g^{ab}f^{A}{}_af^{B}{}_b$ so
+\begin{equation}
+\frac{\partial \rho}{\partial f^A{}_a} = 2\frac{\partial\rho}{\partial H^{AB}}g^{ab}f^{B}{}_b
+\end{equation}
+further with $\rho = n\epsilon$ we have
+\begin{eqnarray}
+2\frac{\partial \rho}{\partial H^{AB}} & = & 2\epsilon\frac{\partial n}{\partial H^{AB}} + 2n\frac{\partial \epsilon}{\partial H^{AB}} \\
+& = & \rho H_{AB} + p_{AB}
+\end{eqnarray}
+where the relations $\frac{\partial n}{\partial H^{AB}} = n/2H_{AB}$ and $2n\frac{\partial \epsilon}{\partial H^{AB}} = n\tau_{AB} = p_{AB}$ were used (recall that $H_{AB}$ is the inverse of $H^{AB}$). Combining these terms yields
+\begin{equation}
+\frac{\partial \rho}{\partial f^A{}_a} = \left( \rho H_{AB} + p_{AB} \right)g^{ab}f^{B}{}_b
+\end{equation}
+while the derivative of the determinant of the metric again follows from Jacobi's formula
+\begin{equation}
+\partial_a \sqrt{-g} = \frac{-1}{2\sqrt{-g}} \frac{\partial g}{\partial g_{bc}}\frac{\partial g_{bc}}{\partial x^a} = \frac{\sqrt{-g}}{2}g_{bc,a}g^{bc}
+\end{equation}
+so the last term becomes
+\begin{equation}
+\frac{\partial^2 \rho}{\partial f^B{}_b \partial f^A{}_a} \partial_a f^B{}_b + \frac{\partial^2 \rho}{\partial f^B \partial f^A{}_a} \partial_a f^B + \frac{\partial^2 \rho}{\partial g^{bc} \partial f^A{}_a } \partial_a g^{bc} = \frac{\partial \rho}{\partial f^A} - \frac{g_{bc,a}g^{bc}}{2}\left( \rho H_{AB} + p_{AB} \right)g^{ad}f^{B}{}_d.
+\end{equation}
+We will deal with the first term now
+\begin{eqnarray}
+\frac{\partial^2 \rho}{\partial f^B{}_b \partial f^A{}_a} & = & \frac{\partial}{\partial f^B{}_b}\left( \left( \rho H_{AC} + p_{AC} \right)g^{ac}f^{C}{}_c \right) \\
+ & = & \left( \rho H_{AB} + p_{AB} \right)g^{ab} + g^{ac}f^{C}{}_c\frac{\partial}{\partial f^B{}_b}\left( \rho H_{AC} + n\tau_{AC} \right) \\
+ & = & \left( \rho H_{AB} + p_{AB} \right)g^{ab} + g^{ac}f^{C}{}_c\left( \frac{\partial \rho}{\partial f^B{}_b} H_{AC} + \rho \frac{\partial H_{AC}}{\partial f^B{}_b} + \frac{\partial n}{\partial f^B{}_b}\tau_{AC} + n\frac{\partial \tau_{AC}}{\partial f^B{}_b} \right).
+\end{eqnarray}
+The derivative of an inverse matrix is given as
+\begin{equation}
+\frac{\partial H_{AB}}{\partial H^{CD}} = -H_{AC}H_{BD}
+\end{equation}
+so,
+\begin{eqnarray}
+\frac{\partial H_{AB}}{\partial f^C{}_c} & = & \frac{\partial H_{AB}}{\partial H^{DE}}\frac{\partial H^{DE}}{\partial f^C{}_c} = -H_{AD}H_{BE} \frac{\partial}{\partial f^C{}_c} g^{de}f^D{}_df^E{}_e \\
+ & = & -H_{AD}H_{BE} \left( g^{de}\delta^D_C\delta^c_d f^E{}_e + g^{de}f^D{}_d\delta^E_C\delta^c_e\right) \\
+ & = & -H_{AC}H_{BD}g^{cd} f^D{}_d + H_{AD}H_{BC}g^{dc}f^D{}_d \\
+ & = & -\left(H_{AC}H_{BD} + H_{AD}H_{BC}\right)g^{cd}f^D{}_d.
+\end{eqnarray}
+More applications of the chain rule yield
+\begin{eqnarray}
+\frac{\partial n}{\partial f^A{}_a} & = & \frac{\partial n}{\partial H^{BC}}\frac{\partial H^{BC}}{\partial f^A{}_a} = \frac{nH_{BC}}{2}\frac{\partial }{\partial f^A{}_a} h^{bc}f^B{}_b f^C{}_c\\
+ & = & \frac{nH_{BC}}{2}\left(h^{bc}f^C{}_c\delta^B_A\delta^a_b + h^{bc}f^B{}_b \delta^C_A\delta^a_c\right) \\
+ & = & nH_{AB}h^{ab}f^B{}_b = nH_{AB}g^{ab}f^B{}_b.
+\end{eqnarray}
+Meanwhile, the derivative of the Piaola-Kirchhoff tensor again follows from the chain rule
+\begin{equation}
+\frac{\partial \tau_{AC}}{\partial f^B{}_b} = \frac{\partial \tau_{AC}}{\partial H^{DE}}\frac{\partial H^{DE}}{\partial f^B{}_b} = \frac{\partial \tau_{AC}}{\partial H^{DE}}\frac{\partial }{\partial f^B{}_b}g^{de} f^D{}_d f^E{}_e = 2\frac{\partial \tau_{AC}}{\partial H^{BD}} g^{db}f^D{}_d
+\end{equation}
+
+Putting the pieces together
+\begin{eqnarray}
+\frac{\partial^2 \rho}{\partial f^B{}_b \partial f^A{}_a} & = & \left( \rho H_{AB} + p_{AB} \right)g^{ab} + g^{ac}f^{C}{}_c\left( \frac{\partial \rho}{\partial f^B{}_b} H_{AC} + \rho \frac{\partial H_{AC}}{\partial f^B{}_b} + \frac{\partial n}{\partial f^B{}_b}\tau_{AC} + n\frac{\partial \tau_{AC}}{\partial f^B{}_b} \right) \\
+ & = & \left( \rho H_{AB} + p_{AB} \right)g^{ab} + g^{ac}f^{C}{}_c\left( \left( \rho H_{BD} + p_{BD} \right)g^{bd}f^{D}{}_d H_{AC} \right. \nonumber \\
+ && \left. - \rho \left(H_{AB}H_{CD} + H_{AD}H_{BC}\right)g^{bd}f^D{}_d + nH_{BD}g^{bd}f^D{}_d \tau_{AC} + 2n\frac{\partial \tau_{AC}}{\partial H^{BD}} g^{db}f^D{}_d \right) \\
+ & = & \left( \rho H_{AB} + p_{AB} \right)g^{ab} + g^{ac}g^{bd}f^{C}{}_cf^{D}{}_d\left( \left( \rho H_{BD} + p_{BD} \right) H_{AC} \right. \nonumber \\
+ && \left. - \rho \left(H_{AB}H_{CD} + H_{AD}H_{BC}\right) + H_{BD} p_{AC} + 2n\frac{\partial \tau_{AC}}{\partial H^{BD}} \right) \\
+ \label{eqn:principalSymbol}& = & \left( \rho H_{AB} + p_{AB} \right)g^{ab} + ng^{ac}g^{bd}f^{C}{}_cf^{D}{}_d\left( \tau_{BD} H_{AC} + \tau_{AC} H_{BD} + 2\frac{\partial \tau_{AC}}{\partial H^{BD}} \right. \nonumber \\
+ && \left. + \epsilon \left( H_{AC}H_{BD} - H_{AB}H_{CD} - H_{AD}H_{BC}\right)\right).
+\end{eqnarray}
+For comparison with Beig and Schmidt, note the following
+\begin{equation}
+g^{ab} = h^{ab} - u^au^b = g^{ac} g^{bd} f^C{}_c f^D{}_d H_{CD} - u^au^b
+\end{equation}
+yielding
+\begin{eqnarray}
+\frac{\partial^2 \rho}{\partial f^B{}_b \partial f^A{}_a} & = & -\left( \rho H_{AB} + p_{AB} \right)u^au^b + ng^{ac}g^{bd}f^{C}{}_cf^{D}{}_d\left( \tau_{BD} H_{AC} + \tau_{AC} H_{BD} + \tau_{AB}H_{CD} +  \right. \nonumber \\
+ && \left. + \epsilon \left( H_{AC}H_{BD} - H_{AD}H_{BC}\right) + 2\frac{\partial \tau_{AC}}{\partial H^{BD}}\right). \\
+ & = & - \mu_{AB}u^au^b + U_{ACBD}f^{Ca}f^{Db} = M^{ab}{}_{AB}
+\end{eqnarray}
+with
+\begin{equation}
+\mu_{AB} = \rho H_{AB} + p_{AB}
+\end{equation}
+and
+\begin{equation}
+U_{ACBD} = n\left(\tau_{BD} H_{AC} + \tau_{AC} H_{BD} + \tau_{AB}H_{CD} + 2\frac{\partial \tau_{AC}}{\partial H^{BD}} + 2\epsilon H_{A[C}H_{D]B}\right).
+\end{equation}
+Computationally speaking, this expression is unpleasant. It involves computing the four velocity which can be avoided in all previous expressions. Indeed, even the projection tensor $h_{ab}$ only occurs in the equations of motion as $H^{AB}$ and this can be computed entirely in terms of $g^{ab}$. The expression \ref{eqn:principalSymbol} is the better computational expression.
+
+The second term is essentially a derivative with respect to the body coordinates $X^A$
+\begin{equation}
+\frac{\partial^2 \rho}{\partial f^B \partial f^A{}_a} = \frac{\partial}{\partial f^B }\left(\left( \rho H_{AC} + p_{AC} \right)g^{ac}f^{C}{}_c\right)
+\end{equation}
+but only $N$, $G_{AB}$ and therefore $n$ depend on $f^A$, so
+\begin{equation}
+\frac{\partial^2 \rho}{\partial f^B \partial f^A{}_a} = g^{ac}f^{C}{}_c\left( \frac{\partial \rho}{\partial f^B } H_{AC} + \frac{\partial p_{AC}}{\partial f^B } \right) = g^{ac}f^{C}{}_c\left( n\frac{\partial \epsilon}{\partial f^B } H_{AC} + \epsilon\frac{\partial n}{\partial f^B } H_{AC} + \tau_{AC} \frac{\partial n}{\partial f^B } + n\frac{\partial \tau_{AC}}{\partial f^B } \right).
+\end{equation}
+The only computable quantity here is the derivative of the number density. From \eqref{eqn:numberDensity} we have
+\begin{eqnarray}
+2n\frac{\partial n}{\partial f^A} & =& 2N\frac{\partial N}{\partial X^A} G\det(H^{..}) + N^2\frac{\partial G}{\partial G_{BC}}\frac{\partial G_{BC}}{\partial X^A}\det(H^{..})\\
+ & = & 2 \frac{n^2}{N}\frac{\partial N}{\partial X^A} + N^2GG^{BC}G_{BC,A}\det(H^{..}) \\
+ & = & 2 \frac{n^2}{N}\frac{\partial N}{\partial X^A} + n^2 G^{BC}G_{BC,A}
+\end{eqnarray}
+giving
+\begin{equation}
+\frac{\partial n}{\partial f^A} = \frac{n}{N}\frac{\partial N}{\partial X^A} + \frac{n}{2}G^{BC}G_{BC,A}.
+\end{equation}
+The second derivative under consideration is then
+\begin{equation}
+\frac{\partial^2 \rho}{\partial f^B \partial f^A{}_a} = g^{ac}f^{C}{}_c\left( n\frac{\partial \epsilon}{\partial f^B } H_{AC} + n\frac{\partial \tau_{AC}}{\partial f^B } + \left(\epsilon H_{AC} + \tau_{AC} \right)\left( \frac{n}{N}\frac{\partial N}{\partial X^A} + \frac{n}{2}G^{BC}G_{BC,A}\right) \right).
+\end{equation}
+The remaining derivatives (on $\epsilon$ and $\tau$) being equation of state dependent. The next second derivative term is
+\begin{eqnarray}
+\frac{\partial^2 \rho}{\partial g^{bc} \partial f^A{}_a } & = & \frac{\partial}{\partial g^{bc} }\left(\left( \rho H_{AD} + p_{AD} \right)g^{ad}f^{D}{}_d\right).
+\end{eqnarray}
+That direct derivative produces some nasty Kronecker deltas, so I will use the definition... the truth is I am not able to compute it in any other fashion. Here goes...
+\begin{equation}
+\epsilon^{bc}\frac{\partial}{\partial g^{bc} }g^{ad}f^{D}{}_d = \frac{d}{d\lambda} (g^{ad} + \lambda\epsilon^{ad})f^D{}_d = \epsilon^{ad}f^D{}_d = \epsilon^{bc}\delta^a_bf^D{}_c 
+\end{equation}
+so
+\begin{eqnarray}
+\frac{\partial^2 \rho}{\partial g^{bc} \partial f^A{}_a } & = & \left( \rho H_{AD} + p_{AD} \right)\delta^a_bf^D{}_c + g^{ad}f^{D}{}_d\frac{\partial}{\partial g^{bc} }\left( \rho H_{AD} + p_{AD} \right) \\
+& = & \left( \rho H_{AD} + p_{AD} \right)\delta^a_bf^D{}_c + g^{ad}f^{D}{}_d \left( \frac{\partial H_{AD}}{\partial g^{bc} }\rho  + \frac{\partial\rho}{\partial g^{bc} } H_{AD} + \frac{\partial p_{AD}}{\partial g^{bc} } \right).
+\end{eqnarray}
+Then we can use the definition of the pressure tensor \eqref{eqn:pressureDefinition}
+\begin{eqnarray}
+\frac{\partial^2 \rho}{\partial g^{bc} \partial f^A{}_a } & = & \left( \rho H_{AD} + p_{AD} \right)\delta^a_bf^D{}_c + g^{ad}f^{D}{}_d \left( \frac{\partial H_{AD}}{\partial g^{bc} }\rho  + \left(p_{bc} + \rho h_{bc} \right)\frac{H_{AD}}{2} + \frac{\partial p_{AD}}{\partial g^{bc} } \right)\\
+ & = & \left( \rho H_{AD} + p_{AD} \right)\delta^a_bf^D{}_c + g^{ad}f^{D}{}_d \left( \frac{\partial H_{AD}}{\partial H^{BC}}\frac{\partial H^{BC}}{\partial g^{bc} }\rho  + \left(p_{bc} + \rho h_{bc} \right)\frac{H_{AD}}{2} + \frac{\partial p_{AD}}{\partial H^{BC}}\frac{\partial H^{BC}}{\partial g^{bc} } \right) \\
+ & = & \left( \rho H_{AD} + p_{AD} \right)\delta^a_bf^D{}_c + g^{ad}f^{D}{}_d \left( -H_{AB}H_{DC}\frac{\partial H^{BC}}{\partial g^{bc} }\rho  + \left(p_{bc} + \rho h_{bc} \right)\frac{H_{AD}}{2} + \frac{\partial p_{AD}}{\partial H^{BC}}\frac{\partial H^{BC}}{\partial g^{bc} } \right).
+\end{eqnarray}
+I again use the definition of the derivative
+\begin{equation}
+\epsilon^{bc}\frac{\partial H^{BC}}{\partial g^{bc} } = \epsilon^{bc}\frac{\partial }{\partial g^{bc} } g^{de}f^B{}_df^C{}_e = \frac{d}{d\lambda} (g^{de} + \lambda \epsilon^{de})f^B{}_df^C{}_e = \epsilon^{de}f^B{}_df^C{}_e = \epsilon^{bc}f^B{}_bf^C{}_c
+\end{equation}
+and 
+\begin{eqnarray}
+\frac{\partial^2 \rho}{\partial g^{bc} \partial f^A{}_a } & = & \left( \rho H_{AD} + p_{AD} \right)\delta^a_bf^D{}_c + g^{ad}f^B{}_bf^C{}_cf^{D}{}_d \left( -\rho H_{AB}H_{DC}   + \left(p_{BC} + \rho H_{BC} \right)\frac{H_{AD}}{2} + \frac{\partial p_{AD}}{\partial H^{BC} } \right) \\
+ \nonumber & = & g^{ad}f^B{}_bf^C{}_cf^{D}{}_d \left( -\rho H_{AB}H_{DC}   + \left(p_{BC} + \rho H_{BC} \right)\frac{H_{AD}}{2} + n\frac{\partial \tau_{AD}}{\partial H^{BC} } + \tau_{AD}\frac{\partial n}{\partial H^{BC} } \right) \\
+ && + \left( \rho H_{AD} + p_{AD} \right)\delta^a_bf^D{}_c \\
+ \nonumber & = & g^{ad}f^B{}_bf^C{}_cf^{D}{}_d \left( -\rho H_{AB}H_{DC}   + \left(p_{BC} + \rho H_{BC} \right)\frac{H_{AD}}{2} + n\frac{\partial \tau_{AD}}{\partial H^{BC} } + \tau_{AD}\frac{n}{2} H_{BC} \right) \\
+ && + \left( \rho H_{AD} + p_{AD} \right)\delta^a_bf^D{}_c.
+\end{eqnarray}
+Finally,
+\begin{eqnarray}
+\frac{\partial \rho}{\partial f^A} & = & \epsilon\frac{\partial n}{\partial f^A} + n\frac{\partial \epsilon}{\partial f^A} \\
+ & = & \epsilon\left(\frac{n}{N}\frac{\partial N}{\partial X^A} + \frac{n}{2}G^{BC}G_{BC,A}\right) + n\frac{\partial \epsilon}{\partial f^A}
+\end{eqnarray}
+and all the remaining derivatives depend on the particular background state or the equation of state.
+
+Lets gather all the formulae, for ease.
+\begin{equation}
+\boxed{
+\frac{\partial^2 \rho}{\partial f^B{}_b \partial f^A{}_a} \partial_a f^B{}_b + \frac{\partial^2 \rho}{\partial f^B \partial f^A{}_a} \partial_a f^B + \frac{\partial^2 \rho}{\partial g^{bc} \partial f^A{}_a } \partial_a g^{bc} = \frac{\partial \rho}{\partial f^A} - \frac{g_{bc,a}g^{bc}}{2}\left( \rho H_{AB} + p_{AB} \right)g^{ab}f^{B}{}_b.
+}
+\end{equation}
+or
+\begin{equation}
+M^{ab}{}_{AB} \partial_a \partial_b f^B + L^{a}{}_{AB} f^B{}_a + K^a{}_{bcA} \partial_a g^{bc} = J_A
+\end{equation}
+\begin{equation}
+M^{ab}{}_{AB} \partial_a \partial_b f^B = J_A - L_A - K_A
+\end{equation}
+with\newline
+\hfuzz=8pt % Temporarily increase tolerance on overfull hbox
+\fbox{
+ \addtolength{\linewidth}{-2\fboxsep}%
+ \addtolength{\linewidth}{-2\fboxrule}%
+ \begin{minipage}{\linewidth}
+  \begin{eqnarray}
+  J_A \equiv \frac{\partial \rho}{\partial f^A} - \frac{\partial_a \sqrt{-g}}{\sqrt{-g}}\frac{\partial \rho}{\partial f^A{}_a}  & = & \rho\left(\frac{1}{N}\frac{\partial N}{\partial X^A} + \frac{1}{2}G^{BC}G_{BC,A}\right) + n\frac{\partial \epsilon}{\partial f^A}  - \frac{g_{bc,a}g^{bc}}{2}\left( \rho H_{AB} + p_{AB} \right)g^{ad}f^{B}{}_d, \\
+  \nonumber K_A \equiv \frac{\partial^2 \rho}{\partial g^{bc} \partial
+f^A{}_a} \partial_a g^{bc} & = &  g^{ad}g^{bc}{}_{,a}f^B{}_bf^C{}_cf^{D}{}_d \left( -\rho H_{AB}H_{DC}   + \left(\rho H_{BC} + p_{BC} \right)\frac{H_{AD}}{2} + n\frac{\partial \tau_{AD}}{\partial H^{BC} } + \tau_{AD}\frac{n}{2} H_{BC} \right) \\
+ && + \left( \rho H_{AD} + p_{AD} \right) g^{ac}{}_{,a} f^D{}_c, \\
+  L_{A} \equiv \frac{\partial^2 \rho}{\partial f^B \partial f^A{}_a}
+f^B{}_a & = & g^{ac} f^{C}{}_c f^B{}_a\left( n\frac{\partial
+\epsilon}{\partial f^B } H_{AC} + n\frac{\partial \tau_{AC}}{\partial
+f^B } + \left(\rho H_{AC} + p_{AC} \right)\left(
+\frac{1}{N}\frac{\partial N}{\partial X^B} + \frac{1}{2}G^{DE}G_{DE,B}\right) \right) \\
+  M^{ab}{}_{AB} \equiv \frac{\partial^2 \rho}{\partial f^B{}_b \partial f^A{}_a} & = & \left( \rho H_{AB} + p_{AB} \right)g^{ab} + ng^{ac}g^{bd}f^{C}{}_cf^{D}{}_d\left( \tau_{BD} H_{AC} + \tau_{AC} H_{BD} + 2\frac{\partial \tau_{AC}}{\partial H^{BD}} \right. \nonumber \\
+ && \left. + \epsilon \left( H_{AC}H_{BD} - H_{AB}H_{CD} - H_{AD}H_{BC}\right)\right).
+\end{eqnarray}
+\end{minipage}
+}
+\vspace{10pt}
+
+\hfuzz=1pt % Decrease it again.
+One should note that there is nothing significant about the mixed space tensors $J$, $K$ and $L$ while $M$ on the other hand is directly related to the principal symbol. The equations defined above are shown by Beig and Schmidt to be hyperbolic in the unknown variables $f^A$. The equations are quasi-linear, the second derivative term being linear. However the remaining terms contain polynomial terms of first derivatives of $f^A$ and even arbitrary non-linearity in $f^A$ through $N(f^A)$ and $G_{AB}(f^C)$. The derivatives appearing in the equations above depend on the equation of state and the background state.

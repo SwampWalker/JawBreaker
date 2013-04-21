@@ -1,0 +1,270 @@
+\section{Spherically symmetric spacetime, spherically symmetric body
+manifold}
+
+I consider a body manifold in areal coordinates $(R,\Theta,\Phi)$, a
+spherically symmetric body manifold then has a metric
+\begin{equation}
+dS^2 = G_{AB}dX^AdX^B = e^{2\Sigma(R)}dR^2 + R^2(d\Theta^2 +
+\sin^2\Theta d\Phi^2)
+\end{equation}
+while the spacetime metric in areal coordinates $(t,r,\theta,\phi)$  can be written
+\begin{equation}
+ds^2 = g_{ab}dx^adx^b = -e^{2\lambda(r)}dt^2 + e^{2\sigma(r)}dr^2 + r^2(d\theta^2 +
+\sin^2\theta d\phi^2).
+\end{equation}
+Without losing generality (there is a two parameter family of rotations that result in an equivalent equilibria), we can assume that the configuration is a
+radial displacement only,
+\begin{equation}
+(f^R(t,r,\theta,\phi), f^\Theta(t,r,\theta,\phi),
+f^\Phi(t,r,\theta,\phi)) = (\xi(r), \theta, \phi)
+\end{equation}
+giving a simple configuration gradient
+\begin{equation}
+f^A{}_a = \left\{
+\begin{array}{lr}
+\frac{d\xi(r)}{dr} & A=R,a=r, \\
+1 & A=\Theta,a=\theta\ \mathrm{ or }\ A=\Phi,a=\phi, \\
+0 & \mathrm{otherwise}.
+\end{array}
+\right.
+\end{equation}
+Because of the complication of the resulting formulae, we will write
+subsequent equations as one parameter families of functionals 
+(parameterized by $r$) of the unknown functions $\xi$,
+$\xi'$, $\sigma$ and $\lambda$ (a prime will hereafter denote an
+ordinary derivative with respect to $r$). Everything will depend in
+general on the parameter $r$ so its dependence will be dropped from the
+notation. In order for the elastic matter
+to be at static, the four-velocity must be proportional to
+the timelike Killing vector, so
+\begin{equation}
+u^t = e^{-\lambda(r)}
+\end{equation}
+and all other components vanish. The pressure tensor, written as a
+matrix, is given by
+\begin{equation}
+p_{ab} = \left[
+  \begin{array}{cccc}
+    0 & 0 & 0 & 0 \\
+    0 & n\tau_{RR}\xi'^2 & 0 & 0 \\
+    0 & 0 & n\tau_{\Theta\Theta} & 0 \\
+    0 & 0 & 0 & n\tau_{\Phi\Phi} 
+  \end{array}
+\right]
+\end{equation}
+while the contravariant version is
+\begin{equation}
+p^{ab} = \left[
+  \begin{array}{cccc}
+    0 & 0 & 0 & 0 \\
+    0 & n\tau_{RR}\xi'^2 e^{-4\sigma}& 0 & 0 \\
+    0 & 0 & \frac{n\tau_{\Theta\Theta}}{r^4} & 0 \\
+    0 & 0 & 0 & \frac{n\tau_{\Phi\Phi} }{r^4\sin^4\theta}
+  \end{array}
+\right].
+\end{equation}
+The two independent Einstein equations are then given by
+\begin{equation}
+e^{-2\lambda}\left(G_{tt} - 8\pi T_{tt}\right) =
+\frac{1+e^{-2\sigma}\left(2\sigma' - 1\right)}{r^2} +
+8\pi\rho[\sigma,\xi,\xi']
+= 0
+\end{equation}
+and
+\begin{equation}
+G_{rr} - 8\pi T_{rr} = \frac{1 + 2r\lambda' - e^{2\sigma}}{r^2} -
+8\pi n\tau_{RR}[\sigma,\xi,\xi']\xi'^2 = 0,
+\end{equation}
+and the functional dependence of $\rho$ and $\tau_{RR}$ are yet to be
+shown. With the identification (usual for the derivation of the TOV equations)
+$\sigma(r) = -1/2\ln{\left(1-\frac{2m(r)}{r}\right)}$ the equations
+become
+\begin{equation}
+m' = 4\pi r^2\rho[m,\xi,\xi']
+\end{equation}
+and
+\begin{equation}
+\lambda' = \frac{m + 4\pi n\tau_{RR}\xi'^2r^3 (1-\frac{2m}{r})}{r(r-2m)}
+= \frac{m + 4\pi r^3 p^r{}_r}{r(r-2m)}
+\end{equation}
+which are extremely analogous to the TOV equations where one has $p^r{}_r
+ = p_{rr}/g_{rr} = p(r)$.
+
+The strain tensor takes the following form
+\begin{equation}
+H^{AB}[\sigma,\xi'] = g^{ab}f^A{}_af^B{}_b = \left[
+\begin{array}{ccc}
+e^{-2\sigma}\xi'^2 & 0 & 0\\
+0 & \frac{1}{r^2} & 0 \\
+0 & 0 & \frac{1}{r^2\sin^2\theta} 
+\end{array}
+\right]
+\end{equation}
+its (normalized to zero) trace is
+\begin{equation}
+H[\sigma,\xi,\xi']\equiv H^{AB}G_{AB} -3= e^{2(\Sigma(\xi(r))-\sigma(r))}\xi'^2(r) +
+2\frac{\xi(r)^2}{r^2} - 3
+\end{equation}
+and its inverse is
+\begin{equation}
+H_{AB}[\sigma,\xi'] =  \left[
+\begin{array}{ccc}
+\displaystyle{\frac{e^{2\sigma}}{\xi'^2}} & 0 & 0\\
+0 & r^2 & 0 \\
+0 & 0 & r^2\sin^2\theta 
+\end{array}
+\right].
+\end{equation}
+The trace of the square is a little more complicated. First,
+\begin{equation}
+H^{AB}G_{BC} - \delta^A{}_C = \left[
+\begin{array}{ccc}
+e^{2(\Sigma(\xi(r))-\sigma(r))}\xi'^2(r) - 1 & 0 & 0 \\
+0 & \frac{\xi(r)^2}{r^2} - 1& 0 \\
+0 & 0 & \frac{\xi(r)^2}{r^2} - 1
+\end{array}
+\right]
+\end{equation}
+then
+\begin{equation}
+H_2[\sigma,\xi,\xi'] \equiv \mathrm{Tr}(\mathcal{H}-\mathcal{I})^2 \equiv
+\left(H^{AB}G_{BC} - \delta^A{}_C\right)\left(H^{CB}G_{BA} -
+\delta^C{}_A\right) = \left(e^{2(\Sigma(\xi(r))-\sigma(r))}\xi'^2(r) -
+1\right)^2 + 2\left(\frac{\xi(r)^2}{r^2} - 1\right)^2.
+\end{equation}
+The number density in spacetime is given as
+\begin{equation}
+n[\sigma,\xi,\xi'] =
+N[\xi]\left(\frac{\xi}{r}\right)^2\xi'e^{\Sigma[\xi]-\sigma}
+\end{equation}
+while the energy per particle is
+\begin{eqnarray} 
+\epsilon[\sigma,\xi,\xi'] & = & \displaystyle{m + m\varepsilon(N[\xi]) +
+p(N[\xi])\frac{H[\sigma,\xi,\xi']}{N[\xi]}} 
+  + \frac{m}{8}\left( 2r_lH[\sigma,\xi,\xi']^2 +
+qH_2[\sigma,\xi,\xi']\right)
+\end{eqnarray}
+where $r_l$ is the quantity related to the Lam\'e coefficient which was
+previously just $r$. 
+
+The Piaola-Kirchhoff stress tensor can be written in the following way
+or in a slightly more isotropic looking form
+\begin{equation}
+\tau_{AB}[\sigma,\xi,\xi'] = Q[\sigma,\xi,\xi']G_{AB}[\xi] +
+\frac{mq}{4}\left(H^{CD}G_{AC}G_{BD}\right)
+\end{equation}
+with
+\begin{equation}
+Q[\sigma,\xi,\xi'] = \left(\frac{p(N[\xi])}{N[\xi]} +
+\frac{mr_l}{2}H[\sigma,\xi,\xi']-\frac{mq}{4}\right)
+\end{equation}
+this can be written as
+\begin{equation}
+\tau_{AB} = \left[
+  \begin{array}{ccc}
+    Q[\sigma,\xi,\xi']e^{2\Sigma[\xi]} +
+\frac{mq}{4}e^{4\Sigma[\xi]-2\sigma}\xi'^2& 0 & 0\\
+    0 & Q[\sigma,\xi,\xi']\xi^2 +
+\frac{mq}{4}\frac{\xi^4}{r^2}& 0 \\
+    0 & 0 & \left(Q[\sigma,\xi,\xi']\xi^2 +
+\frac{mq}{4}\frac{\xi^4}{r^2}\right)\sin^2\theta
+  \end{array}
+\right].
+\end{equation}
+It is slightly obscure, but when there is no strain $Q=p/N - mq/4$, $\xi'=1$ and $\Sigma=\sigma$, thus the isotropic pressure tensor is regenerated.
+
+The $r$-component of the conservation equations can be written
+\begin{equation}
+\left(\delta_r^c + u_ru^c\right) \left(\partial_a p^a{}_c +
+\Gamma^a_{ad}p^d{}_c - \Gamma^d_{ac}p^a{}_d\right) + \rho u^a
+\left(\partial_a u_r - \Gamma^c_{ar}u_c\right) = 0.
+\end{equation}
+but only the $t$-component of the four-velocity is non-zero, so
+\begin{equation}
+\partial_r p^r{}_r +
+\Gamma^a_{ar}p^r{}_r - \Gamma^d_{ar}p^a{}_d + \rho
+\Gamma^t_{tr}.
+\end{equation}
+The Christoffel symbols are
+\begin{eqnarray}
+\Gamma^t_{tr} & = & \lambda' \\
+\Gamma^r_{rr} & = & \sigma' \\
+\Gamma^\theta_{\theta r} & = \Gamma^\phi_{\phi r} = \frac{1}{r}
+\end{eqnarray}
+and the radial derivative of the determinant (the contraction of the Christoffel symbols) is
+\begin{equation}
+\Gamma^a_{ar} \equiv \frac{\partial_r \sqrt{-g}}{\sqrt{-g}} =
+\frac{\partial_r e^{\lambda+\sigma}r^2\sin
+\theta}{e^{\lambda+\sigma}r^2\sin \theta} = \frac{2}{r} + \sigma' + \lambda'.
+\end{equation}
+Now note that $\tau_{\phi\phi} = \tau_{\theta\theta}\sin^2\theta$ so
+that $p^\phi{}_\phi = n\tau_{\theta\theta}/(r^2) = p^\theta{}_\theta$
+\begin{equation}
+(\partial_r p^r{}_r)[\sigma,\sigma',\xi,\xi',\xi''] + \lambda'
+\left( p^r{}_r[\sigma,\xi,\xi'] + \rho[\sigma,\xi,\xi']\right)
++\frac{2}{r}\left(p^r{}_r[\sigma,\xi,\xi'] -
+p^\theta{}_\theta[\sigma,\xi,\xi']\right) = 0.
+\end{equation}
+The TOV equation for hydrostatic equilibrium falls directly out of this
+equation. There $p^a{}_b = ph^a{}_b = p\delta^a{}_b$ for $a,b\neq t$, and
+in particular for hydro $p^r{}_r = p^\theta{}_\theta =p$.
+
+Finally, note that
+\begin{eqnarray}
+(\partial_r p^r{}_r)[\sigma,\sigma',\xi,\xi',\xi''] & = & \partial_r\left(n[\sigma,\xi,\xi']\tau_{RR}[\sigma,\xi,\xi']\xi'^2 e^{-2\sigma}\right) \\
+ \nonumber & = & n[\sigma,\xi,\xi']\tau_{RR}[\sigma,\xi,\xi']2\xi'\xi'' e^{-2\sigma} - 2\sigma'n[\sigma,\xi,\xi']\tau_{RR}[\sigma,\xi,\xi']\xi'^2 e^{-2\sigma} \\
+ && + (\partial_r n)[\sigma,\sigma',\xi,\xi',\xi'']\tau_{RR}[\sigma,\xi,\xi']\xi'^2 e^{-2\sigma} + n[\sigma,\xi,\xi'](\partial_r \tau_{RR})[\sigma,\sigma',\xi,\xi',\xi'']\xi'^2 e^{-2\sigma},
+\end{eqnarray}
+\begin{eqnarray}
+(\partial_r n)[\sigma,\sigma',\xi,\xi',\xi''] & = & \partial_r\left(
+N[\xi]\left(\frac{\xi}{r}\right)^2\xi'e^{\Sigma[\xi]-\sigma}\right) \\
+\nonumber & = & \frac{\partial N}{\partial R}[\xi]\xi'^2\left(\frac{\xi}{r}\right)^2e^{\Sigma[\xi]-\sigma}
++ 2\left(\frac{\xi}{r}\right)\left(\frac{\xi'}{r}-\frac{\xi}{r^2}\right)\xi'e^{\Sigma[\xi]-\sigma} \\
+&& +N[\xi]\left(\frac{\xi}{r}\right)^2\xi''e^{\Sigma[\xi]-\sigma} +
+N[\xi]\left(\frac{\xi}{r}\right)^2\xi'e^{\Sigma[\xi]-\sigma}\left(\frac{\partial \Sigma}{\partial R}\xi' - \sigma'\right),
+\end{eqnarray}
+\begin{eqnarray}
+(\partial_r\tau_{rr})[\sigma,\sigma',\xi,\xi',\xi''] & = & \partial_r\left(Q[\sigma,\xi,\xi']e^{2\Sigma[\xi]} +
+\frac{mq}{4}e^{4\Sigma[\xi]-2\sigma}\xi'^2\right) \\
+\nonumber & = & (\partial_rQ)[\sigma,\sigma',\xi,\xi',\xi'']e^{2\Sigma[\xi]} + 2Q[\sigma,\xi,\xi']e^{2\Sigma[\xi]} \frac{\partial \Sigma}{\partial R}\xi' \\
+\nonumber && + 2\frac{mq}{4}e^{4\Sigma[\xi]-2\sigma}\xi'\xi'' + 
+\frac{mq}{4}e^{4\Sigma[\xi]-2\sigma}\xi'^2\left(4\frac{\partial\Sigma}{\partial
+R}\xi'-2\sigma'\right)\\
+&& + \frac{m}{4}\frac{\partial q}{\partial R}
+e^{4\Sigma[\xi]-2\sigma}\xi'^3
+\end{eqnarray}
+\begin{eqnarray}
+(\partial_rQ)[\sigma,\sigma',\xi,\xi',\xi''] & = & \partial_r\left(\frac{p(N[\xi])}{N[\xi]} +
+\frac{mr_l}{2}H[\sigma,\xi,\xi']-\frac{mq}{4}\right)\\
+\nonumber & = & \frac{\partial p}{\partial R}\frac{\xi'}{N[\xi]} - \frac{p(N[\xi])}{N[\xi]^2}\frac{\partial N}{\partial R}\xi' +
+\frac{mr_l}{2}(\partial_rH)[\sigma,\sigma',\xi,\xi'\xi'']\\
+&& + \left(\frac{m}{2}\frac{\partial r_l}{\partial R} H -
+\frac{m}{4}\frac{\partial q}{\partial R}\right)\xi',
+\end{eqnarray}
+and
+\begin{eqnarray}
+(\partial_rH)[\sigma,\sigma',\xi,\xi',\xi''] & = & \partial_r\left( e^{2(\Sigma[\xi]-\sigma)}\xi'^2 +
+2\frac{\xi^2}{r^2} - 3\right) \\
+& = & 2\xi'\xi''e^{2(\Sigma(\xi(r))-\sigma(r))} + 2e^{2(\Sigma[\xi]-\sigma)}\xi'^2\left(\frac{\partial \Sigma}{\partial R} - \sigma'\right) + 4\frac{\xi\xi'}{r^2} - 4\frac{\xi^2}{r^3}.
+\end{eqnarray}
+
+Those are all the pieces. We now name the functionals,
+\begin{equation}
+\mathcal{D}[\sigma,\sigma',\xi,\xi'] \equiv \frac{d\sigma}{dr} + \frac{e^{2\sigma}-1}{2r} + 4\pi r\rho[\sigma,\xi,\xi'] e^{2\sigma},
+\label{eq:functionaltt}
+\end{equation}
+\begin{equation}
+\mathcal{E}[\sigma,\lambda',\xi,\xi'] \equiv \frac{d\lambda}{dr} + \frac{1-e^{2\sigma-1}+8\pi p_{rr}[\sigma,\xi,\xi']r^2}{2r},
+\label{eq:functionalrr}
+\end{equation}
+\begin{equation}
+\mathcal{F}[\sigma,\sigma',\lambda',\xi,\xi',\xi''] \equiv 
+(\partial_r p^r{}_r)[\sigma,\sigma',\xi,\xi',\xi''] + \lambda'
+\left( p^r{}_r[\sigma,\xi,\xi'] + \rho[\sigma,\xi,\xi']\right)
++\frac{2}{r}\left(p^r{}_r[\sigma,\xi,\xi'] -
+p^\theta{}_\theta[\sigma,\xi,\xi']\right).
+\label{eq:functionalhydro}
+\end{equation}
+A curious and useful property of these equations follow from the fact that they only depend on the derivative of $\lambda$. This occurs because one is free to specify the rate of time flow (the lapse) of any of the coordinate observers. The Einstein equations then determine the speed of clocks of neighbouring observers through the derivatives. The usefulness follows from the fact that we can set $\lambda|_{r=0}=0$ and integrate outwards. This property is shared by the perfect fluid TOV equations. 
+
+The problem to be solved can be phrased: find $\sigma,\lambda,\xi$ such that $\mathcal{D}=\mathcal{E}=\mathcal{F}=0$ subject to appropriate boundary conditions.

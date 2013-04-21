@@ -99,7 +99,6 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         outputEveryField = new javax.swing.JFormattedTextField();
         centralPressureLabel = new javax.swing.JLabel();
         centralPressureField = new javax.swing.JFormattedTextField();
-        createTOVButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         massLabel = new javax.swing.JLabel();
         MassField = new javax.swing.JTextField();
@@ -111,6 +110,10 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         domainLabel = new javax.swing.JLabel();
         logarithmDomain = new javax.swing.JCheckBox();
         logarithmRange = new javax.swing.JCheckBox();
+        spectralPanel = new javax.swing.JPanel();
+        rankSpinner = new javax.swing.JSpinner();
+        jLabel1 = new javax.swing.JLabel();
+        createTOVButton = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1224, 768));
         setMinimumSize(new java.awt.Dimension(1224, 768));
@@ -172,7 +175,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
                             .addComponent(stepSizeLabel)
                             .addComponent(minPressureLabel)
                             .addComponent(outputEveryLabel))
-                        .addGap(0, 155, Short.MAX_VALUE))
+                        .addGap(0, 158, Short.MAX_VALUE))
                     .addComponent(outputEveryField))
                 .addContainerGap())
         );
@@ -201,13 +204,6 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
             )
         ));
         centralPressureField.setText("7.5e-2");
-
-        createTOVButton.setText("Make Model");
-        createTOVButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createTOVButtonActionPerformed(evt);
-            }
-        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Properties"));
 
@@ -263,15 +259,17 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
                     .addComponent(rangeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(domainComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(massLabel)
-                            .addComponent(MassField)
+                            .addComponent(MassField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(radiusLabel)
                             .addComponent(radiusField, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(domainLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
                         .addComponent(logarithmDomain))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(rangeLabel)
@@ -283,14 +281,16 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(massLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(MassField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(radiusLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(radiusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(massLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(MassField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(radiusLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(radiusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(domainLabel)
                     .addComponent(logarithmDomain))
@@ -305,18 +305,52 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
                 .addContainerGap())
         );
 
+        spectralPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectral Properties"));
+
+        rankSpinner.setModel(new javax.swing.SpinnerNumberModel(10, 1, 255, 1));
+
+        jLabel1.setText("Number of abscissas");
+
+        javax.swing.GroupLayout spectralPanelLayout = new javax.swing.GroupLayout(spectralPanel);
+        spectralPanel.setLayout(spectralPanelLayout);
+        spectralPanelLayout.setHorizontalGroup(
+            spectralPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, spectralPanelLayout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(rankSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        spectralPanelLayout.setVerticalGroup(
+            spectralPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(spectralPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(spectralPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rankSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap(45, Short.MAX_VALUE))
+        );
+
+        createTOVButton.setText("Make Model");
+        createTOVButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createTOVButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelRightLayout = new javax.swing.GroupLayout(jPanelRight);
         jPanelRight.setLayout(jPanelRightLayout);
         jPanelRightLayout.setHorizontalGroup(
             jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRightLayout.createSequentialGroup()
+            .addGroup(jPanelRightLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(eosComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rkPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(centralPressureField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelRightLayout.createSequentialGroup()
+                .addGroup(jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(spectralPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(eosComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rkPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(centralPressureField)
+                    .addGroup(jPanelRightLayout.createSequentialGroup()
                         .addGroup(jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(eosLabel)
                             .addComponent(centralPressureLabel)
@@ -338,9 +372,11 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
                 .addGap(24, 24, 24)
                 .addComponent(rkPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spectralPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(createTOVButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(24, 24, 24)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -367,6 +403,8 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         TOVBuilder.evolve(rk4TOV, eos, centralPressure, stepSize, outputEvery, minPressure);
         rk4TOV.computeSecondaries(eos);
         tovDataset.add(0, rk4TOV);
+        TOVData spectralTov = new TOVData();
+        TOVBuilder.spectralGuess(spectralTov, rk4TOV, eos, null);
         chart.getXYPlot().datasetChanged(null);
     }//GEN-LAST:event_createTOVButtonActionPerformed
 
@@ -395,6 +433,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
     private javax.swing.JLabel domainLabel;
     private javax.swing.JComboBox eosComboBox;
     private javax.swing.JLabel eosLabel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelLeft;
     private javax.swing.JPanel jPanelRight;
@@ -410,7 +449,9 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
     private javax.swing.JLabel radiusLabel;
     private javax.swing.JComboBox rangeComboBox;
     private javax.swing.JLabel rangeLabel;
+    private javax.swing.JSpinner rankSpinner;
     private javax.swing.JPanel rkPanel;
+    private javax.swing.JPanel spectralPanel;
     private javax.swing.JFormattedTextField stepSizeField;
     private javax.swing.JLabel stepSizeLabel;
     // End of variables declaration//GEN-END:variables

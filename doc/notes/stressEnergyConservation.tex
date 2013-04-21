@@ -1,0 +1,58 @@
+\section{Conservation of stress-energy}
+
+Conservation of stress energy implies the following equations
+\begin{equation}
+\nabla_a T^{ab} = \nabla_a p^{ab} + u^b \nabla_a \rho u^a + \rho u^a \nabla_a u^b.
+\end{equation}
+The contraction with the four-velocity in particular yields the following equation
+\begin{equation}
+u_b\nabla_ap^{ab} = \nabla_a \rho u^a
+\end{equation}
+and differentiating the expression $u_bp^{ab}$ gives
+\begin{equation}
+-p^{ab}\nabla_au_b = \nabla_a \rho u^a.
+\end{equation}
+This can now be expanded
+\begin{eqnarray}
+-\frac{p^{ab}\nabla_au_b}{n} = -\tau^{ab}\nabla_au_b & = &  \frac{\nabla_a n\epsilon u^a}{n} = u^a \nabla_a \epsilon +  \frac{\epsilon}{n}\nabla_a nu^a = u^a \nabla_a \epsilon \\
+-\tau^{ab}\nabla_au_b & = &  u^a \frac{\partial \epsilon}{\partial H^{BC}}\frac{\partial H^{BC}}{\partial x^a} = u^a\frac{\tau_{BC}}{2}\frac{\partial }{\partial x^a} g^{bc}f^B{}_bf^C{}_c \\
+& = &u^a\frac{\tau_{BC}}{2} \left( g^{bc}{}_{,a}f^B{}_bf^C{}_c  + g^{bc}f^B{}_{ab}f^C{}_c + g^{bc}f^B{}_bf^C{}_{ac}\right).
+\end{eqnarray}
+Now, since $u^af^A{}_a = 0$, $u^a{}_{,b}f^A{}_a = - u^af^A{}_{ab}$ and
+\begin{eqnarray}
+-\tau^{ab}\nabla_au_b & = &  \frac{\tau_{BC}}{2} \left( u^a g^{bc}{}_{,a}f^B{}_bf^C{}_c  - u^a{}_{,b}g^{bc}f^B{}_af^C{}_c - u^a{}_{,c}g^{bc}f^B{}_bf^C{}_a\right) \\
+& = &  u^a g^{bc}{}_{,a}\frac{\tau_{bc}}{2}  - u^a{}_{,b}g^{bc}\frac{\tau_{ac}}{2} - u^a{}_{,c}g^{bc}\frac{\tau_{ab}}{2} = u^{a'} g^{b'c'}{}_{,a'}\frac{\tau_{b'c'}}{2}  - u^a{}_{,b'}g^{b'c'}\frac{\tau_{ac'}}{2} - u^a{}_{,c}g^{bc}\frac{\tau_{ab}}{2} \\
+& = & u^{c} g^{ab}{}_{,c}\frac{\tau_{ab}}{2}  - u^a{}_{,c}g^{cb}\frac{\tau_{ab}}{2} - u^a{}_{,c}g^{bc}\frac{\tau_{ab}}{2} = \frac{\tau^{a'b'}}{2} g_{aa'}g_{bb'}\left( u^{c} g^{ab}{}_{,c}  - 2u^a{}_{,c}g^{cb}\right).
+\end{eqnarray}
+Substituting $u^a{}_{,c} = \nabla_c u^a - \Gamma^a_{cd}u^d$
+\begin{eqnarray}
+-\tau^{ab}\nabla_au_b & = & \frac{\tau^{a'b'}}{2} g_{aa'}g_{bb'}\left( u^{c} g^{ab}{}_{,c}  - 2g^{cb} \nabla_c u^a + 2\Gamma^a_{cd}u^dg^{cb}\right) \\
+ & = & -\tau^{a'b'} \nabla_{b'} u_{a'} + \frac{\tau^{a'b'}}{2}\left( 2\Gamma_{a'b'd}u^d + g_{aa'}g_{bb'}u^cg^{ab}{}_{,c} \right).
+\end{eqnarray}
+Using properties of the Levi-Civita connection $\nabla_c g^{ab} = g^{ab}{}_{,c} + \Gamma^a_{cd}g^{bd} + \Gamma^b_{cd}g^{ad}$ and
+\begin{eqnarray}
+-\tau^{ab}\nabla_au_b & = & -\tau^{a'b'} \nabla_{b'} u_{a'} + \frac{\tau^{a'b'}}{2}\left( 2\Gamma_{a'b'd}u^d - g_{aa'}g_{bb'}u^c(\Gamma^a_{cd}g^{bd} + \Gamma^b_{cd}g^{ad}) \right)\\
+& = & -\tau^{ab} \nabla_{b} u_{a} + \frac{\tau^{a'b'}}{2}\left( 2\Gamma_{a'b'd}u^d - u^c \Gamma_{a'cb'} - u^c\Gamma_{b'ca'} \right)\\
+& = & -\tau^{ab} \nabla_{b} u_{a} + \frac{\tau^{ab}}{2}u^c\left( \Gamma_{abc} - \Gamma_{bac} \right)\\
+& = & -\tau^{ab} \nabla_{b} u_{a},
+\end{eqnarray}
+where the last propertry follows from contracting a symmetric tensor with an anti-symmetric one. This equation is therefore trivially satisfied by virtue of the definition of the pressure tensor.
+
+It turns out to be simpler to deal with the divergence of the mixed
+stress energy tensor
+\begin{equation}
+\nabla_a T^a{}_b = \nabla_a\left( p^a{}_b + \rho u^au_b \right) =
+\nabla_a p^a{}_b + u_b\nabla_a\rho u^a + \rho u^a\nabla_a u_b = 0.
+\end{equation}
+These remaining conservation laws may be simplified by substituting $\nabla_a \rho u^a = u_c \nabla_ap^{ac}$ so that
+\begin{equation}
+\left(\delta_b^c + u_bu^c\right) \nabla_a p^a{}_c + \rho u^a \nabla_a
+u_b = 0
+\end{equation}
+for $i=1\dots 3$ so long as the slicing is time-like. Expanding the covariant derivatives
+\begin{equation}
+\left(\delta_b^c + u_bu^c\right) \left(\partial_a p^a{}_c +
+\Gamma^a_{ad}p^d{}_c - \Gamma^d_{ac}p^a{}_d\right) + \rho u^a
+\left(\partial_a u_b - \Gamma^c_{ab}u_c\right).
+\end{equation}
+This completes the description of the equations of motion, as derived from stress-energy conservation.

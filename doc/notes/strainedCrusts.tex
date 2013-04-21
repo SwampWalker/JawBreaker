@@ -1,0 +1,76 @@
+\section{Spherically symmetric neutron stars with strained crusts}
+Since we have the governing bulk equations, we can now complete the description of the problem with boundary conditions. To specify a background state, we will first solve the TOV equations with a prescribed equation of state; that is we will solve
+\begin{equation}
+\frac{dM}{dR} - 4\pi\rho R^2=0
+\end{equation}
+\begin{equation}
+\frac{dp}{dR} + (p+\rho)\frac{M+4\pi R^3p}{R(R-2M)} = 0,
+\end{equation}
+subject to the usual boundary conditions $m_{r=0}=0$ and $p|_{r=0}=p_c$ and the relation $\Sigma = -1/2\ln(1 - 2m/R)$. The equation of state used to produce the stellar model can then be used to produce $N(p)$. A given density or pressure will correspond to the boundary between the crust and the core, from the radius where that occurs $R_c$ to the surface $R_s$ will correspond to the domain of the body manifold $\mathcal{B}$.
+
+To create the model with the strained crust, the equation of state must be modified in some way. If a realistic equation of state is used, the temperature can be altered, otherwise one must use some other prescription to estimate a pressure loss/gain. The problem then separates into two domains, the interior, where the TOV equations may be solved, and the crust where the elasticity equations must be solved. The new core radius $r_c$ is an unknown parameterizing this problem, and with it comes a single condition
+\begin{equation}
+\mathcal{N}[m,p,r_c] \equiv 4\pi\int_0^{r_c}{Ne^{\Sigma}R^2dR} - 4\pi\int_0^{R_c}{ne^{\sigma}r^2dr} = 0;
+\label{eq:coreNumberConservation}
+\end{equation}
+i.e. the total number of particles in the core is the same in both models. The boundary condition on $\xi$ at this point is simply
+\begin{equation}
+\xi(r_c) = R_c
+\end{equation}
+while at the outer boundary $r_s$, which is also an unknown,
+\begin{equation}
+\xi(r_s) = R_s.
+\end{equation}
+However, in order to be in true equilibrium, the pressure must be constant across the boundary
+\begin{equation}
+\left[p_{rr}\right]_{r_c} = 0,
+\end{equation}
+the radial pressure is constant across the crust-core boundary. This can be expanded
+\begin{equation}
+p(r_c^-) - \frac{p_{rr}(r_c^+)}{e^{2\sigma}} = 0
+\end{equation}
+so that
+\begin{eqnarray}
+\frac{n\tau_{RR}\xi'^2}{e^{2\sigma}} = n\xi'^2e^{-2\sigma}\left(Q[\sigma,\xi,\xi']e^{2\Sigma[\xi]} +
+\frac{mq}{4}e^{4\Sigma[\xi]-2\sigma}\xi'^2\right) & = & p(r_c^-) \\
+\left(N(R_c)\left(\frac{R_c}{r_c}\right)^2\xi'e^{\Sigma(R_c)-\sigma(r_c)}\right)\xi'^2\left(Q[\sigma,\xi,\xi']e^{2\Sigma(R_c)-2\sigma(r_c)} + \frac{mq}{4}e^{4\Sigma(R_c)-4\sigma(r_c)}\xi'^2\right)& = & p(r_c^-) \\
+\label{eq:coreBoundaryPressure}\mathcal{M}[\sigma,\xi,\xi'] \equiv N(R_c)\left(\frac{R_c}{r_c}\right)^2\xi'^3\left(Q[\sigma,\xi,\xi']e^{3\Sigma(R_c)-3\sigma(r_c)} + \frac{mq}{4}e^{5\Sigma(R_c)-5\sigma(r_c)}\xi'^2\right)& = & p(r_c^-)
+\end{eqnarray}
+here
+\begin{eqnarray}
+Q & = & \left(\frac{p(R_c)}{N(R_c)} +
+\frac{mr_l}{2}H[\sigma,\xi,\xi']-\frac{mq}{4}\right) \\
+& = & \left(\frac{p(R_c)}{N(R_c)} +
+\frac{mr_l}{2}\left(e^{2(\Sigma(R_C)-\sigma(r_c))}\xi'^2(r) +
+2\left(\frac{R_c}{r_c}\right)^2 - 3\right)-\frac{mq}{4}\right)
+\end{eqnarray}
+so that we have a quintic equation for $\xi'|_{r_c}$ to ensure the continuity of pressure. Finally, the surface must have zero pressure
+\begin{equation}
+\mathcal{P}[\sigma,\xi,\xi'] \equiv p_{rr}[\sigma,\xi,\xi']_{r_s} = 0,
+\label{eq:surfacePressure}
+\end{equation}
+for which the central pressure $p_c$ provides the degree of freedom. In the interior, we solve the TOV equations
+\begin{equation}
+\mathcal{T}[m,m',p] \equiv \frac{dm}{dr} - 4\pi\rho(p) r^2=0
+\label{eq:tovrr}
+\end{equation}
+\begin{equation}
+\mathcal{O}[m,p,p'] \equiv \frac{dp}{dr} + (p+\rho)\frac{m+4\pi r^3p}{r(r-2m)} = 0,
+\label{eq:tovhydro}
+\end{equation}
+\begin{equation}
+\mathcal{V}[\lambda',m,p] \equiv \frac{d\lambda}{dr} - \frac{m+4\pi r^3p}{r(r-2m)} = 0,
+\label{eq:tovtt}
+\end{equation}
+subject to the three boundary conditions at the centre $p|_{r=0} = p_c$, $m|_{r=0}=0$ and $\lambda|_{r=0}=0$. Although $\lambda$ will be shifted once the solution is found. In the crust, one solves the equations \eqref{eq:functionaltt}, \eqref{eq:functionalrr} and \eqref{eq:functionalhydro} subject to the four boundary condition 
+\begin{equation}
+m|_{r=r_c^+}=m|_{r=r_c^-}
+\end{equation}
+\begin{equation}\lambda|_{r=r_c^+}=\lambda|_{r=r_c^-}
+\end{equation}
+\begin{equation}
+\xi|_{r=r_c}=R_c.
+\end{equation}
+Finally, there are the equations \eqref{eq:coreBoundaryPressure}, \eqref{eq:coreNumberConservation} and \eqref{eq:surfacePressure} to determine the coefficients $p_c$, $r_c$ and $r_s$.
+
+It is clear that for some problems a solution will simply not exist. If the pressure is sapped too much from the equation of state, the total particle number attainable may be insufficient to represent the core. In that case a black hole would form (assuming that the equation of state is the realistic one) and the crust would possibly surround that. The above problem could be modified to account for that event.

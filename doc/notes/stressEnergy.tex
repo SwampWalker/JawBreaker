@@ -1,0 +1,65 @@
+\section{Stress-energy and the second Piaola-Kirchhoff tensor}
+ When the action of the elastic matter is given as
+\begin{equation}
+\label{eqn:action}
+S[f] = \int{\rho(f,df,g)\sqrt{-g}d^4x}
+\end{equation}
+and I will immediately point out that this action can be written to depend only on $H^{AB}$ and $f^A$ since any other combination of $g$ and $df$ would not be covariant. The stress-energy tensor is given as
+\begin{equation}
+T_{ab} = 2 \frac{\partial\rho}{\partial g^{ab}} - \rho g_{ab}.
+\end{equation}
+or
+\begin{equation}
+T_{ab} =  \rho u_au_b + p_{ab}.
+\end{equation}
+so long as the pressure tensor $p_{ab}$ is given by
+\begin{equation}
+\label{eqn:pressureDefinition}
+p_{ab} = 2 \frac{\partial\rho}{\partial g^{ab}} - \rho h_{ab}.
+\end{equation}
+Defining the energy per particle $\epsilon$ (related to the specific internal energy when there is only one particle species as $\epsilon = m(1 + \varepsilon)$) as
+\begin{equation}
+\rho = n\epsilon
+\end{equation}
+the pressure tensor is expanded
+\begin{equation}
+p_{ab} = 2 n\frac{\partial\epsilon}{\partial g^{ab}} + 2 \epsilon\frac{\partial n}{\partial g^{ab}} - \rho h_{ab}.
+\end{equation}
+The volume form associated with the body metric can be used together with the particle density to produce a particle 3-form
+\begin{equation}
+N_{ABC} = N \sqrt{G}\epsilon_{ABC}
+\end{equation}
+which can be pulled back to get the particle 3-form on the spacetime
+\begin{equation}
+n_{abc} = f^{A}{}_{a}f^{B}{}_{b}f^{C}{}_{c}N_{ABC}.
+\end{equation}
+The square of the particle density three form gives the number density squared on spacetime
+\begin{equation}
+n^2 = \frac{n_{abc}n^{abc}}{3!} = \frac{n_{abc}n_{def}g^{ad}g^{be}g^{cf}}{3!} \equiv \frac{n_{abc}n_{def}h^{ad}h^{be}h^{cf}}{3!}
+\end{equation}
+which can be written as a determinant
+\begin{equation}
+\label{eqn:numberDensity}
+n^2 =  \frac{N_{ABC}N_{DEF}H^{AD}H^{BE}H^{CF}}{3!} = N^2G\frac{\epsilon_{ABC}\epsilon_{DEF}H^{AD}H^{BE}H^{CF}}{3!} \equiv N^2G \det(H^{..}).
+\end{equation}
+The derivative of a determinant is given by the Jacobi formula, so
+\begin{equation}
+\frac{\partial n^2}{\partial H^{AB}} = N^2G\frac{\partial \det(H^{..})}{\partial H^{AB}} = N^2 G \det(H^{..}) H_{AB} = n^2 H_{AB}
+\end{equation}
+and $H_{AB}$ is the inverse of $H^{AB}$, that is $H^{AB}H_{BC} = \delta^A{}_C$. This relation can be pushed forward
+\begin{equation}
+\frac{\partial n^2}{\partial g^{ab}} = \frac{\partial n^2}{\partial H^{AB}} \frac{\partial H^{AB}}{\partial g^{ab}} = 2nf^A{}_af^{B}{}_b\frac{\partial n}{\partial H^{AB}} = n^2 h_{ab}
+\end{equation}
+so that
+\begin{equation}
+\frac{\partial n}{\partial g^{ab}} = \frac{nh_{ab}}{2}
+\end{equation}
+and the pressure tensor can finally be written in terms of the second Piaola-Kirchhoff tensor $\tau_{ab} = 2\partial\epsilon / \partial g^{ab}$
+\begin{equation}
+p_{ab} = n\tau_{ab}.
+\end{equation}
+One should note that because the energy per particle can only depend on the metric $g^{ab}$ through the push forward $H^{AB}$ (as shown in Beig and Schmidt)
+\begin{equation}
+\tau_{ab} = 2 \frac{\partial \epsilon}{\partial g^{ab}} = 2\frac{\partial \epsilon}{\partial H^{AB}}\frac{\partial H^{AB}}{\partial g^{ab}} = \tau_{AB}f^A{}_af^{B}{}_b,
+\end{equation}
+i.e. there is a natural relation between the spacetime tensor and the body tensor. Further, if one defines $H = \det(H_{..}) = 1/\det(H^{..})$ then $n=N\sqrt{G/H}$ and the spacetime number density is the body number density scaled by the ratio of volumes. Finally note that because of the form of $\tau_{ab}$ there is the identity $u^bp_{ab} = 0$.

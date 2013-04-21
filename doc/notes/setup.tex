@@ -1,0 +1,15 @@
+\section{Tensors on the spacetime and the body manifold}
+
+The following is basically Beig and Schmidt (2003). We take as the fundamental variable in elasticity the configuration, a mapping from spacetime $(\mathcal{M},g_{ab})$ to the body or material manifold $(\body,G_{AB})$ given by $f:\mathcal{M}\rightarrow \body$. In local coordinates $X^A=f^A(x^a)$. The pre-image of a point in $\mathcal{B}$ is the worldline of a material particle and it should be timelike. The normalized tangent vector to the world line must be orthogonal to the gradient of the map $f$ since the particle should not change identity along its own evolution, thus
+\begin{equation}
+u^a\partial_a f^A = 0.
+\end{equation}
+On the body manifold $\body$ we have, as mentioned above, the metric tensor $G_{AB}$ as well as the particle number density $N$. We push push forward the spacetime metric $g_{ab}$ onto the body manifold $\body$ in order to measure its distortion in a coordinate free manner. This push-forward is defined as
+\begin{equation}
+H^{AB} = f^A{}_{,a}f^B{}_{,b}g^{ab} \equiv f^A{}_{,a}f^B{}_{,b}(g^{ab}+u^au^b) = f^A{}_{,a}f^B{}_{,b}h^{ab}.
+\end{equation}
+with the tensor
+\begin{equation}
+h_{ab} = g_{ab} + u_au_b
+\end{equation}
+being the projection tensor onto the (congruence) of the elastic particles. Because the only mixed tensor to appear will be $f^A{}_{,a}$ the derivative will always be implied so $f^A{}_a \equiv \partial_a f^A$ and $f^A{}_{ab} \equiv \partial_a\partial_b f^A$.
