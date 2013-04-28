@@ -1,10 +1,10 @@
 package ca.tonita.physics.gr;
 
-import ca.tonita.math.numerical.NonLinearFirstOrderODESystem;
-import ca.tonita.math.numerical.QuasiLinearFirstOrderODESystem;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.math.numerical.NonLinearFirstOrderODEBean;
+import ca.tonita.math.numerical.NonLinearFirstOrderODESystem;
 import ca.tonita.math.numerical.ODEIndexer1D;
+import ca.tonita.math.numerical.QuasiLinearFirstOrderODESystem;
 import ca.tonita.math.numerical.spectral.SpectralVector1D;
 
 /**
@@ -98,9 +98,9 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
      */
     @Override
     public NonLinearFirstOrderODEBean equations(int iR, double r, double[] y, double[] dy, double[] parameters, int type) {
-        if (iR == 0) {
-            double[] residue = bean.getResidue();
-            double[][] jacobian = bean.getJacobian();
+        double[] residue = new double[3];
+        double[][] jacobian = new double[3][7];
+        if (type == NonLinearFirstOrderODESystem.LEFTBOUNDARY) {
             for (int i = 0; i < residue.length; i++) {
                 residue[i] = dy[i];
                 for (int j = 0; j < jacobian[0].length; j++) {
@@ -110,7 +110,6 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
             }
         } else {
             // Residue.
-            double[] residue = bean.getResidue();
             double mass = y[1];
             double pressure = y[0];
             double dlambdadr = (mass + 4 * Math.PI * Math.pow(r, 3) * pressure)
@@ -121,7 +120,6 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
             residue[iLambda] = dy[iLambda] - dlambdadr;
 
             // Jacobian.
-            double[][] jacobian = bean.getJacobian();
             double drho = eos.denergyDensity(pressure);
             double d2lambdadrdp = (mass + 4 * Math.PI * Math.pow(r, 3))
                     / (r * (r - 2 * mass));
@@ -134,7 +132,7 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
             jacobian[iPressure][nEquations + iPressure] = 1;
             jacobian[iPressure][nEquations + iMass] = 0;
             jacobian[iPressure][nEquations + iLambda] = 0;
-            jacobian[iPressure][2*nEquations] = 0;
+            jacobian[iPressure][2 * nEquations] = 0;
             // Mass equation.
             jacobian[iMass][iPressure] = - 4 * Math.PI * drho * r * r;
             jacobian[iMass][iMass] = 0;
@@ -142,7 +140,7 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
             jacobian[iMass][nEquations + iPressure] = 0;
             jacobian[iMass][nEquations + iMass] = 1;
             jacobian[iMass][nEquations + iLambda] = 0;
-            jacobian[iMass][2*nEquations] = 0;
+            jacobian[iMass][2 * nEquations] = 0;
             // Lambda equation.
             jacobian[iLambda][iPressure] = -d2lambdadrdp;
             jacobian[iLambda][iMass] = -d2lambdadrdm;
@@ -150,19 +148,22 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
             jacobian[iLambda][nEquations + iPressure] = 0;
             jacobian[iLambda][nEquations + iMass] = 0;
             jacobian[iLambda][nEquations + iLambda] = 1;
-            jacobian[iLambda][2*nEquations] = 0;
+            jacobian[iLambda][2 * nEquations] = 0;
         }
+        bean.setResidue(residue);
+        bean.setJacobian(jacobian);
         return bean;
     }
 
-    @Override
-    public double computeConstraint(int iConstraint, ODEIndexer1D indexer, SpectralVector1D vector, double[] dconstraint) {
-        for (int i = 0; i < dconstraint.length; i++) {
-            dconstraint[i] = 0;
-        }
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
+    /**
+     * Sets the pressure at the surface to be zero.
+     * 
+     * @param iConstraint The index of the constraint.
+     * @param indexer The indexer.
+     * @param vector The data vector.
+     * @param dconstraint The vector that dotted with a perturbation gives the derivative of the constraint in the direction of that perturbation. I.E. dconstraint.
+     * @return the residual of the constraint.
+     */
     public double zeroPressureConstraint(int iConstraint, ODEIndexer1D indexer, SpectralVector1D vector, double[] dconstraint) {
         for (int i = 0; i < dconstraint.length; i++) {
             dconstraint[i] = 0;
@@ -170,5 +171,31 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
         int rank = vector.getRank(0);
         dconstraint[indexer.index(0, iPressure, rank - 1)] = 1;
         return vector.getVariable(0, iPressure)[rank - 1];
+    }
+
+    @Override
+    public double computeConstraint(int iConstraint, ODEIndexer1D indexer, SpectralVector1D vector, double[] dconstraint) {
+        if (iConstraint == 0) {
+            return zeroPressureConstraint(iConstraint, indexer, vector, dconstraint);
+        }
+        throw new IllegalArgumentException("Unknown constraint index: " + iConstraint);
+    }
+
+    public int getNDomains() {
+        return 1;
+    }
+
+    public int[] getNVariables() {
+        return new int[]{3};
+    }
+
+    @Override
+    public int getNVariables(int iDomain) {
+        return 3;
+    }
+
+    @Override
+    public int getNParameters() {
+        return 1;
     }
 }

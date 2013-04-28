@@ -1,8 +1,10 @@
 package ca.tonita.math.numerical.spectral;
 
+import ca.tonita.math.linearalgebra.LinearAlgebra;
 import ca.tonita.math.numerical.NonLinearFirstOrderODEBean;
 import ca.tonita.math.numerical.NonLinearFirstOrderODESystem;
 import ca.tonita.math.numerical.ODEIndexer1D;
+import ca.tonita.math.polynomials.LinearlyMappedBasis;
 
 /**
  *
@@ -12,16 +14,38 @@ public class SpectralSolver1D {
 
     private NonLinearFirstOrderODESystem system;
     private SpectralVector1D vector;
-    private ODEIndexer1D indexer;
+    private LinearlyMappedBasis[] bases;
     private double[][] jacobian;
     private double[] rhs;
 
-    public SpectralSolver1D(NonLinearFirstOrderODESystem system, SpectralVector1D vector, ODEIndexer1D indexer) {
+    public SpectralSolver1D(NonLinearFirstOrderODESystem system, LinearlyMappedBasis[] bases) {
         this.system = system;
-        this.vector = vector;
-        this.indexer = indexer;
+        this.bases = bases;
+        vector = new SpectralVector1D(system, bases);
     }
 
+    public void solve() {
+        for (int i = 0; i < 1; i++) {
+            computeNewtonRaphsonTerms();
+            LinearAlgebra.solve(jacobian, rhs);
+            vector.update(rhs);
+        }
+    }
+
+    /**
+     * Sets a guess. The guess is indexed in the following fashion:
+     * variables[iDomain][iVariable][iAbscissa].
+     *
+     * @param guess The guess to set.
+     * @param parameters The guess at the parameter values.
+     */
+    public void setGuess(double[][][] guess, double[] parameters) {
+        vector.setGuess(guess, parameters);
+    }
+
+    /**
+     * Computes the jacobian and the right hand side.
+     */
     private void computeNewtonRaphsonTerms() {
         int N = vector.getLength();
         jacobian = new double[N][N];
@@ -33,16 +57,22 @@ public class SpectralSolver1D {
             }
         }
         double[] parameters = vector.getParameters();
-
         // Compute.
-        for (int iDomain = 0; iDomain <vector.getNDomains(); iDomain++) {
+        ODEIndexer1D indexer = vector.getIndexer();
+        for (int iDomain = 0; iDomain < vector.getNDomains(); iDomain++) {
             double[] x = vector.getX(iDomain);
             double[][] diff = vector.getBases()[iDomain].getDifferentiationMatrix();
             for (int iX = 0; iX < x.length; iX++) {
+                int type = NonLinearFirstOrderODESystem.BULK;
+                if (iX == 0) {
+                    type = NonLinearFirstOrderODESystem.LEFTBOUNDARY;
+                } else if (iX == x.length - 1) {
+                    type = NonLinearFirstOrderODESystem.RIGHTBOUNDARY;
+                }
                 double[] y = vector.getVariables(iDomain, iX);
                 double[] dy = vector.getDVariables(iDomain, iX);
                 double[] d = diff[iX]; // The vector that dotted into a variable vector gives the derivative at the iX'th collocation. 
-                NonLinearFirstOrderODEBean equations = system.equations(iX, x[iX], y, dy, parameters);
+                NonLinearFirstOrderODEBean equations = system.equations(iX, x[iX], y, dy, parameters, type);
                 int nVariables = indexer.getNVariables(iDomain);
                 for (int iEquation = 0; iEquation < nVariables; iEquation++) {
                     int iRow = indexer.index(iDomain, iEquation, iX);
@@ -61,20 +91,26 @@ public class SpectralSolver1D {
                         // Derivative part.
                         double jac = equations.getJacobian()[iEquation][nVariables + jVariable];
                         for (int jX = 0; jX < x.length; jX++) {
-                            int iColumn = indexer.index(iDomain, iEquation, iX);
+                            int iColumn = indexer.index(iDomain, jVariable, jX);
                             jacobian[iRow][iColumn] += jac * d[jX];
                         }
                     }
                     // Parameter part.
                     for (int iParameter = 0; iParameter < parameters.length; iParameter++) {
-                        jacobian[iRow][indexer.index(nVariables)] += equations.getJacobian()[iEquation][nVariables * 2 + iParameter];
+                        int index = indexer.index(iParameter);
+                        jacobian[iRow][index] += equations.getJacobian()[iEquation][nVariables * 2 + iParameter];
                     }
                 }
             } // End loop over equations.
         } // End loop over domains.
         // The constraints.
         for (int iConstraint = 0; iConstraint < parameters.length; iConstraint++) {
-            system.computeConstraint(iConstraint, indexer, vector, jacobian[indexer.index(iConstraint)]);
+            int iRow = indexer.index(iConstraint);
+            rhs[iRow] = system.computeConstraint(iConstraint, indexer, vector, jacobian[iRow]);
         }
+    }
+
+    public double[][][] getSolution() {
+        return vector.getVariables();
     }
 }

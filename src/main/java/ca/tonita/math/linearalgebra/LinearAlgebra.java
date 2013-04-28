@@ -122,6 +122,7 @@ public final class LinearAlgebra {
     }
 
     public static void printMatrix(double[][] a) {
+        System.out.println("Printing matrix:");
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a.length; j++) {
                 System.out.print(a[i][j] + " ");
@@ -185,6 +186,16 @@ public final class LinearAlgebra {
             for (int j = 0; j < M; j++) {
                 b[i] += A[i][j]*x[j];
             }
+        }
+    }
+
+    public static void printSystem(double[][] a, double[] b) {
+                System.out.println("Printing matrix:");
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a.length; j++) {
+                System.out.print(a[i][j] + " ");
+            }
+            System.out.print("| " + b[i] + "\n");
         }
     }
 }

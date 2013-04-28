@@ -1,6 +1,8 @@
 package ca.tonita.math.numerical.spectral;
 
 import ca.tonita.math.linearalgebra.LinearAlgebra;
+import ca.tonita.math.numerical.NonLinearFirstOrderODESystem;
+import ca.tonita.math.numerical.ODEIndexer1D;
 import ca.tonita.math.polynomials.LinearlyMappedBasis;
 
 /**
@@ -17,6 +19,33 @@ public class SpectralVector1D {
     private double[][][] dvariables;
     private double[] parameters;
     private LinearlyMappedBasis[] bases;
+    private ODEIndexer1D indexer;
+
+    SpectralVector1D(NonLinearFirstOrderODESystem system, LinearlyMappedBasis[] bases) {
+        this.bases = bases;
+        nDomains = system.getNDomains();
+        parameters = new double[system.getNParameters()];
+        int[] rank = new int[nDomains];
+        int[] nVariables = new int[nDomains];
+        variables = new double[nDomains][][];
+        dvariables = new double[nDomains][][];
+        for (int iDomain = 0; iDomain < nDomains; iDomain++) {
+            rank[iDomain] = bases[iDomain].getRank();
+            nVariables[iDomain] = system.getNVariables(iDomain);
+            variables[iDomain] = new double[nVariables[iDomain]][rank[iDomain]];
+            dvariables[iDomain] = new double[nVariables[iDomain]][rank[iDomain]];
+        }
+        indexer = new ODEIndexer1D(rank, nVariables, system.getNParameters(), nDomains);
+    }
+
+    /**
+     * Returns the indexer for this vector.
+     *
+     * @return the ODEIndexer1D for this vector.
+     */
+    public ODEIndexer1D getIndexer() {
+        return indexer;
+    }
 
     /**
      * Returns the number of domains.
@@ -32,22 +61,17 @@ public class SpectralVector1D {
     }
 
     /**
-     * Creates the spectral vector with no storage.
-     *
-     * @param domains
-     * @param nParameters
+     * Returns the variables.
+     * @return the variables.
      */
-    public SpectralVector1D(LinearlyMappedBasis[] bases, int nParameters) {
-        this.bases = bases;
-        this.parameters = new double[nParameters];
-        int nDomains = bases.length;
-        variables = new double[nDomains][][];
+    public double[][][] getVariables() {
+        return variables;
     }
 
     /**
      * Computes the derivatives of the variables.
      */
-    public void differentiate() {
+    private void differentiate() {
         for (int iDomain = 0; iDomain < bases.length; iDomain++) {
             double[][] diff = bases[iDomain].getDifferentiationMatrix();
             for (int iVariable = 0; iVariable < variables[iDomain].length; iVariable++) {
@@ -65,10 +89,10 @@ public class SpectralVector1D {
     public double[] getX(int iDomain) {
         return bases[iDomain].getAbscissas();
     }
-    
+
     /**
      * Returns the rank of basis in the given domain.
-     * 
+     *
      * @param iDomain The index of the domain.
      * @return the rank of that domain
      */
@@ -134,6 +158,7 @@ public class SpectralVector1D {
 
     /**
      * Returns the parameters of the vector only.
+     *
      * @return the parameters
      */
     double[] getParameters() {
@@ -142,11 +167,58 @@ public class SpectralVector1D {
 
     /**
      * Returns the variable vector.
+     *
      * @param iDomain
      * @param iVariable
-     * @return 
+     * @return
      */
     public double[] getVariable(int iDomain, int iVariable) {
         return variables[iDomain][iVariable];
+    }
+
+    /**
+     * Sets a guess. The guess is indexed in the following fashion:
+     * variables[iDomain][iVariable][iAbscissa].
+     *
+     * @param guess The guess to set.
+     * @param parameters The guess at the parameter values.
+     */
+    void setGuess(double[][][] guess, double[] parameters) {
+        for (int iDomain = 0; iDomain < nDomains; iDomain++) {
+            int nVariables = variables[iDomain].length;
+            int nAbscissa = bases[iDomain].getRank();
+            for (int iVariable = 0; iVariable < nVariables; iVariable++) {
+                System.arraycopy(guess[iDomain][iVariable], 0, variables[iDomain][iVariable], 0, nAbscissa);
+            }
+        }
+        if (this.parameters.length > 0) {
+            System.arraycopy(parameters, 0, this.parameters, 0, this.parameters.length);
+        }
+        differentiate();
+    }
+
+    /**
+     * Updates the data given an update vector. The vector is assumed to be the
+     * solution to a Newton-Raphson step trying to solve f(V) = 0, the sign
+     * convention used follows the derivation, f(V_0) - JdV = 0 -> f(V_0) = JdV.
+     * So the update vector is subtracted from the current data vector.
+     *
+     * @param update The data to use as an update.
+     */
+    void update(double[] update) {
+        for (int iDomain = 0; iDomain < nDomains; iDomain++) {
+            int nVariables = variables[iDomain].length;
+            int nAbscissas = bases[iDomain].getRank();
+            for (int iVariable = 0; iVariable < nVariables; iVariable++) {
+                for (int iAbscissa = 0; iAbscissa < nAbscissas; iAbscissa++) {
+                    int index = indexer.index(iDomain, iVariable, iAbscissa);
+                    variables[iDomain][iVariable][iAbscissa] -= update[index];
+                }
+            }
+        }
+        for (int iParameter = 0; iParameter < parameters.length; iParameter++) {
+            parameters[iParameter] -= update[indexer.index(iParameter)];
+        }
+        differentiate();
     }
 }
