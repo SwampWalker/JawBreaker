@@ -14,6 +14,8 @@ import ca.tonita.jawbreaker.eoswindows.ChartPanelCreator;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
 import ca.tonita.jawbreaker.models.TOVData;
+import ca.tonita.math.polynomials.ChebyshevExtrema;
+import ca.tonita.math.polynomials.LinearlyMappedBasis;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.LogarithmicAxis;
@@ -30,6 +32,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
     private TOVData rk4TOV = new TOVData();
     private JawBreakerModel model;
     private final TOVDataset tovDataset;
+    private TOVData spectralTov = new TOVData();
 
     /**
      * Creates new form TOVBuilderPanel
@@ -307,7 +310,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
 
         spectralPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectral Properties"));
 
-        rankSpinner.setModel(new javax.swing.SpinnerNumberModel(10, 1, 255, 1));
+        rankSpinner.setModel(new javax.swing.SpinnerNumberModel(20, 1, 255, 1));
 
         jLabel1.setText("Number of abscissas");
 
@@ -316,6 +319,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         spectralPanelLayout.setHorizontalGroup(
             spectralPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, spectralPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(rankSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -402,9 +406,15 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         double minPressure = Double.valueOf(minPressureField.getText());
         TOVBuilder.evolve(rk4TOV, eos, centralPressure, stepSize, outputEvery, minPressure);
         rk4TOV.computeSecondaries(eos);
-        tovDataset.add(0, rk4TOV);
-        TOVData spectralTov = new TOVData();
-        TOVBuilder.spectralGuess(spectralTov, rk4TOV, eos, null);
+        LinearlyMappedBasis basis = new LinearlyMappedBasis(new ChebyshevExtrema());
+        basis.setDomain(new double[]{0, 1});
+        int rank = (Integer) rankSpinner.getValue();
+        basis.setRank(rank);
+        TOVBuilder.spectralSolution(spectralTov, rk4TOV, eos, basis);
+        if (tovDataset.getSeriesCount() == 0) {
+            tovDataset.add(0, spectralTov);
+            tovDataset.add(1, rk4TOV);
+        }
         chart.getXYPlot().datasetChanged(null);
     }//GEN-LAST:event_createTOVButtonActionPerformed
 
@@ -423,7 +433,6 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
     private void logarithmRangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logarithmRangeActionPerformed
         updateChart();
     }//GEN-LAST:event_logarithmRangeActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField MassField;
     private javax.swing.JFormattedTextField centralPressureField;

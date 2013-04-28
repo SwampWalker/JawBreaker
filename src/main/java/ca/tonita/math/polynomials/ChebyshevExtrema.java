@@ -1,6 +1,6 @@
 package ca.tonita.math.polynomials;
 
-import ca.tonita.math.numerical.LinearAlgebra;
+import ca.tonita.math.linearalgebra.LinearAlgebra;
 
 /**
  * The basis of Chebyshev polynomials using the extrema as the collocation

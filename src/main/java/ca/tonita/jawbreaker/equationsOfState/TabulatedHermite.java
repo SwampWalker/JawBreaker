@@ -11,6 +11,7 @@ public class TabulatedHermite {
      * An identifier to differentiate this table from others.
      */
     private String identifier;
+    private final double particleMass;
     
     /**
      * Returns the identifier of this equation of state.
@@ -107,6 +108,7 @@ public class TabulatedHermite {
     public TabulatedHermite(double[] logn, double[] logp, double[] energyPerParticle, double particleMass) {
         N = logp.length;
         pressure = new double[N];
+        this.particleMass = particleMass;
         for (int i = 0; i < N; i++) {
             pressure[i] = Math.pow(10, logp[i]);
         }
@@ -279,6 +281,10 @@ public class TabulatedHermite {
             coefficients[i] = Polynomials.interpolatingCoefficients(localVariable, localDVariable, localPressure);
         }
         return coefficients;
+    }
+
+    public double getParticleMass() {
+        return particleMass;
     }
 }
 

@@ -74,9 +74,10 @@ public class TOVData {
     public void computeSecondaries(TabulatedHermite eos) {
         secondaries = new ArrayList<double[]>();
         for (double[] y : variables) {
-            double[] z = new double[2];
+            double[] z = new double[3];
             z[0] = eos.numberDensity(y[0]);
             z[1] = eos.energyDensity(y[0]);
+            z[2] = z[0]*eos.getParticleMass();
             secondaries.add(z);
         }
     }

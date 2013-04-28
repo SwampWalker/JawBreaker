@@ -1,6 +1,6 @@
 package ca.tonita.math.polynomials;
 
-import ca.tonita.math.numerical.LinearAlgebra;
+import ca.tonita.math.linearalgebra.LinearAlgebra;
 import junit.framework.TestCase;
 
 /**

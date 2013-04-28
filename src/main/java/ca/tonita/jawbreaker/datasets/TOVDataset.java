@@ -20,7 +20,7 @@ public class TOVDataset extends MultiDataset<TOVData> {
         variableNames = tovVariableNames;
     }
     
-    private static final String[] tovVariableNames = {"Radius", "Pressure", "Gravitational Mass", "Lambda", "Number Density", "Energy Density"};
+    private static final String[] tovVariableNames = {"Radius", "Pressure", "Gravitational Mass", "Lambda", "Number Density", "Energy Density", "Mass Density"};
 
     /**
      * Returns the specified data element.

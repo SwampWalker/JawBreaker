@@ -4,6 +4,8 @@ import ca.tonita.math.numerical.NonLinearFirstOrderODESystem;
 import ca.tonita.math.numerical.QuasiLinearFirstOrderODESystem;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.math.numerical.NonLinearFirstOrderODEBean;
+import ca.tonita.math.numerical.ODEIndexer1D;
+import ca.tonita.math.numerical.spectral.SpectralVector1D;
 
 /**
  *
@@ -95,8 +97,8 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
      * @return the residue and Jacobian
      */
     @Override
-    public NonLinearFirstOrderODEBean equations(double r, double[] y, double[] dy, double[] parameters, int type) {
-        if (type == NonLinearFirstOrderODESystem.LEFTBOUNDARY) {
+    public NonLinearFirstOrderODEBean equations(int iR, double r, double[] y, double[] dy, double[] parameters, int type) {
+        if (iR == 0) {
             double[] residue = bean.getResidue();
             double[][] jacobian = bean.getJacobian();
             for (int i = 0; i < residue.length; i++) {
@@ -153,10 +155,20 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
         return bean;
     }
 
-    public void computeConstraints(double[] x, double[][] variables, double[][] dvariables, double[] parameters, double[] dconstraint, int iConstraint) {
+    @Override
+    public double computeConstraint(int iConstraint, ODEIndexer1D indexer, SpectralVector1D vector, double[] dconstraint) {
         for (int i = 0; i < dconstraint.length; i++) {
             dconstraint[i] = 0;
         }
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public double zeroPressureConstraint(int iConstraint, ODEIndexer1D indexer, SpectralVector1D vector, double[] dconstraint) {
+        for (int i = 0; i < dconstraint.length; i++) {
+            dconstraint[i] = 0;
+        }
+        int rank = vector.getRank(0);
+        dconstraint[indexer.index(0, iPressure, rank - 1)] = 1;
+        return vector.getVariable(0, iPressure)[rank - 1];
     }
 }

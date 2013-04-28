@@ -129,4 +129,62 @@ public final class LinearAlgebra {
             System.out.print("\n");
         }
     }
+    
+    /**
+     * Multiplies two matrices together, returning the result: AB = C.
+     * @param A The left hand matrix.
+     * @param B The right hand matrix.
+     * @return The product.
+     */
+    public static double[][] matrixMultiply(double[][] A, double[][] B) {
+        int N = A.length;
+        int M = B[0].length;
+        int O = B.length;
+        double[][] C = new double[N][M];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                C[i][j] = 0;
+                for (int k = 0; k < O; k++) {
+                    C[i][j] += A[i][k]*B[k][j];
+                }
+            }
+        }
+        return C;
+    }
+    
+    /**
+     * Multiplies a vector into a matrix: Ax = b. Returns b.
+     * @param A The matrix to multiply into.
+     * @param x The vector to multiply with.
+     * @return The result.
+     */
+    public static double[] matrixVectorMultiply(double[][] A, double[] x) {
+        int N = A.length;
+        int M = x.length;
+        double[] b = new double[N];
+        for (int i = 0; i < N; i++) {
+            b[i] = 0;
+            for (int j = 0; j < M; j++) {
+                b[i] += A[i][j]*x[j];
+            }
+        }
+        return b;
+    }
+    
+    /**
+     * Multiplies a vector into a matrix: Ax = b. Returns b.
+     * @param A The matrix to multiply into.
+     * @param x The vector to multiply with.
+     * @param b The result.
+     */
+    public static void matrixVectorMultiply(double[][] A, double[] x, double[] b) {
+        int N = A.length;
+        int M = x.length;
+        for (int i = 0; i < N; i++) {
+            b[i] = 0;
+            for (int j = 0; j < M; j++) {
+                b[i] += A[i][j]*x[j];
+            }
+        }
+    }
 }

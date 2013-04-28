@@ -1,4 +1,4 @@
-package ca.tonita.math.numerical;
+package ca.tonita.math.linearalgebra;
 
 import junit.framework.TestCase;
 
@@ -35,7 +35,7 @@ public class LinearAlgebraTest extends TestCase {
         A[2] = new double[]{8,7,9,5};
         A[3] = new double[]{6,7,9,8};
         int[] expResult = {2,3,1,0};
-        int[] result = LinearAlgebra.factorizeLU(A);
+        int[] result = LinearAlgebra.LUFactor(A);
         double[][] LU = new double[4][];
         LU[0] = new double[]{8,7,9,5};
         LU[1] = new double[]{3./4,7./4,9./4,17./4};
@@ -67,10 +67,10 @@ public class LinearAlgebraTest extends TestCase {
         A[3] = new double[]{6,7,9,8};
         double[] expResult = {1,2,3,4};
         double[] b = new double[]{2+2+3,4+3*2+3*3+4,8+7*2+9*3+5*4,6+7*2+9*3+8*4};
-        double[] result = LinearAlgebra.solve(A, b);
+        int result = LinearAlgebra.solve(A, b);
         for (int i = 0; i < 4; i++) {
-            if (Math.pow(result[i] - expResult[i], 2) > tolerance*tolerance) {
-                fail("Incorrect value at row " + i + ", expected " + expResult[i] + " receive " + result[i] + ".");
+            if (Math.pow(b[i] - expResult[i], 2) > tolerance*tolerance) {
+                fail("Incorrect value at row " + i + ", expected " + expResult[i] + " receive " + b[i] + ".");
             }
         }
     }
