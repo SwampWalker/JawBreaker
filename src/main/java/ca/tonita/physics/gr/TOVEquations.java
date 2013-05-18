@@ -23,7 +23,7 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
     private int iLambda = 2;
     private int nEquations = 3;
 
-    TOVEquations(TabulatedHermite eos) {
+    public TOVEquations(TabulatedHermite eos) {
         this.eos = eos;
         bean = new NonLinearFirstOrderODEBean();
         bean.setResidue(new double[3]);

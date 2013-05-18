@@ -69,6 +69,16 @@ public class TabulatedHermite {
      */
     private double[][] numberDensityA;
     /**
+     * The coefficients of the energy per particle in pressure.
+     */
+    private final double[][] energyA;
+    /**
+     * Coefficients for extrapolating the energy per particle. A polytrope has
+     * energy per particle given by e = k^(1/g) * m / (g - 1) * p ^ (1 - 1/g).
+     * This array holds the coefficients {k^(1/g)*m/(g-1), 1 - 1/g}.
+     */
+    private double[][] energyExtrap;
+    /**
      * Coefficients for extrapolating the energy density. The array
      * energyDensityExtrap[0] gives the 2 coefficients {g, c, 1/g, 1/(g-1)} that
      * continuously fit the value and derivative of the input energy density to
@@ -126,9 +136,11 @@ public class TabulatedHermite {
         // The derivatives.
         double[] drho = dvariable(rho);
         double[] dn = dvariable(numberDensity);
+        double[] denergyPerParticle = dvariable(energyPerParticle);
         // Now we compute the interpolating coefficients.
         energyDensityA = computeHermiteCoefficients(rho, drho);
         numberDensityA = computeHermiteCoefficients(numberDensity, dn);
+        energyA = computeHermiteCoefficients(energyPerParticle, denergyPerParticle);
 
         // Compute the extrapolating coefficients.
         energyDensityExtrap = new double[2][4];
@@ -147,6 +159,12 @@ public class TabulatedHermite {
         numberDensityExtrap[1][0] = energyDensityExtrap[1][0];
         numberDensityExtrap[1][2] = energyDensityExtrap[1][2];
         numberDensityExtrap[1][1] = numberDensity[N - 1] / Math.pow(pressure[N - 1], numberDensityExtrap[1][2]);
+        // Goal as always is to extrapolate a polytrope through the last two points...
+        energyExtrap = new double[2][2];
+        energyExtrap[0][1] = Math.log(energyPerParticle[0] / energyPerParticle[1]) / Math.log(pressure[0] / pressure[1]);
+        energyExtrap[0][0] = energyPerParticle[0] * Math.pow(pressure[0], -energyExtrap[0][1]);
+        energyExtrap[1][1] = Math.log(energyPerParticle[N - 1] / energyPerParticle[N - 2]) / Math.log(pressure[N - 1] / pressure[N - 2]);
+        energyExtrap[1][0] = energyPerParticle[N - 1] * Math.pow(pressure[N - 1], -energyExtrap[1][1]);
         setEdgePressure();
     }
 
@@ -184,11 +202,10 @@ public class TabulatedHermite {
     }
 
     /**
-     * Clones the data from this table into the argument. The fields
-     * copied are in order: <ol> <li>particle number density</li>
-     * <li>pressure</li> <li>total energy density (rest mass + specific
-     * internal)</li> <li>derivative of total energy density w.r.t
-     * pressure</li></ol>
+     * Clones the data from this table into the argument. The fields copied are
+     * in order: <ol> <li>particle number density</li> <li>pressure</li>
+     * <li>total energy density (rest mass + specific internal)</li>
+     * <li>derivative of total energy density w.r.t pressure</li></ol>
      *
      * @param table A 2-d array, at least <code>double[4][]</code>
      */
@@ -240,8 +257,6 @@ public class TabulatedHermite {
         }
         return Polynomials.interpolate(numberDensityA[memoIndex], p);
     }
-    
-    
 
     /**
      * Returns the derivative of number density as a function of pressure.
@@ -320,7 +335,7 @@ public class TabulatedHermite {
      * Computes the value of the edge density.
      */
     private void setEdgePressure() {
-        double nEdge = UnitSystem.convert(0.08, Dimension.NUMBERDENSITY, CommonUnits.MEV, CommonUnits.GEOMETRICASTRO)*UnitSystem.convert(SIConstants.mneutron.getValue(), Dimension.MASS, CommonUnits.MKS, CommonUnits.GEOMETRICASTRO)/particleMass;
+        double nEdge = UnitSystem.convert(0.08, Dimension.NUMBERDENSITY, CommonUnits.MEV, CommonUnits.GEOMETRICASTRO) * UnitSystem.convert(SIConstants.mneutron.getValue(), Dimension.MASS, CommonUnits.MKS, CommonUnits.GEOMETRICASTRO) / particleMass;
         int iGuess = 0;
         while (numberDensity[iGuess] < nEdge) {
             iGuess++;
@@ -328,12 +343,43 @@ public class TabulatedHermite {
         double guess = pressure[iGuess];
         double nGuess = numberDensity[iGuess];
         while (Math.abs(nGuess - nEdge) > 1.0E-10) {
-            guess += (nEdge - nGuess)/dnumberDensity(guess);
+            guess += (nEdge - nGuess) / dnumberDensity(guess);
             nGuess = numberDensity(guess);
-            System.out.println(guess + " " + nGuess + " " + nEdge);
         }
         edgePressure = guess;
         edgeDensity = nEdge;
+    }
+
+    /**
+     * Returns the energy per particle at the pressure p.
+     *
+     * @param p the pressure p
+     * @return the energy per particle
+     */
+    public double energyPerParticle(double p) {
+        memoize(p);
+        if (memoIndex == -1) {
+            return energyExtrap[0][0] * Math.pow(p, energyExtrap[0][1]);
+        } else if (memoIndex == N - 1) {
+            return energyExtrap[1][0] * Math.pow(p, energyExtrap[1][1]);
+        }
+        return Polynomials.interpolate(energyA[memoIndex], p);
+    }
+
+    /**
+     * Returns the derivative of the energy per particle at the pressure p.
+     *
+     * @param p the pressure p
+     * @return the derivative of energy per particle
+     */
+    public double dEnergyPerParticle(double p) {
+        memoize(p);
+        if (memoIndex == -1) {
+            return energyExtrap[0][0] * energyExtrap[0][1] * Math.pow(p, energyExtrap[0][1] - 1);
+        } else if (memoIndex == N - 1) {
+            return energyExtrap[1][0] * energyExtrap[1][1] * Math.pow(p, energyExtrap[1][1] - 1);
+        }
+        return Polynomials.differentiate(energyA[memoIndex], p);
     }
 
     public double getEdgePressure() {
