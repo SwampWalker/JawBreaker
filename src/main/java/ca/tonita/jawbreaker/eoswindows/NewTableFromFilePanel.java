@@ -64,7 +64,7 @@ public class NewTableFromFilePanel extends javax.swing.JPanel implements Tabulat
         filenameTextArea.setColumns(20);
         filenameTextArea.setLineWrap(true);
         filenameTextArea.setRows(5);
-        filenameTextArea.setText("F:\\Projects\\elasticity\\data\\eos\\eos2.shear.betaEquilibrium.2.t00");
+        filenameTextArea.setText("F:\\Projects\\elasticity\\data\\eos2.shear.betaEquilibrium.2.t00");
         filenameTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(filenameTextArea);
 

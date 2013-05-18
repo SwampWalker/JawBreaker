@@ -20,7 +20,7 @@ public class TOVDataset extends MultiDataset<TOVData> {
         variableNames = tovVariableNames;
     }
     
-    private static final String[] tovVariableNames = {"Radius", "Pressure", "Gravitational Mass", "Lambda", "Number Density", "Energy Density", "Mass Density"};
+    private static final String[] tovVariableNames = {"Radius", "Pressure", "Gravitational Mass", "Lambda", "Interior mass", "Number Density", "Energy Density", "Mass Density"};
 
     /**
      * Returns the specified data element.
@@ -32,7 +32,7 @@ public class TOVDataset extends MultiDataset<TOVData> {
         double variable;
         if (iVariable == 0) {
             variable = getDataset(iSeries).getRadius(iItem);
-        } else if (iVariable < 4) {
+        } else if (iVariable < 5) {
             variable = getDataset(iSeries).getVariables(iItem)[iVariable - 1];
         } else {
             variable = getDataset(iSeries).getSecondaries(iItem)[iVariable - 4];

@@ -112,7 +112,8 @@ public class ChebyshevExtremaTest extends TestCase {
     public void testFunction() {
         System.out.println("function");
         int n = 5;
-        double[] x = ChebyshevExtrema.getAbscissas(n);
+        ChebyshevExtrema instance = new ChebyshevExtrema();
+        double[] x = instance.getAbscissas(n);
         double[] expResult = new double[]{1,-1,1,-1,1};
         for (int i = 0; i < n; i++) {
             double result = ChebyshevExtrema.function(n-1, x[i]);

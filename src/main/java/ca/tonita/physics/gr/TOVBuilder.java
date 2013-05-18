@@ -7,6 +7,8 @@ package ca.tonita.physics.gr;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.jawbreaker.models.TOVData;
 import ca.tonita.math.numerical.RK4;
+import ca.tonita.math.numerical.spectral.SpectralSolver1D;
+import ca.tonita.math.polynomials.ChebyshevExtrema;
 import ca.tonita.math.polynomials.LinearlyMappedBasis;
 import java.util.ArrayList;
 
@@ -38,12 +40,13 @@ public class TOVBuilder {
         ArrayList<double[]> points = tov.getVariables();
         ArrayList<Double> radii = tov.getRadii();
         points.clear();
-        points.add(new double[]{centralPressure, 0, 0});
+        points.add(new double[]{centralPressure, 0, 0, 0});
         radii.clear();
         radii.add(0.);
         int maxSteps = Integer.MAX_VALUE;
         TOVTerminator terminator = new TOVTerminator(maxSteps * stepSize, maxSteps, minPressure);
         RK4.evolve(points, radii, eqns, stepSize, outputEvery, terminator);
+        tov.setConservedMass(eos.getParticleMass()*points.get(points.size()-1)[3]);
     }
 
     /**
@@ -59,6 +62,7 @@ public class TOVBuilder {
     public static void spectralSolution(TOVData tov, TOVData guess, TabulatedHermite eos, LinearlyMappedBasis basis) {
         // Set up for the interpolation.
         TOVEquations eqns = new TOVEquations(eos); // TODO: stick these in a static hashmap? Will create problems when EOSs are deleted.
+        eqns.setCentralPressure(guess.getPressure(0));
         basis.setRight(guess.getRadius());
         double[] spectralRadii = basis.getAbscissas();
         ArrayList<Double> radii = guess.getRadii();
@@ -72,6 +76,9 @@ public class TOVBuilder {
             while (Math.abs(radii.get(iRadii) - spectralRadii[i]) > deltaR) {
                 iRadii++;
             }
+            if (radii.get(iRadii) > spectralRadii[i]) {
+                iRadii--;
+            }
             double[] newPoint = RK4.step(guess.getVariables(iRadii), radii.get(iRadii), eqns, Math.abs(radii.get(iRadii) - spectralRadii[i]));
             newPoints.add(newPoint);
         }
@@ -83,10 +90,45 @@ public class TOVBuilder {
         for (double r: spectralRadii) {
             newRadii.add(r);
         }
-        tov.setRadii(newRadii);
-        tov.setVariables(newPoints);
         
         // Solve.
+        SpectralSolver1D solver = new SpectralSolver1D(eqns, new LinearlyMappedBasis[]{basis});
+        ArrayList[] variables = new ArrayList[]{newPoints};
+        solver.setGuess(variables, new double[]{basis.getDomain()[1]});
+        solver.solve(1.0e-19, 20);
         
+        // Reset the data.
+        newRadii.clear();
+        spectralRadii = basis.getAbscissas();
+        for (double r: spectralRadii) {
+            newRadii.add(r);
+        }
+        newPoints.clear();
+        double[][][] solution = solver.getSolution();
+        for (int i = 0; i < basis.getRank(); i++) {
+            double[] y = new double[]{solution[0][0][i], solution[0][1][i], solution[0][2][i], 1};
+            newPoints.add(y);
+        }
+        
+        tov.setRadii(newRadii);
+        tov.setVariables(newPoints);
+        tov.computeSecondaries(eos);
+    }
+    
+    public ArrayList<TOVData> continuation(TabulatedHermite eos, TOVData base, int maxRank) {
+        // Set up the system.
+        TOVEquations eqns = new TOVEquations(eos);
+        ArrayList<TOVData> solutions = new ArrayList<TOVData>();
+        LinearlyMappedBasis basis = new LinearlyMappedBasis(new ChebyshevExtrema());
+        basis.setDomain(new double[]{0, base.getRadius()});
+        basis.setRank(base.getNPoints());
+        SpectralSolver1D solver = new SpectralSolver1D(eqns, new LinearlyMappedBasis[]{basis});
+        
+        // Continuation.
+        while (basis.getRank() < maxRank) {
+            int newRank = basis.getRank() + 1;
+            double[] newX = basis.getAbscissas();
+        }
+        return solutions;
     }
 }

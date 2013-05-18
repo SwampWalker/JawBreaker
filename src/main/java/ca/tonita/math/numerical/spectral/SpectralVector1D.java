@@ -4,6 +4,7 @@ import ca.tonita.math.linearalgebra.LinearAlgebra;
 import ca.tonita.math.numerical.NonLinearFirstOrderODESystem;
 import ca.tonita.math.numerical.ODEIndexer1D;
 import ca.tonita.math.polynomials.LinearlyMappedBasis;
+import java.util.ArrayList;
 
 /**
  *
@@ -61,7 +62,7 @@ public class SpectralVector1D {
     }
 
     /**
-     * Returns the variables.
+     * Returns the pointer to the variables.
      * @return the variables.
      */
     public double[][][] getVariables() {
@@ -71,7 +72,7 @@ public class SpectralVector1D {
     /**
      * Computes the derivatives of the variables.
      */
-    private void differentiate() {
+    public void differentiate() {
         for (int iDomain = 0; iDomain < bases.length; iDomain++) {
             double[][] diff = bases[iDomain].getDifferentiationMatrix();
             for (int iVariable = 0; iVariable < variables[iDomain].length; iVariable++) {
@@ -161,7 +162,7 @@ public class SpectralVector1D {
      *
      * @return the parameters
      */
-    double[] getParameters() {
+    public double[] getParameters() {
         return parameters;
     }
 
@@ -220,5 +221,54 @@ public class SpectralVector1D {
             parameters[iParameter] -= update[indexer.index(iParameter)];
         }
         differentiate();
+    }
+
+    /**
+     * Sets a guess. The guess is indexed in the following fashion:
+     * guess[iDomain].get(iAbscissa)[iVariable].
+     *
+     * @param guess The guess to set.
+     * @param parameters The guess at the parameter values.
+     */
+    void setGuess(ArrayList<double[]>[] guess, double[] parameters) {
+        for (int iDomain = 0; iDomain < nDomains; iDomain++) {
+            int nVariables = guess[iDomain].get(0).length;
+            int nAbscissa = bases[iDomain].getRank();
+            for (int iVariable = 0; iVariable < nVariables; iVariable++) {
+                for (int iAbscissa = 0; iAbscissa < nAbscissa; iAbscissa++) {
+                    variables[iDomain][iVariable][iAbscissa] = guess[iDomain].get(iAbscissa)[iVariable];
+                }
+            }
+        }
+        if (this.parameters.length > 0) {
+            System.arraycopy(parameters, 0, this.parameters, 0, this.parameters.length);
+        }
+        differentiate();
+    }
+    
+    /**
+     * Prints variables.
+     */
+    void printVariables() {
+        for (int iDomain = 0; iDomain < nDomains; iDomain++) {
+            int nVariables = variables[iDomain].length;
+            int nAbscissa = bases[iDomain].getRank();
+            for (int iVariable = 0; iVariable < nVariables; iVariable++) {
+                for (int iAbscissa = 0; iAbscissa < nAbscissa; iAbscissa++) {
+                    System.out.print(variables[iDomain][iVariable][iAbscissa] + " ");
+                }
+                System.out.print("\n");
+            }
+        }
+        for (int iDomain = 0; iDomain < nDomains; iDomain++) {
+            int nVariables = variables[iDomain].length;
+            int nAbscissa = bases[iDomain].getRank();
+            for (int iVariable = 0; iVariable < nVariables; iVariable++) {
+                for (int iAbscissa = 0; iAbscissa < nAbscissa; iAbscissa++) {
+                    System.out.print(dvariables[iDomain][iVariable][iAbscissa] + " ");
+                }
+                System.out.print("\n");
+            }
+        }
     }
 }

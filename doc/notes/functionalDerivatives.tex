@@ -1,0 +1,129 @@
+\section{Functional derivatives of spherically symmetric terms}
+These elastic terms are not trivial, so I collect them and take their functional derivatives. In this section, to avoid the ugly but exact functional derivative notation, I will simply treat the function arguments of functionals as variables. For example, it should be understood that
+\begin{equation}
+\frac{\partial p^r{}_r}{\partial \xi'} \equiv dp^r{}_r[m,\xi,\xi';\delta\xi'],
+\label{eq:functionalDerivativeNotation}
+\end{equation}
+where $dp^r{}_r[m,\xi,\xi';\delta\xi']$ denotes the G\^ateaux derivative of $p^r{}_r$ in the direction of $\delta\xi'$ where the direction is only perturbing the variable $\xi'$. The initial functional will be denoted using the full notation (ignoring the radial dependence as usual) to make the derivatives easier to follow.
+
+\subsection{Radial elastic pressure}
+The radial pressure (functional, not the first class variable) term is expanded to the expression
+\begin{equation}
+p^r{}_r[m,\xi,\xi'] = n[m,\xi,\xi']\tau_{RR}[m,\xi,\xi']\xi'^2\left(1 - \frac{2m}{r}\right)
+  = n[m,\xi,\xi']\left(Q[m,\xi,\xi'] + \frac{m_pq}{4}\frac{1-\frac{2m}{r}}{1-\frac{2M[\xi]}{\xi}}\xi'^2\right)\frac{1-\frac{2m}{r}}{1-\frac{2M[\xi]}{\xi}}\xi'^2.
+\label{eq:radialPressureExpanded}
+\end{equation}
+The derivative with respect to the configuration gradient,
+\begin{eqnarray}
+  \nonumber \frac{\partial p^r{}_r}{\partial \xi'} & = & \frac{\partial n}{\partial\xi'}\left(Q + \frac{m_pq}{4}\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2\right)\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2 + n\left(\frac{\partial Q}{\partial \xi'} + \frac{m_pq}{2}\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'\right)\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2\\
+ \label{eq:dradialPressure:dxi} & & + 2n\left(Q +  \frac{m_pq}{4}\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2\right)\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'.	
+\end{eqnarray}
+The derivative with respect to the configuration is much more annoying,
+\begin{eqnarray}
+  \nonumber \frac{\partial p^r{}_r}{\partial \xi} & = & \left(\frac{2}{\xi}\left.\frac{\partial M}{\partial R}\right|_{\xi} - \frac{2M}{\xi^2}\right)n\left(Q + \frac{m_pq}{4}\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2\right)\frac{1-\frac{2m}{r}}{\left(1-\frac{2M}{\xi}\right)^2}\xi'^2\\
+  \label{eq:dradialPressure:xi}& &+ n\left(\frac{\partial Q}{\partial \xi} + \left(\frac{2}{\xi}\left.\frac{\partial M}{\partial R}\right|_{\xi} - \frac{2M}{\xi^2}\right) \frac{m_pq}{4}\frac{1-\frac{2m}{r}}{\left(1-\frac{2M}{\xi}\right)^2}\xi'^2 + \frac{m}{4}\left.\frac{\partial q}{\partial R}\right|_\xi\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2\right)\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2.
+\end{eqnarray}
+The mass (potential) derivative,
+\begin{eqnarray}
+\nonumber \frac{\partial p^r{}_r}{\partial m} & = & \frac{\partial n}{\partial m}\left(Q + \frac{m_pq}{4}\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2\right)\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2 + n\left(\frac{\partial Q}{\partial m} - \frac{m_pq}{2r}\frac{1}{1-\frac{2M}{\xi}}\xi'^2\right)\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2\\
+&&-\frac{2n}{r}\left(Q + \frac{m_pq}{4}\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2\right)\frac{1}{1-\frac{2M}{\xi}}\xi'^2
+\label{eq:dradialPressure:m}
+\end{eqnarray}
+
+\subsection{Tangential elastic pressure}
+The remarkable property of the mixed tensor is that the entries are physical quantities directly, especially since the eigenvalues are the measurable principal pressures. The azimuthal and zenithal components of the pressure tensor are therefore equal by symmetry (and analysis as pointed out before), so
+\begin{equation}
+p^\phi{}_\phi[m,\xi,\xi'] = p^\theta{}_\theta[m,\xi,\xi'] = \frac{n[m,\xi,\xi']\tau_{\Theta\Theta}[m,\xi,\xi']}{r^2} = n[m,\xi,\xi']\left(Q[m,\xi,\xi'] +
+\frac{m_pq(N[\xi])}{4}\frac{\xi^2}{r^2}\right)\frac{\xi^2}{r^2}.
+\label{eq:tangentialPressureExpanded}
+\end{equation}
+The derivative with respect to the configuration gradient,
+\begin{equation}
+\frac{\partial p^\theta{}_\theta}{\partial \xi'} = \frac{\partial n}{\partial\xi'}\left(Q +
+\frac{m_pq}{4}\frac{\xi^2}{r^2}\right)\frac{\xi^2}{r^2} + n\frac{\partial Q}{\partial \xi'}\frac{\xi^2}{r^2},
+\label{eq:dtangentialPressure:dxi}
+\end{equation}
+with respect to the configuration
+\begin{eqnarray}
+\nonumber \frac{\partial p^\theta{}_\theta}{\partial \xi} & = & \frac{\partial n}{\partial\xi}\left(Q +
+\frac{m_pq}{4}\frac{\xi^2}{r^2}\right)\frac{\xi^2}{r^2} + 2n\left(Q +
+\frac{m_pq}{4}\frac{\xi^2}{r^2}\right)\frac{\xi}{r^2} \\
+\label{eq:dtangentialPressure:xi} && + n\left(\frac{\partial Q}{\partial \xi} +
+\frac{m_p}{4r^2} \left.\frac{\partial q}{\partial R}\right|_\xi \xi^2 + \frac{m_pq\xi}{2r^2} \right)\frac{\xi^2}{r^2}
+\end{eqnarray}
+and with respect to the mass potential
+\begin{equation}
+\frac{\partial p^\theta{}_\theta}{\partial m} = \frac{\partial n}{\partial m}\left(Q +
+\frac{m_pq}{4}\frac{\xi^2}{r^2}\right)\frac{\xi^2}{r^2} + n\frac{\partial Q}{\partial m} \frac{\xi^2}{r^2}.
+\label{eq:dtangentialPressure:m}
+\end{equation}
+
+\subsection{Number density}
+The number density is given by \eqref{eq:numberDensity},
+\begin{equation}
+n[m,\xi,\xi'] = N[\xi]\left(\frac{\xi}{r}\right)^2\xi'\sqrt{\frac{1-\frac{2m}{r}}{1-\frac{2M[\xi]}{\xi}}}.
+\label{eq:numberDensityExpanded}
+\end{equation}
+The derivative with respect to the configuration gradient,
+\begin{equation}
+\frac{\partial n}{\partial \xi'} = N\left(\frac{\xi}{r}\right)^2\sqrt{\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}}.
+\label{eq:dnumberDensity:dxi}
+\end{equation}
+The derivative with respect to the configuration, ever the annoying one,
+\begin{equation}
+\frac{\partial n}{\partial \xi} = \frac{\partial N}{\partial \xi} \frac{\xi^2}{r^2}\xi'\sqrt{\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}} +  2N\frac{\xi}{r^2}\xi'\sqrt{\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}} + N\left(\frac{\xi}{r}\right)^2\xi'\sqrt{\frac{1-\frac{2m}{r}}{\left(1-\frac{2M}{\xi}\right)^3}} \left(\left.\frac{\partial M}{\partial R}\right|_\xi\frac{1}{\xi} - \frac{M}{\xi^2}\right).
+\label{eq:dnumberDensity:xi}
+\end{equation}
+The derivative with respect to mass,
+\begin{equation}
+\frac{\partial n}{\partial m} = -\frac{N\xi^2\xi'}{r^3\sqrt{\left(1-\frac{2m}{r}\right) \left(1-\frac{2M}{\xi}\right)}}.
+\label{eq:dnumberDensity:m}
+\end{equation}
+Pay close attention to that minus sign in front.
+
+\subsection{The isotropic pressure coefficient}
+The isotropic pressure coefficient is just a simplifying constant, given as
+\begin{equation}
+Q[\sigma,\xi,\xi'] = \frac{P(N[\xi])}{N[\xi]} +
+\frac{mr_l\left(N[\xi]\right)}{2}H[\sigma,\xi,\xi']-\frac{mq\left(N[\xi]\right)}{4}.
+\label{eq:pressureQExpanded}
+\end{equation}
+The derivative with respect to configuration gradient
+\begin{equation}
+\frac{\partial Q}{\partial \xi'} = \frac{mr_l}{2}\frac{\partial H}{\partial \xi'},
+\label{eq:dpressureQ:dxi}
+\end{equation}
+with respect to the configuration gradient
+\begin{equation}
+\frac{\partial Q}{\partial \xi} = \frac{1}{N}\left( \left.\frac{\partial P}{\partial R}\right|_\xi - \frac{P}{N^2}\left.\frac{\partial N}{\partial R}\right|_\xi \right)
++\frac{m}{2}\left(\left.\frac{\partial r_l}{\partial R}\right|_\xi H + r_l\frac{\partial H}{\partial \xi}\right) - \frac{m}{4}\left.\frac{\partial q}{\partial R}\right|_\xi,
+\label{eq:dpressureQ:xi}
+\end{equation}
+note that the $P'$ term can be evaluated using the TOV equations. The derivative of the isotropic pressure $Q$ with respect to the mass potential is
+\begin{equation}
+\frac{\partial Q}{\partial m} = \frac{mr_l}{2}\frac{\partial H}{\partial m}.
+\label{eq:dpressureQ:m}
+\end{equation}
+
+\subsection{The trace of the strain}
+The trace of the strain, normalized to zero is given by
+\begin{equation}
+H[\sigma,\xi,\xi']\equiv H^{AB}G_{AB} -3= e^{2(\Sigma(\xi(r))-\sigma(r))}\xi'^2(r) +
+2\frac{\xi(r)^2}{r^2} - 3 = \frac{1 - \frac{2m}{r}}{1 - \frac{2M(\xi)}{\xi}}\xi'^2 + 2\frac{\xi^2}{r^2} - 3.
+\label{eq:traceExpanded}
+\end{equation}
+The derivative with respect to the configuration gradient
+\begin{equation}
+\frac{\partial H}{\partial \xi'} = 2\frac{1 - \frac{2m}{r}}{1 - \frac{2M}{\xi}}\xi',
+\label{eq:dtrace:dxi}
+\end{equation}
+with respect to the configuration
+\begin{equation}
+\frac{\partial H}{\partial \xi} = \frac{1 - \frac{2m}{r}}{\left(1 - \frac{2M}{\xi}\right)^2}\xi'^2\left(\frac{2}{\xi}\left.\frac{\partial M}{\partial R}\right|_\xi - \frac{2M}{\xi^2}\right) + 4\frac{\xi}{r^2},
+\label{eq:dtrace:xi}
+\end{equation}
+and the derivative with respect to the mass potential
+\begin{equation}
+\frac{\partial H}{\partial m} = -\frac{2\xi'^2}{r}\frac{1}{1 - \frac{2M}{R}}.
+\label{eq:dtrace:m}
+\end{equation}

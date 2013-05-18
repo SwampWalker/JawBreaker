@@ -13,8 +13,7 @@ import junit.framework.TestCase;
  */
 public class SpectralSolver1DTest extends TestCase implements NonLinearFirstOrderODESystem {
     private double tolerance = 1.0e-10;
-    private double parameter = 2;
-    private int rank = 10;
+    private int rank = 20;
     
     public SpectralSolver1DTest(String testName) {
         super(testName);
@@ -83,11 +82,11 @@ public class SpectralSolver1DTest extends TestCase implements NonLinearFirstOrde
         SpectralSolver1D instance = new SpectralSolver1D(this, bases);
         double[] parameters = new double[]{Math.log(2) + 0.02*(Math.random() - 0.5)};
         instance.setGuess(getGuess(bases[0].getAbscissas()), parameters);
-        instance.solve();
+        instance.solve(tolerance, 5);
         double[][][] solution = instance.getSolution();
         double[] x = bases[0].getAbscissas();
         for (int i = 0; i < rank; i++) {
-            assertEquals(Math.pow(2, x[i]), solution[0][0][i], tolerance);
+            assertEquals(Math.pow(2, x[i]), solution[0][0][i], 1.0E-6);
         }
     }
     

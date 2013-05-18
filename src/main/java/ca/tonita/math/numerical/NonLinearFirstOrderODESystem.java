@@ -1,6 +1,7 @@
 package ca.tonita.math.numerical;
 
 import ca.tonita.math.numerical.spectral.SpectralVector1D;
+import ca.tonita.math.polynomials.LinearlyMappedBasis;
 
 /**
  * Interface for a Nonlinear ODE system.

@@ -11,7 +11,15 @@ public interface PolynomialBasis {
      *
      * @return the abscissas
      */
-    double[] getAbscissas();
+    public double[] getAbscissas();
+
+    /**
+     * Returns the abscissas for this basis for the specified rank.
+     *
+     * @param n The number of the abscissas desired abscissas.
+     * @return the abscissas
+     */
+    public double[] getAbscissas(int n);
 
     /**
      * Returns the differentiation matrix D such that for a function u, Du is
@@ -19,14 +27,14 @@ public interface PolynomialBasis {
      *
      * @return the differentiation operator
      */
-    double[][] getDifferentiationMatrix();
+    public double[][] getDifferentiationMatrix();
 
     /**
      * Returns the rank of the truncated basis.
      *
      * @return the rank
      */
-    int getRank();
+    public int getRank();
 
     /**
      * Computes the integral of a function using Guassian quadrature.
@@ -35,14 +43,14 @@ public interface PolynomialBasis {
      * rank.
      * @return the integrated function.
      */
-    double integrate(double[] integrand);
+    public double integrate(double[] integrand);
 
     /**
      * Sets the maximum rank of the truncated basis.
      *
      * @param rank the maximum rank of this truncated basis.
      */
-    void setRank(int rank);
+    public void setRank(int rank);
 
     /**
      * Returns a two element array with the left and right end points of the
@@ -51,4 +59,12 @@ public interface PolynomialBasis {
      * @return the domain of the polynomial basis
      */
     public double[] getDomain();
+    
+    /**
+     * Interpolates the function onto the given points.
+     * @param function the function to interpolate
+     * @param x the points to interpolate the function onto
+     * @return the interpolated values
+     */
+    public double[] interpolate(double[] function, double[] x);
 }

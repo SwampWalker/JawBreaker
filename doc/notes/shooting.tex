@@ -1,0 +1,20 @@
+\section{Finding the strained neutron star solutions: shooting}
+
+A nice method in one dimension is the shooting method. A reference solution is evolved to give the background solution. The equation of state is modified via phase transition, and a new central pressure is selected as a guess. This solution is evolved until the conserved particle number interior to a given radius equals the conserved particle number in the interior of the reference solution. This gives the variables $m$, $r$ and $p^r{}_r$ at the boundary. The constituent equation for $p^r{}_r$ is inverted to compute $\xi'$, and this is used to compute $p^\theta{}_\theta$. If this equals $p^r{}_r$ then the shooting method has worked. Otherwise, a new guess pressure is selected. The comparison process is eased by noting the following,
+\begin{equation}
+p^r{}_r - p^\theta{}_\theta = n\tau_{RR}\xi'^2\left(1 - \frac{2m}{r}\right) - \frac{n\tau_{\Theta\Theta}}{r^2} = n\left(Q +
+\frac{mq}{4}\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2\right)\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2 - n\left(Q +
+\frac{mq}{4}\frac{\xi^2}{r^2}\right)\frac{\xi^2}{r^2}.
+\end{equation}
+This equation has the structure,
+\begin{equation}
+\left(Q + \frac{mq}{4}a\right)a = \left(Q + \frac{mq}{4}b\right)b
+\end{equation}
+which always has the solution $a=b$, or substituting $a$, $b$, $M$ and $\xi$
+\begin{equation}
+\xi' = \sqrt{
+  \frac{R_c^2}{r^2}\frac{1-\frac{2M|_{R_c}}{R_c}}{1-\frac{2m}{r}}
+}.
+\end{equation}
+
+The shooting method is only convenient because one can use explicit time-stepping evolution algorithms, chiefly 4th order Runge-Kutta. In order to make use of this method, the constituent equation for the pressure \eqref{eq:functionalelastic} must be inverted using Newton-Raphson algorithm to compute $\xi'$. This can then be used to compute $p^\theta{}_\theta$ and the other derivatives.

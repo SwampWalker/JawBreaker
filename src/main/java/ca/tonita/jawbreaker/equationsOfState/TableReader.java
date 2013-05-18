@@ -6,7 +6,6 @@ package ca.tonita.jawbreaker.equationsOfState;
 
 import atonita.unitconversion.dimensionalanalysis.CommonUnits;
 import atonita.unitconversion.dimensionalanalysis.Dimension;
-import atonita.unitconversion.dimensionalanalysis.SIConstants;
 import atonita.unitconversion.dimensionalanalysis.UnitSystem;
 import java.io.*;
 import java.util.ArrayList;
@@ -60,6 +59,12 @@ public class TableReader {
             logn[i] = Double.valueOf(tokens[1]) + nConversion;
             logp[i] = Double.valueOf(tokens[13]) + pConversion;
             energyPerParticle[i] = Double.valueOf(tokens[4])*eConversion;
+            if (i != 0) {
+                if (logp[i] < logp[i-1]) {
+                    System.out.println("Problem reading table at entry " + (i-1) + "-" + i + ", non-monotonic pressure.");
+                    System.out.println(logp[i-1] - pConversion + " " + tokens[13]);
+                }
+            }
         }
         
         TabulatedHermite eos = new TabulatedHermite(logn, logp, energyPerParticle, particleMass);

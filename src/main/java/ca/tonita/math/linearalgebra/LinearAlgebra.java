@@ -124,15 +124,16 @@ public final class LinearAlgebra {
     public static void printMatrix(double[][] a) {
         System.out.println("Printing matrix:");
         for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j < a.length; j++) {
+            for (int j = 0; j < a[i].length; j++) {
                 System.out.print(a[i][j] + " ");
             }
             System.out.print("\n");
         }
     }
-    
+
     /**
      * Multiplies two matrices together, returning the result: AB = C.
+     *
      * @param A The left hand matrix.
      * @param B The right hand matrix.
      * @return The product.
@@ -146,15 +147,16 @@ public final class LinearAlgebra {
             for (int j = 0; j < M; j++) {
                 C[i][j] = 0;
                 for (int k = 0; k < O; k++) {
-                    C[i][j] += A[i][k]*B[k][j];
+                    C[i][j] += A[i][k] * B[k][j];
                 }
             }
         }
         return C;
     }
-    
+
     /**
      * Multiplies a vector into a matrix: Ax = b. Returns b.
+     *
      * @param A The matrix to multiply into.
      * @param x The vector to multiply with.
      * @return The result.
@@ -166,14 +168,15 @@ public final class LinearAlgebra {
         for (int i = 0; i < N; i++) {
             b[i] = 0;
             for (int j = 0; j < M; j++) {
-                b[i] += A[i][j]*x[j];
+                b[i] += A[i][j] * x[j];
             }
         }
         return b;
     }
-    
+
     /**
      * Multiplies a vector into a matrix: Ax = b. Returns b.
+     *
      * @param A The matrix to multiply into.
      * @param x The vector to multiply with.
      * @param b The result.
@@ -184,18 +187,28 @@ public final class LinearAlgebra {
         for (int i = 0; i < N; i++) {
             b[i] = 0;
             for (int j = 0; j < M; j++) {
-                b[i] += A[i][j]*x[j];
+                b[i] += A[i][j] * x[j];
             }
         }
     }
 
     public static void printSystem(double[][] a, double[] b) {
-                System.out.println("Printing matrix:");
+        System.out.println("Printing matrix:");
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a.length; j++) {
                 System.out.print(a[i][j] + " ");
             }
             System.out.print("| " + b[i] + "\n");
+        }
+    }
+
+    public static void printMatrixDiff(double[][] a, double[][] a2) {
+        System.out.println("Printing matrix difference:");
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a[i].length; j++) {
+                System.out.print((a[i][j] - a2[i][j]) + " ");
+            }
+            System.out.print("\n");
         }
     }
 }

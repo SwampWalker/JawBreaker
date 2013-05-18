@@ -72,7 +72,7 @@ public class ChebyshevExtrema implements PolynomialBasis {
      * @param rank the desired number of abscissas
      * @return the abscissas for the given rank
      */
-    public static double[] getAbscissas(int rank) {
+    public double[] getAbscissas(int rank) {
         double[] x = new double[rank];
         double inverseRankMinusOne = 1. / (rank - 1);
         for (int i = 0; i < rank; i++) {
@@ -269,5 +269,9 @@ public class ChebyshevExtrema implements PolynomialBasis {
 
     public double[] getDomain() {
         return new double[]{-1,1};
+    }
+
+    public double[] interpolate(double[] function, double[] x) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

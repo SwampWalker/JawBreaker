@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class EOSDataset extends MultiDataset<EOSBean> {
 
-    private final static String[] eosVariableNames = new String[]{"Number Density", "Pressure", "Total Energy Density"};
+    private final static String[] eosVariableNames = new String[]{"Number Density", "Pressure", "Total Energy Density", "Total Energy Density Derivative"};
     private ArrayList<String> names = null;
 
     public EOSDataset() {
@@ -29,7 +29,7 @@ public class EOSDataset extends MultiDataset<EOSBean> {
      * @param eos the equation of state to add.
      */
     public void add(int index, TabulatedHermite eos) {
-        double[][] table = new double[3][];
+        double[][] table = new double[4][];
         eos.cloneTable(table);
         EOSBean bean = new EOSBean();
         bean.setData(table);

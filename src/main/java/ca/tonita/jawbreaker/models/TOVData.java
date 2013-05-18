@@ -1,7 +1,7 @@
 package ca.tonita.jawbreaker.models;
 
-import java.util.ArrayList;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,6 +13,7 @@ public class TOVData {
     private ArrayList<double[]> secondaries;
     private ArrayList<Double> radii;
     private String name = "Unset name";
+    private double conservedMass;
 
     public ArrayList<double[]> getVariables() {
         return variables;
@@ -96,5 +97,17 @@ public class TOVData {
      */
     public double getRadius() {
         return radii.get(radii.size() - 1);
+    }
+
+    public double getConservedMass() {
+        return conservedMass;
+    }
+
+    /**
+     * Sets the conserved mass.
+     * @param mass the mass to set
+     */
+    public void setConservedMass(double mass) {
+        conservedMass = mass;
     }
 }

@@ -4,18 +4,16 @@
  */
 package ca.tonita.jawbreaker.tovwindows;
 
-import ca.tonita.physics.gr.TOVBuilder;
-import java.awt.BorderLayout;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import ca.tonita.jawbreaker.datasets.TOVDataset;
 import ca.tonita.jawbreaker.eoswindows.ChartPanelCreator;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
 import ca.tonita.jawbreaker.models.TOVData;
-import ca.tonita.math.polynomials.ChebyshevExtrema;
-import ca.tonita.math.polynomials.LinearlyMappedBasis;
+import ca.tonita.physics.gr.TOVBuilder;
+import java.awt.BorderLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.LogarithmicAxis;
@@ -32,7 +30,6 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
     private TOVData rk4TOV = new TOVData();
     private JawBreakerModel model;
     private final TOVDataset tovDataset;
-    private TOVData spectralTov = new TOVData();
 
     /**
      * Creates new form TOVBuilderPanel
@@ -104,7 +101,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         centralPressureField = new javax.swing.JFormattedTextField();
         jPanel1 = new javax.swing.JPanel();
         massLabel = new javax.swing.JLabel();
-        MassField = new javax.swing.JTextField();
+        massField = new javax.swing.JTextField();
         radiusLabel = new javax.swing.JLabel();
         radiusField = new javax.swing.JTextField();
         rangeComboBox = new javax.swing.JComboBox();
@@ -210,9 +207,9 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Properties"));
 
-        massLabel.setText("Gravitational Mass");
+        massLabel.setText("Conserved Mass");
 
-        MassField.setEnabled(false);
+        massField.setEnabled(false);
 
         radiusLabel.setText("Radius");
 
@@ -264,7 +261,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(massLabel)
-                            .addComponent(MassField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(massField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(radiusLabel)
@@ -288,7 +285,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(massLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MassField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(massField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(radiusLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -310,7 +307,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
 
         spectralPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectral Properties"));
 
-        rankSpinner.setModel(new javax.swing.SpinnerNumberModel(20, 1, 255, 1));
+        rankSpinner.setModel(new javax.swing.SpinnerNumberModel(50, 1, 255, 1));
 
         jLabel1.setText("Number of abscissas");
 
@@ -406,15 +403,11 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         double minPressure = Double.valueOf(minPressureField.getText());
         TOVBuilder.evolve(rk4TOV, eos, centralPressure, stepSize, outputEvery, minPressure);
         rk4TOV.computeSecondaries(eos);
-        LinearlyMappedBasis basis = new LinearlyMappedBasis(new ChebyshevExtrema());
-        basis.setDomain(new double[]{0, 1});
-        int rank = (Integer) rankSpinner.getValue();
-        basis.setRank(rank);
-        TOVBuilder.spectralSolution(spectralTov, rk4TOV, eos, basis);
         if (tovDataset.getSeriesCount() == 0) {
-            tovDataset.add(0, spectralTov);
-            tovDataset.add(1, rk4TOV);
+            tovDataset.add(0, rk4TOV);
         }
+        massField.setText(String.format("%.6f", rk4TOV.getConservedMass()));
+        radiusField.setText(String.format("%.6f",rk4TOV.getRadius()));
         chart.getXYPlot().datasetChanged(null);
     }//GEN-LAST:event_createTOVButtonActionPerformed
 
@@ -434,7 +427,6 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         updateChart();
     }//GEN-LAST:event_logarithmRangeActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField MassField;
     private javax.swing.JFormattedTextField centralPressureField;
     private javax.swing.JLabel centralPressureLabel;
     private javax.swing.JButton createTOVButton;
@@ -449,6 +441,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JCheckBox logarithmDomain;
     private javax.swing.JCheckBox logarithmRange;
+    private javax.swing.JTextField massField;
     private javax.swing.JLabel massLabel;
     private javax.swing.JFormattedTextField minPressureField;
     private javax.swing.JLabel minPressureLabel;
