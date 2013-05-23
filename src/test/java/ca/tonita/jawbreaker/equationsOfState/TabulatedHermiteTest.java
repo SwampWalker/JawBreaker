@@ -161,7 +161,7 @@ public class TabulatedHermiteTest extends TestCase {
     }
 
     /**
-     * Test of dEnergyPerParticle method, of class TabulatedHermite.
+     * Test of denergyPerParticle method, of class TabulatedHermite.
      */
     public void testDEnergyPerParticle() {
         System.out.println("dEnergyPerParticle");
@@ -171,7 +171,7 @@ public class TabulatedHermiteTest extends TestCase {
             double ep = instance.energyPerParticle(p[i]*(1 + h));
             double em = instance.energyPerParticle(p[i]*(1 - h));
             double expResult = (ep - em)*0.5/p[i]/h;
-            double result = instance.dEnergyPerParticle(p[i]);
+            double result = instance.denergyPerParticle(p[i]);
             assertEquals(expResult, result, result*h);
         }
     }

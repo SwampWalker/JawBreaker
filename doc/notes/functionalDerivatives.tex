@@ -85,23 +85,23 @@ Pay close attention to that minus sign in front.
 The isotropic pressure coefficient is just a simplifying constant, given as
 \begin{equation}
 Q[\sigma,\xi,\xi'] = \frac{P(N[\xi])}{N[\xi]} +
-\frac{mr_l\left(N[\xi]\right)}{2}H[\sigma,\xi,\xi']-\frac{mq\left(N[\xi]\right)}{4}.
+\frac{m_pr_l\left(N[\xi]\right)}{2}H[\sigma,\xi,\xi']-\frac{m_pq\left(N[\xi]\right)}{4}.
 \label{eq:pressureQExpanded}
 \end{equation}
 The derivative with respect to configuration gradient
 \begin{equation}
-\frac{\partial Q}{\partial \xi'} = \frac{mr_l}{2}\frac{\partial H}{\partial \xi'},
+\frac{\partial Q}{\partial \xi'} = \frac{m_pr_l}{2}\frac{\partial H}{\partial \xi'},
 \label{eq:dpressureQ:dxi}
 \end{equation}
 with respect to the configuration gradient
 \begin{equation}
 \frac{\partial Q}{\partial \xi} = \frac{1}{N}\left( \left.\frac{\partial P}{\partial R}\right|_\xi - \frac{P}{N^2}\left.\frac{\partial N}{\partial R}\right|_\xi \right)
-+\frac{m}{2}\left(\left.\frac{\partial r_l}{\partial R}\right|_\xi H + r_l\frac{\partial H}{\partial \xi}\right) - \frac{m}{4}\left.\frac{\partial q}{\partial R}\right|_\xi,
++\frac{m_p}{2}\left(\left.\frac{\partial r_l}{\partial R}\right|_\xi H + r_l\frac{\partial H}{\partial \xi}\right) - \frac{m_p}{4}\left.\frac{\partial q}{\partial R}\right|_\xi,
 \label{eq:dpressureQ:xi}
 \end{equation}
 note that the $P'$ term can be evaluated using the TOV equations. The derivative of the isotropic pressure $Q$ with respect to the mass potential is
 \begin{equation}
-\frac{\partial Q}{\partial m} = \frac{mr_l}{2}\frac{\partial H}{\partial m}.
+\frac{\partial Q}{\partial m} = \frac{m_pr_l}{2}\frac{\partial H}{\partial m}.
 \label{eq:dpressureQ:m}
 \end{equation}
 
@@ -124,6 +124,6 @@ with respect to the configuration
 \end{equation}
 and the derivative with respect to the mass potential
 \begin{equation}
-\frac{\partial H}{\partial m} = -\frac{2\xi'^2}{r}\frac{1}{1 - \frac{2M}{R}}.
+\frac{\partial H}{\partial m} = -\frac{2\xi'^2}{r}\frac{1}{1 - \frac{2M}{\xi}}.
 \label{eq:dtrace:m}
 \end{equation}

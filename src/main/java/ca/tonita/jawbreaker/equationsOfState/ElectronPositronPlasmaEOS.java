@@ -204,20 +204,20 @@ public class ElectronPositronPlasmaEOS {
 		// First we determine if the (numberDensity,temperature) point lies to the left of the turning point curve.
 		// This would imply that positrons are important and we don't have a good estimate of eta. See Cox & Giuli sec 24.9.
 		double beta = k_b*temperature/(m_e*c*c);
-		double turningPointDensity = 0.0;
+		double turningPointDensity;
 		if (beta > 1.0) {
 			turningPointDensity = beta*beta*4.0*8.0*Math.PI*Math.pow(m_e*c/h, 3.0)/3.0;	// C&G 24.345
 		} else {
 			turningPointDensity = beta*(1.0+0.75*beta)*Math.exp(-1.0/beta)*2.0*Math.sqrt(1.5*Math.PI)*8.0*Math.PI*Math.pow(m_e*c/h, 3.0)/3.0;
 		}
-		double eta = 0.0;
+		double eta;
 		if (turningPointDensity > numberDensity) {
 			// Positrons are important, most likely mu is between 0 and -1, so...
 			eta = -0.5;
 		} else {
 			// We estimate eta through equation 24.309, so we compute the dimensionless number density
 			double dimensionlessNumberDensitySquared = Math.pow(h/(m_e*c)*Math.pow(3.0*numberDensity/(8.0*Math.PI), 1.0/3.0),2.0);
-			double firstGuess = 0.0;
+			double firstGuess;
 			if (dimensionlessNumberDensitySquared > 1.0e-6) {
 				firstGuess = (Math.sqrt(1.0+dimensionlessNumberDensitySquared)-1.0)/beta;
 			} else {

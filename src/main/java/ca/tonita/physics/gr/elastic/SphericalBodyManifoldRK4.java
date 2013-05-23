@@ -54,9 +54,14 @@ public class SphericalBodyManifoldRK4 {
         double h = r - solution.getRadius(iLowerBound);
         double[] newPoint = RK4.step(solution.getVariables(iLowerBound), solution.getRadius(iLowerBound), eqns, h);
         bean.setPressure(newPoint[0]);
+        bean.setDpressure(eqns.dmdr(r, newPoint));
         bean.setMassPotential(newPoint[1]);
-        bean.setNumberDensity(eos.numberDensity(bean.getPressure()));
+        bean.setdMassPotential(eqns.dmdr(r, newPoint));
         
+        bean.setNumberDensity(eos.numberDensity(bean.getPressure()));
+        bean.setEnergyPerParticle(eos.energyPerParticle(bean.getPressure()));
+        bean.setDnumberDensity(eos.dnumberDensity(bean.getPressure()));
+        bean.setDenergyPerParticle(eos.denergyPerParticle(bean.getPressure()));
         return bean;
     }
 }

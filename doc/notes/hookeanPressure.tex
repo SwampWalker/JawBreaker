@@ -1,29 +1,27 @@
 \section{The pressure tensor of a Hookean equation of state.}
 
-It can be shown by reasons of covariance that the only dependence of $\rho$ is on $f^A$ and $H^{AB}$. Expanded to second order, and assuming isotropicity, one may write the energy per particle as
-\begin{equation}
+It can be shown by reasons of covariance that the only dependence of $\rho$ is on $f^A$ and $H^{AB}$. Expanded to second order, and assuming isotropicity, one may write the energy per particle as 
+\begin{eqnarray}
 \label{eqn:eos}
-\begin{array}{rcl}
-\epsilon & = & \displaystyle{m_p + m_p\varepsilon(N) + p(N)\frac{H^{AB}G_{AB}-3}{N}} \\
- && + \frac{m}{8}\left[ 2r\left(H^{AB}G_{AB}-3\right)^2 + q\left(H^{AB}G_{BC} - \delta^{A}{}_C\right)\left(H^{CD}G_{DA} - \delta^{C}{}_A\right) \right]
- \end{array}
-\end{equation}
-so that it depends only on the invariants of the deformation tensor $H^{A}{}_{B}$; here, $m_p$ is the (average) particle rest mass. The first order trace term, proportional to $p(N)$ represents the pressure at zero strain, i.e. the prestressed case. According to Beig and Schmidt (2003) the coefficients $q$ and $r$ are related to the Lam\'e coefficients as $\lambda = m_pNq$ and $\mu = m_pNr$. According to Landau and Lifshitz ``Theory of Elasticity'' the bulk modulus is given by $K=\lambda + 2/3 \mu$. The coefficient $\mu$ is known as the shear modulus or the modulus of rigidity.
+\nonumber\epsilon & = & \displaystyle{m + m\varepsilon(N) + p(N)\frac{H^{AB}G_{AB}-3}{N}} \\
+ && +  \frac{\lambda(N)}{8N}\left(H^{AB}G_{AB}-3\right)^2 + \frac{\mu(N)}{4N}\left(H^{AB}G_{BC} - \delta^{A}{}_C\right)\left(H^{CD}G_{DA} - \delta^{C}{}_A\right)
+\end{eqnarray}
+so that it depends only on the invariants of the deformation tensor $H^{A}{}_{B}$. There is some controversy on the correct formulation of this equation of state, here I have largely used the equation of state proposed by Karlovini and Samuelsson. The above equation of state is equivalent to theirs as they denote the generalised Cauchy-Green tensor as $h_{ab}$ and the background state as ${}^0\eta_{ab}$. In the notation used in these notes one would have $e_{AB} = H_{AB} - G_{AB}$, since the trace is $e_{AB}G^{AB}$ the above equation of state follows. The first order trace term, proportional to $p(N)$ represents the pressure at zero strain, i.e. the prestressed case. This differs from Karlovini and Samuelsson, but as shown below is the necessary term to give the background pressure. This is corroborated by Beig and Schmidt (2003). According to Landau and Lifshitz ``Theory of Elasticity'' the bulk modulus is given by $K=\lambda + 2/3 \mu$. The coefficient $\mu$ is known as the shear modulus or the modulus of rigidity.
 
 The Piaola-Kirchhoff stress-tensor corresponding to this energy term is given by
 \begin{equation}
 \label{eqn:pkTensor}
 \tau_{AB} = \frac{p(N)G_{AB}}{N} +
-\frac{m_p}{4}\left[2rG_{AB}\left(H^{CD}G_{CD}-3\right) + q\left(H^{CD}G_{AC}G_{BD} - G_{AB}\right)\right]
+\frac{\lambda(N)}{4N}G_{AB}\left(H^{CD}G_{CD}-3\right) + \frac{\mu(N)}{2N}\left(H^{CD}G_{AC}G_{BD} - G_{AB}\right)
 \end{equation}
-or in a slightly more isotropic looking form
+or in a form separating the tensors from their coefficients
 \begin{equation}
 \label{eqn:pkTensorIso}
-\tau_{AB} = \left(\frac{p(N)}{N} +
-\frac{m_pr}{2}\left(H^{CD}G_{CD}-3\right)-\frac{m_pq}{4}\right)G_{AB} +
-\frac{m_pq}{4}\left(H^{CD}G_{AC}G_{BD}\right)
+\tau_{AB}N = \left(p(N) +
+\frac{\lambda(N)}{4}\left(H^{CD}G_{CD}-3\right)-\frac{\mu(N)}{2}\right)G_{AB} +
+\frac{\mu(N)}{2}\left(H^{CD}G_{AC}G_{BD}\right)
 \end{equation}
-Due to the oddity of the second term in \eqref{eqn:pkTensor}, I will show it in more detail, define first the tensor functional $I$ as
+Due to the oddity of the derivative of the trace of the square term, I will show it in more detail, define first the tensor functional $I$ as
 \begin{equation}
 I[H^{AB}] = \left(H^{CD}G_{DE} - \delta^{C}{}_E\right)\left(H^{EF}G_{FC} - \delta^{E}{}_C\right)
 \end{equation}
@@ -37,60 +35,15 @@ we have
 This also illustrates the general way of taking derivatives with respect to tensor without the use of coordinates. Writing $H=G_{AB}H^{AB}$ then
 \begin{equation}
 \tau_{AB} = \frac{p(N)G_{AB}}{N} +
-\frac{m_p}{4}\left[2rG_{AB}\left(H-3\right) + q\left(H^{CD}G_{AC}G_{BD} - G_{AB}\right)\right]
+\frac{\lambda(N)}{4N}G_{AB}\left(H-3\right) + \frac{\mu(N)}{2N}\left(H^{CD}G_{AC}G_{BD} - G_{AB}\right)
 \end{equation}
 and we have the pressure tensor from the pullback
 \begin{equation}
 p_{ab} = p(N)G_{ab}\frac{n}{N} +
-\frac{m_pn}{4}\left[2rG_{ab}\left(H-3\right) + q\left(H_{ab} - G_{ab}\right)\right]
+\frac{n}{N}\left[\frac{\lambda(N)}{4}G_{ab}\left(H-3\right) + \frac{\mu(N)}{2}\left(H_{ab} - G_{ab}\right)\right]
 \end{equation}
 (note that $H_{ab} = H^{CD}G_{AC}G_{BD} f^A{}_af^B{}_b \neq h_{ab}$). In the case of zero strain $H^{AB} = G^{AB}$ implying $G_{ab} = H_{ab}\equiv h_{ab}$, the trace $H=3$, and $n=N$, so that
 \begin{equation}
 p_{ab} = p(n)h_{ab}
 \end{equation}
 which is the normal perfect fluid pressure tensor.
-
-One also needs to compute the various derivatives of equation of state
-quantities. The equation of state for a Hookean material is
-\eqref{eqn:eos}
-\begin{equation}
-\begin{array}{rcl}
-\epsilon & = & \displaystyle{m_p + m_p\varepsilon(N) + p(N)\frac{H^{AB}G_{AB}-3}{N}} \\
- && + \frac{m_p}{8}\left[ 2r\left(H^{AB}G_{AB}-3\right)^2 + q\left(H^{AB}G_{BC} - \delta^{A}{}_C\right)\left(H^{CD}G_{DA} - \delta^{C}{}_A\right) \right]
- \end{array} \tag{\ref{eqn:eos}}
-\end{equation}
-which leads to the second Piaola-Kirchhoff tensor \eqref{eqn:pkTensor}
-\begin{equation}
-\tau_{AB} = \frac{p(N)G_{AB}}{N} +
-\frac{m_p}{4}\left[2rG_{AB}\left(H^{CD}G_{CD}-3\right) +
-q\left(H^{CD}G_{AC}G_{BD} - G_{AB} \right) \right]
-\tag{\ref{eqn:pkTensor}}.
-\end{equation}
-First, lets deal with the Piaola-Kirchhoff tensor. The one derivative is
-easy
-\begin{equation}
-\frac{\partial \tau_{AB}}{\partial H^{BC}} = 
-\frac{m_p}{4}\left(2rG_{AB} G_{CD} +
-q G_{AC}G_{BD} \right)
-\end{equation}
-the next derivative, not so much
-\begin{eqnarray}
-\nonumber\frac{\partial \tau_{AB}}{\partial f^C} & = & \left( \frac{p'(N)}{N} -
-\frac{p(N)}{N^2}\right)\frac{\partial N}{\partial X^C}G_{AB} +
-\frac{p(N)}{N} G_{AB,C} +
-\frac{m_p}{4}\left[2rG_{AB,C}\left(H^{DE}G_{DE}-3\right)\right. \\
-&& \left. + 2rG_{AB}H^{DE}G_{DE,C} +
-q\left(H^{DE}G_{AD,C}G_{BE} + H^{DE}G_{AD}G_{BE,C} - G_{AB,C} \right)
-\right].
-\end{eqnarray}
-Finally, we just need the body derivative of the specific energy,
-\begin{eqnarray}
-\nonumber\frac{\partial \epsilon}{\partial f^A} = \frac{\partial \epsilon}{\partial X^A} & = &
-m_p\varepsilon'(N)\frac{\partial N}{\partial X^A} + \left( \frac{p'(N)}{N} - \frac{p(N)}{N^2}\right)
-\frac{\partial N}{\partial X^A}(H^{BC}G_{BC} - 3) +
-\frac{p(N)}{N}H^{BC}G_{BC,A} \\
-&& + \frac{m_p}{4}\left(2rH^{BC}G_{BC,A}(H^{DE}G_{DE}-3) +
-qH^{BC}G_{CD,A}(H^{DE}G_{EB} - \delta^D{}_B)\right).
-\end{eqnarray}
-This is assuming that the coefficients $q$ and $r$ are constant...
-Nothing really simplifies very much, in any case.

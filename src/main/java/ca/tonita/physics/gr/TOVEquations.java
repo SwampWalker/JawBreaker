@@ -84,7 +84,7 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
      * @param y The TOV variables {p,m,lambda}
      * @return the derivative of lambda wrt r
      */
-    private double dlambdadr(double r, double[] y) {
+    public double dlambdadr(double r, double[] y) {
         if (r == 0.0) {
             return 0;
         }
@@ -101,7 +101,7 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
      * @param y The TOV variables {p,m,lambda}
      * @return the derivative of pressure wrt r
      */
-    private double dpdr(double r, double[] y) {
+    public double dpdr(double r, double[] y) {
         if (r == 0.0) {
             return 0;
         }

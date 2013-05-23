@@ -372,7 +372,7 @@ public class TabulatedHermite {
      * @param p the pressure p
      * @return the derivative of energy per particle
      */
-    public double dEnergyPerParticle(double p) {
+    public double denergyPerParticle(double p) {
         memoize(p);
         if (memoIndex == -1) {
             return energyExtrap[0][0] * energyExtrap[0][1] * Math.pow(p, energyExtrap[0][1] - 1);
