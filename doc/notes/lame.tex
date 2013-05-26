@@ -1,6 +1,50 @@
 \section{Elastic constants: the Lam\'e coefficients}
-In this section we consider the Lam\'e coefficients $q$ and $r_l$. These are related to some basic thermodynamic quantities in a manner specified earlier. The coefficient $r_l$ is perhaps the easiest relation
+In this section I consider the Lam\'e coefficients $\lambda_l$ and $\mu$. The shear modulus $\mu$ is a simple thermodynamic quantity which is part of the equation of state of the matter under investigation. In particular, Strohmayer et al. (1990) performed Monte Carlo simulations and found that the shear modulus of neutron star crustal matter is well described by
 \begin{equation}
-r_l \equiv 
-\label{eq:q_lame}
+\frac{\mu_\mathrm{eff}}{n_I(Ze)^2/a} = \frac{0.1194}{1 + 1.781(100/\Gamma)^2}.
+\label{eq:strohmayerMu}
+\end{equation}
+In this formula, $Ze$ gives the electric charge of an average nucleus in the crust, $n_I=1/(4\pi/3)a^3$ is the ion number density, $a$ is the radius Wigner-Seitz cell containing one single ion of charge $Ze$ (crystal spacing) so that $a=(4\pi n_I/3)^{-1/3}$, and $\Gamma = (Ze)^2(4\pi N/3)^{1/3}/k_bTL$ is the so called Coulomb coupling parameter. At zero temperature--the usual or at least approximate temperature of equilibrium neutron stars--this constant rapidly increases to $\Gamma \rightarrow \infty$. In that case the shear modulus is given by (dropping the eff notation)
+\begin{equation}
+\mu = 0.1194\frac{n(Ze)^2}{A}\frac{1}{a} = 0.1194\frac{n(Ze)^2}{A}\left(\frac{3A}{4\pi n}\right)^{1/3}=0.07407\left(\frac{n}{A}\right)^{2/3}(Ze)^2
+\label{eq:zeroTemperatureShearESU}
+\end{equation}
+with $A$ the mass number of the ion; this expresses the shear in terms of the baryon number density $n$ and the other equation of state parameters $Z$ and $A$. This formula is given in electrostatic units, in SI units the shear is given by
+\begin{equation}
+\mu = 0.07407\left(\frac{n}{A}\right)^{2/3}k(Ze)^2
+\label{eq:zeroTemperatureShear}
+\end{equation}
+with $k$ being Coulomb's constant. Analysing the units,
+\begin{equation}
+[\mu] = [n][k][(Ze)^2][a]^{-1} = \frac{1}{L^3}\frac{ML^3}{Q^2T^2}Q^2\frac{1}{L} = \frac{M}{LT^2} = \frac{ML^2T^{-2}}{L^3},
+\label{eq:shearDimension}
+\end{equation}
+which are the units of an energy density or pressure, the correct units of the shear modulus.
+
+The other Lam\'e constant does not have such a tidy expression. Instead, it is related to the combination of the shear modulus and the bulk modulus as
+\begin{equation}
+\lambda_l = K - \frac{2\mu}{3}.
+\label{eq:lameLambda}
+\end{equation}
+With the bulk modulus given by the thermodynamic relation
+\begin{equation}
+K = -V \frac{\partial p}{\partial V}
+\label{eq:bulkModulusThermo}
+\end{equation}
+If one notes that $n=N_b/V$ for some $N_b$, then
+\begin{equation}
+K = -\frac{1}{n}\frac{\partial p}{\partial n^{-1}} = n\frac{\partial p}{\partial n}.
+\label{eq:bulkModulus}
+\end{equation}
+
+\subsection{Polytropic equation of state}
+In the case of a realistic equation of state, the quantities $A$, $Z$ and $\partial p/\partial n$ are given. However, for a polytropic equation of state with $p=\kappa n^\Gamma$, these quantities (except the pressure derivative) are a matter of choice. For an average ion of ${}^{56}\mathrm{Fe}$ in the crust, the mass number is $A=56$, the charge number is $Z=26$. In this case,
+\begin{equation}
+\mu = 3.421\left(n\right)^{2/3}ke^2 = 3.421p^{2/(3\Gamma)}\frac{ke^2}{\kappa^{2/(3\Gamma)}}
+\label{eq:polytropicShear}
+\end{equation}
+with the constants remaining depending on the particular polytrope and the units chosen. The bulk modulus has the simple formula
+\begin{equation}
+K = n\Gamma \kappa n^{\Gamma-1} = \Gamma \kappa n^\Gamma = \Gamma p.
+\label{eq:polytropicBulkModulus}
 \end{equation}

@@ -146,43 +146,9 @@ H_2[\sigma,\xi,\xi'] \equiv \mathrm{Tr}(\mathcal{H}-\mathcal{I})^2 \equiv
 The number density in spacetime is calculated from \eqref{eqn:numberDensity} and \eqref{eq:sphericalStrainTensor}
 \begin{equation}
 n[\sigma,\xi,\xi'] =
-N[\xi]\left(\frac{\xi}{r}\right)^2\xi'e^{\Sigma[\xi]-\sigma}
+N[\xi]\left(\frac{\xi}{r}\right)^2\xi'e^{\Sigma[\xi]-\sigma}.
 \label{eq:numberDensity}
 \end{equation}
-while the energy per particle is
-\begin{eqnarray} 
-\epsilon[\sigma,\xi,\xi'] & = & \displaystyle{m_p + m_p\varepsilon (N[\xi]) +
-P(N[\xi])\frac{H[\sigma,\xi,\xi']}{N[\xi]}} 
-  + \frac{m_p}{8}\left( 2r_l\left(N[\xi]\right)H[\sigma,\xi,\xi']^2 +
-q\left(N[\xi]\right)H_2[\sigma,\xi,\xi']\right)
-\end{eqnarray}
-where $r_l$ is the quantity related to the Lam\'e coefficient which was
-previously just $r$. The equation of state quantities in the background are denoted with capitals in a manner similar to other quantities; the pressure is denoted $P$ and the number density $N$, however, the background energy per particle is denoted as $\varepsilon$.
-
-The Piaola-Kirchhoff stress tensor can be written in the following form
-\begin{equation}
-\tau_{AB}[\sigma,\xi,\xi'] = Q[\sigma,\xi,\xi']G_{AB}[\xi] +
-\frac{mq\left(N[\xi]\right)}{4}\left(H^{CD}G_{AC}G_{BD}\right)
-\end{equation}
-with $Q$ being the isotropic pressure
-\begin{equation}
-Q[\sigma,\xi,\xi'] = \left(\frac{P(N[\xi])}{N[\xi]} +
-\frac{mr_l\left(N[\xi]\right)}{2}H[\sigma,\xi,\xi']-\frac{mq\left(N[\xi]\right)}{4}\right)
-\end{equation}
-this can be written as
-\begin{equation}
-\tau_{AB} = \left[
-  \begin{array}{ccc}
-    \left(Q[\sigma,\xi,\xi'] +
-\frac{mq\left(N[\xi]\right)}{4}e^{2\Sigma[\xi]-2\sigma}\xi'^2\right)e^{2\Sigma[\xi]}& 0 & 0\\
-    0 & \left(Q[\sigma,\xi,\xi'] +
-\frac{mq\left(N[\xi]\right)}{4}\frac{\xi^2}{r^2}\right)\xi^2& 0 \\
-    0 & 0 & \left(Q[\sigma,\xi,\xi'] +
-\frac{mq\left(N[\xi]\right)}{4}\frac{\xi^2}{r^2}\right)\xi^2\sin^2\theta
-  \end{array}
-\right].
-\end{equation}
-It is slightly obscure, but when there is no strain $Q=p/N - mq/4$, $\xi'=1$ and $\Sigma=\sigma$, thus the isotropic pressure tensor is regenerated.
 
 The $r$-component of the conservation equations can be written
 \begin{equation}
@@ -220,6 +186,7 @@ The TOV equation for hydrostatic equilibrium falls directly out of this
 equation. There $p^a{}_b = ph^a{}_b = p\delta^a{}_b$ for $a,b\neq t$, and
 in particular for hydro $p^r{}_r = p^\theta{}_\theta =p$.
 
+
 In the interests of simplicity, I define a first order system by promoting the radial pressure to a first class variable. The constituent equation for the pressure then becomes a first order nonlinear differential equation for the configuration $\xi$. Collecting and naming the elastic functionals (while replacing $\sigma$ with its relation to $m$)
 \begin{equation}
 \mathcal{D}[p^r{}_r,m,\lambda',\xi,\xi'] \equiv \partial_r p^r{}_r + \lambda'
@@ -239,3 +206,38 @@ In the interests of simplicity, I define a first order system by promoting the r
 \mathcal{G}[p^r{}_r,m,\xi,\xi'] \equiv n[m,\xi,\xi']\tau_{RR}[m,\xi,\xi']\xi'^2\left(1 - \frac{2m}{r}\right) - p^r{}_r = 0.
 \label{eq:functionalelastic}
 \end{equation}
+This set of equations governs radial dependence of the set of physical variables $(p^r{}_r,m,\lambda,\xi)$ which are respectively the radial pressure, the gravitational mass, the logarithm of the lapse and the configuration. Note that because of the notation used to refer to background components, $\xi$ could also be written as $R$.
+
+\subsection{Hookean equation of state pressure tensor}
+This subsection specialises the above equations to the equation of state chosen above. The energy per particle is \eqref{eqn:eos}
+\begin{equation}
+\nonumber\epsilon = \displaystyle{m_p + m_p\varepsilon(N) + P(N)\frac{H[\sigma,\xi,\xi']}{N}}
+ +  \frac{\lambda_l(N)}{8N}H[\sigma,\xi,\xi']^2 + \frac{\mu(N)}{4N}H_2[\sigma,\xi,\xi']
+\end{equation}
+where $\lambda_l$ is the Lam\'e coefficient subscripted to distinguish it from the metric potential. The equation of state quantities in the background are denoted with capitals in a manner similar to other quantities; the pressure is denoted $P$ and the number density $N$, however, the background energy per particle is denoted as $\varepsilon$. The term $H$ and $H_2$ denotes the trace and the trace of the square of the generalised right Cauchy-Green tensor (minus the metric).
+
+The Piaola-Kirchhoff stress tensor is \eqref{eqn:pkTensor}
+\begin{equation}
+\tau_{AB} = \left(\frac{P(N)}{N} + \frac{\lambda_l(N)}{4N}H\right)G_{AB} + \frac{\mu(N)}{2N}\left(H^{CD}G_{AC}G_{BD} - G_{AB}\right).
+\end{equation}
+It should be clear that the isotropic component of the pressure is therefor $P_I = P + \lambda_l/4H$. Recall the relation between the gravitational mass and the potential $\sigma(r) = -1/2\ln{\left(1-\frac{2m(r)}{r}\right)}$ and $\Sigma(\xi) = -1/2\ln{\left(1-\frac{2M(\xi)}{\xi}\right)}$, with this the Piaola-Kirchoff tensor can be written as (dropping functional dependence notation to save space)
+\begin{equation}
+N\tau_{AB} = \left[
+  \begin{array}{ccc}
+    \left(P_I + \frac{\mu}{2}\left(e^{2\Sigma-2\sigma}\xi'^2 - 1\right)\right)e^{2\Sigma}& 0 & 0\\
+    0 & \left(P_I + \frac{\mu}{2}\left(\frac{\xi^2}{r^2} - 1\right)\right)\xi^2& 0 \\
+    0 & 0 & \left(P_I + \frac{\mu}{2}\left(\frac{\xi^2}{r^2} - 1\right)\right)\xi^2\sin^2\theta
+  \end{array}
+\right].
+\end{equation}
+Choosing the notation $\chi \equiv n/N = \left(\frac{\xi}{r}\right)^2\xi'e^{\Sigma[\xi]-\sigma}$ for the volume contraction factor (ratio of the determinants of the spatial and body metric), the physical (mixed) pressure tensor can be written
+\begin{equation}
+p^a{}_b = \left[
+  \begin{array}{cccc}
+    0 & 0 & 0 & 0 \\
+    0 & \chi\left(P_I + \frac{\mu}{2}\left(e^{2\Sigma-2\sigma}\xi'^2 - 1\right)\right)e^{2\Sigma-2\sigma}\xi'^2 & 0 & 0 \\
+    0 & 0 & \chi\left(P_I + \frac{\mu}{2}\left(\frac{\xi^2}{r^2} - 1\right)\right)\frac{\xi^2}{r^2} & 0 \\
+    0 & 0 & 0 & \chi\left(P_I + \frac{\mu}{2}\left(\frac{\xi^2}{r^2} - 1\right)\right)\frac{\xi^2}{r^2}  \end{array}
+\right].
+\end{equation}
+Note that when $\xi<r$ the shear term in the tangential pressure becomes negative. In this case, the body has expanded and the elastic terms reduce the tangential pressure. This will occur for the radial pressure only when $G_RR/g_rr\xi'^2<1$.
