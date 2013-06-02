@@ -82,9 +82,5 @@ public final class ElasticTOVEquations {
      */
     protected double dtracedmass(double r, SphericalElasticBean bodyVars, double xi, double xiPrime, double m) {
         return - 2*xiPrime*xiPrime/r/(1 - 2*bodyVars.getMassPotential()/xi);
-    }
-    
-    protected double isotropicQ(double r, SphericalElasticBean bodyVars, double xi, double xiPrime, double m) {
-        return bodyVars.getPressure()/bodyVars.getNumberDensity() + 
-    }
+    }    
 }

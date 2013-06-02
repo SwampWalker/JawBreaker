@@ -40,6 +40,8 @@ public class TOVEquationsTest extends TestCase {
         double[] logn = new double[nPoints];
         double[] logp = new double[nPoints];
         double[] energyPerParticle = new double[nPoints];
+        double[] A = new double[nPoints];
+        double[] Z = new double[nPoints];
         double logNMin = 1.0E-3;
         double logNMax = 1;
         for (int i = 0; i < nPoints; i++) {
@@ -47,8 +49,10 @@ public class TOVEquationsTest extends TestCase {
             double n = Math.pow(10, logn[i]);
             logp[i] = Math.log10(poly.pressure(n));
             energyPerParticle[i] = poly.energyPerParticle(n);
+            A[i] = 56;
+            Z[i] = 26;
         }
-        TabulatedHermite eos = new TabulatedHermite(logn, logp, energyPerParticle, 1);
+        TabulatedHermite eos = new TabulatedHermite(logn, logp, energyPerParticle, 1, A, Z);
         TOVEquations instance = new TOVEquations(eos);
         for (int iType = 0; iType < 3; iType++) {
             int type = iType;

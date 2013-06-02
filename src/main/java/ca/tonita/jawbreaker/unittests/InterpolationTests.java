@@ -32,12 +32,16 @@ public class InterpolationTests {
         double[] logn = new double[nPoints];
         double[] logp = new double[nPoints];
         double[] spE = new double[nPoints];
+        double[] A = new double[nPoints];
+        double[] Z = new double[nPoints];
         for (int i = 0; i < nPoints; i++) {
             logn[i] = logn0 + i*lognStep;
             logp[i] = Math.log10(polyP(Math.pow(10, logn[i])));
             spE[i] = polySpE(Math.pow(10, logn[i]));
+                        A[i] = 56;
+            Z[i] = 26;
         }
-        TabulatedHermite eos = new TabulatedHermite(logn, logp, spE, 1);
+        TabulatedHermite eos = new TabulatedHermite(logn, logp, spE, 1, A, Z);
         System.out.println("\nEnergy Density:");
         double n = Math.pow(10, logn[1]);
         double p = polyP(n);

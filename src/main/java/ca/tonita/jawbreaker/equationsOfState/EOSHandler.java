@@ -52,21 +52,26 @@ public class EOSHandler {
      *
      * @param k The polytropic constant k or kappa to use.
      * @param gamma The adiabatic index to use.
+     * @param particleMass The average mass of a particle to use.
      * @param nPoints The number of points to use in the table.
      * @param logn0 The initial (log10) number density of the table.
      * @param lognStep The step size to use between different table points.
      * @return A polytropic equation of state to use.
      */
-    public TabulatedHermite polytrope(double k, double gamma, int nPoints, double logn0, double lognStep) {
+    public static TabulatedHermite polytrope(double k, double gamma, double particleMass, int nPoints, double logn0, double lognStep) {
         double[] logn = new double[nPoints];
         double[] logp = new double[nPoints];
         double[] spE = new double[nPoints];
+        double[] A = new double[nPoints];
+        double[] Z = new double[nPoints];
         for (int i = 0; i < nPoints; i++) {
             logn[i] = logn0 + i * lognStep;
             logp[i] = Math.log10(polyP(Math.pow(10, logn[i]), k, gamma));
             spE[i] = polySpE(Math.pow(10, logn[i]), k, gamma);
+            A[i] = 56;
+            Z[i] = 56;
         }
-        return new TabulatedHermite(logn, logp, spE, 1);
+        return new TabulatedHermite(logn, logp, spE, particleMass, A, Z);
     }
 
     /**

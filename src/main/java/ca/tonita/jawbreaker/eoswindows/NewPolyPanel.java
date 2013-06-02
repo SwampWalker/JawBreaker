@@ -4,6 +4,7 @@
  */
 package ca.tonita.jawbreaker.eoswindows;
 
+import ca.tonita.jawbreaker.equationsOfState.EOSHandler;
 import ca.tonita.jawbreaker.equationsOfState.Polytrope;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 
@@ -201,17 +202,8 @@ public class NewPolyPanel extends javax.swing.JPanel implements TabulatedEOSGene
         double kappa = Double.valueOf(kappaField.getText());
         double gamma = Double.valueOf(gammaField.getText());
         
-        Polytrope poly = new Polytrope(kappa, gamma, particleMass);
-        double[] logn = new double[nPoints];
-        double[] logp = new double[nPoints];
-        double[] energyPerParticle = new double[nPoints];
-        for (int i = 0; i < nPoints; i++) {
-            logn[i] = logNMin + i*(logNMax-logNMin)/(nPoints - 1);
-            double n = Math.pow(10, logn[i]);
-            logp[i] = Math.log10(poly.pressure(n));
-            energyPerParticle[i] = poly.energyPerParticle(n);
-        }
-        TabulatedHermite eos = new TabulatedHermite(logn, logp, energyPerParticle, particleMass);
+        double lognstep = (logNMax-logNMin)/(nPoints - 1);
+        TabulatedHermite eos = EOSHandler.polytrope(kappa, gamma, particleMass, nPoints, logNMax, lognstep);
         // TODO: add table parameters to name.
         eos.setIdentifier("Polytrope: Γ = " + gamma + ", k = " + kappa);
         return eos;

@@ -28,13 +28,17 @@ public class TabulatedHermiteTest extends TestCase {
         double[] logn = new double[nPoints];
         double[] logp = new double[nPoints];
         double[] energyPerParticle = new double[nPoints];
+        double[] A = new double[nPoints];
+        double[] Z = new double[nPoints];
         for (int i = 0; i < nPoints; i++) {
             logn[i] = logNMin + i * (logNMax - logNMin) / (nPoints - 1);
             double n = Math.pow(10, logn[i]);
             logp[i] = Math.log10(poly.pressure(n));
             energyPerParticle[i] = poly.energyPerParticle(n);
+            A[i] = 56;
+            Z[i] = 26;
         }
-        instance = new TabulatedHermite(logn, logp, energyPerParticle, particleMass);
+        instance = new TabulatedHermite(logn, logp, energyPerParticle, particleMass, A, Z);
     }
 
     @Override
@@ -106,7 +110,7 @@ public class TabulatedHermiteTest extends TestCase {
      */
     public void testCloneTable() {
         System.out.println("cloneTable");
-        double[][] table = new double[4][];
+        double[][] table = new double[6][];
         instance.cloneTable(table);
     }
 

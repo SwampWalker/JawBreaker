@@ -2,7 +2,9 @@ package ca.tonita.jawbreaker.equationsOfState;
 
 import atonita.unitconversion.dimensionalanalysis.CommonUnits;
 import atonita.unitconversion.dimensionalanalysis.Dimension;
+import atonita.unitconversion.dimensionalanalysis.PhysicalQuantity;
 import atonita.unitconversion.dimensionalanalysis.SIConstants;
+import atonita.unitconversion.dimensionalanalysis.SIQuantity;
 import atonita.unitconversion.dimensionalanalysis.UnitSystem;
 import ca.tonita.jawbreaker.shenzerotemperature.drivers.interpolators.Polynomials;
 
@@ -19,29 +21,6 @@ public class TabulatedHermite {
     private final double particleMass;
     private double edgePressure;
     private double edgeDensity;
-
-    /**
-     * Returns the identifier of this equation of state.
-     *
-     * @return the identifier
-     */
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    /**
-     * Sets the identifier for this equation of state.
-     *
-     * @param identifier the identifier to set
-     */
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    @Override
-    public String toString() {
-        return identifier;
-    }
     /**
      * The pressure array.
      */
@@ -106,18 +85,45 @@ public class TabulatedHermite {
      * recomputing the bounding pressure.
      */
     private double memoPressure;
+    /**
+     * The coefficients of the Lame coefficient lambda.
+     */
+    private double[][] lambdaA;
+    /**
+     * The shear modulus coefficients.
+     */
+    private double[][] shearModulusA;
+    /**
+     * Assuming a polytropic continutation mu = k*p^(2/3g), coefficients are
+     * {2/3g, k}.
+     */
+    private double[][] shearModulusExtrap;
+    /**
+     * Bulk modulus follows K = c*p. This is the coefficient c.
+     */
+    private double[] bulkModulusExtrap;
+    /**
+     * The shear modulus.
+     */
+    private final double[] shear;
+    /**
+     * The lame coefficient lambda.
+     */
+    private final double[] lambda;
 
     /**
      * Construct an equation of state using tabulated data. Assumes units where
-     * c=1.
+     * c=1. The shear modulus is computed using the Strohmayer formula.
      *
      * @param logn The log_10 of the particle number density. Dimensions = 1/L^3
      * @param logp The log_10 of the pressure. Dimensions of pressure.
      * @param energyPerParticle The internal energy per particle (excludes rest
      * mass). Dimensions of energy.
      * @param particleMass The mass of a particle.
+     * @param A The atomic mass number of the average ion.
+     * @param Z The charge of the average ion.
      */
-    public TabulatedHermite(double[] logn, double[] logp, double[] energyPerParticle, double particleMass) {
+    public TabulatedHermite(double[] logn, double[] logp, double[] energyPerParticle, double particleMass, double[] A, double[] Z) {
         N = logp.length;
         pressure = new double[N];
         this.particleMass = particleMass;
@@ -137,10 +143,26 @@ public class TabulatedHermite {
         double[] drho = dvariable(rho);
         double[] dn = dvariable(numberDensity);
         double[] denergyPerParticle = dvariable(energyPerParticle);
+
+        // Elastic coefficients.
+        PhysicalQuantity coeff = new PhysicalQuantity(SIConstants.k_c.times(SIConstants.e).times(SIConstants.e));
+        double shearCoefficient = 0.07407 * CommonUnits.GEOMETRICASTRO.convert(coeff).getValue();
+        shear = new double[N];
+        lambda = new double[N];
+        for (int i = 0; i < N; i++) {
+            shear[i] = shearCoefficient * Math.pow(numberDensity[i] / A[i], 2. / 3.) * Z[i] * Z[i];
+            lambda[i] = numberDensity[i] / dn[i] - 2. / 3. * shear[i];
+        }
+        double[] dshear = dvariable(shear);
+        double[] dlambda = dvariable(lambda);
+
         // Now we compute the interpolating coefficients.
         energyDensityA = computeHermiteCoefficients(rho, drho);
         numberDensityA = computeHermiteCoefficients(numberDensity, dn);
         energyA = computeHermiteCoefficients(energyPerParticle, denergyPerParticle);
+        shearModulusA = computeHermiteCoefficients(shear, dshear);
+        lambdaA = computeHermiteCoefficients(lambda, dlambda);
+
 
         // Compute the extrapolating coefficients.
         energyDensityExtrap = new double[2][4];
@@ -153,6 +175,7 @@ public class TabulatedHermite {
         energyDensityExtrap[0][1] = -energyDensityExtrap[0][0] * energyDensityExtrap[0][3] * (pressure[0] * drho[0] - rho[0]) * Math.pow(pressure[0], -energyDensityExtrap[0][2]);
         energyDensityExtrap[1][1] = -energyDensityExtrap[1][0] * energyDensityExtrap[1][3] * (pressure[N - 1] * drho[N - 1] - rho[N - 1]) * Math.pow(pressure[N - 1], -energyDensityExtrap[1][2]);
         numberDensityExtrap = new double[2][3];
+        // TODO: enforce continuity of value + derivative...
         numberDensityExtrap[0][0] = energyDensityExtrap[0][0];
         numberDensityExtrap[0][2] = energyDensityExtrap[0][2];
         numberDensityExtrap[0][1] = numberDensity[0] / Math.pow(pressure[0], numberDensityExtrap[0][2]);
@@ -165,6 +188,16 @@ public class TabulatedHermite {
         energyExtrap[0][0] = energyPerParticle[0] * Math.pow(pressure[0], -energyExtrap[0][1]);
         energyExtrap[1][1] = Math.log(energyPerParticle[N - 1] / energyPerParticle[N - 2]) / Math.log(pressure[N - 1] / pressure[N - 2]);
         energyExtrap[1][0] = energyPerParticle[N - 1] * Math.pow(pressure[N - 1], -energyExtrap[1][1]);
+        // Shear ~ k*p^a dshear ~ a*k*p^(a-1)
+        shearModulusExtrap = new double[2][2];
+        shearModulusExtrap[0][0] = dshear[0] * pressure[0] / shear[0];
+        shearModulusExtrap[1][0] = dshear[N - 1] * pressure[N - 1] / shear[N - 1];
+        shearModulusExtrap[0][1] = shear[0] * Math.pow(pressure[0], -shearModulusExtrap[0][0]);
+        shearModulusExtrap[1][1] = shear[N - 1] * Math.pow(pressure[N - 1], -shearModulusExtrap[1][0]);
+        // bulk modulus ~ K = c*p.
+        bulkModulusExtrap = new double[2];
+        bulkModulusExtrap[0] = numberDensity[0] / (dn[0] * pressure[0]);
+        bulkModulusExtrap[1] = numberDensity[N - 1] / (dn[N - 1] * pressure[N - 1]);
         setEdgePressure();
     }
 
@@ -205,12 +238,13 @@ public class TabulatedHermite {
      * Clones the data from this table into the argument. The fields copied are
      * in order: <ol> <li>particle number density</li> <li>pressure</li>
      * <li>total energy density (rest mass + specific internal)</li>
-     * <li>derivative of total energy density w.r.t pressure</li></ol>
+     * <li>derivative of total energy density w.r.t pressure</li> <li>the shear
+     * modulus</li> <li>the Lame coefficient, lambda</li> </ol>
      *
-     * @param table A 2-d array, at least <code>double[4][]</code>
+     * @param table A 2-d array, at least <code>double[6][]</code>
      */
     public void cloneTable(double[][] table) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             table[i] = new double[N];
         }
         System.arraycopy(numberDensity, 0, table[0], 0, N);
@@ -219,6 +253,8 @@ public class TabulatedHermite {
         for (int i = 0; i < N; i++) {
             table[3][i] = denergyDensity(pressure[i]);
         }
+        System.arraycopy(shear, 0, table[4], 0, N);
+        System.arraycopy(lambda, 0, table[5], 0, N);
     }
 
     private void memoize(double p) {
@@ -367,6 +403,38 @@ public class TabulatedHermite {
     }
 
     /**
+     * Returns the shear modulus at the pressure p.
+     *
+     * @param p the pressure p
+     * @return the shear modulus
+     */
+    public double shearModulus(double p) {
+        memoize(p);
+        if (memoIndex == -1) {
+            return shearModulusExtrap[0][1] * Math.pow(p, shearModulusExtrap[0][0]);
+        } else if (memoIndex == N - 1) {
+            return shearModulusExtrap[1][1] * Math.pow(p, shearModulusExtrap[1][0]);
+        }
+        return Polynomials.interpolate(shearModulusA[memoIndex], p);
+    }
+
+    /**
+     * Returns the Lame coefficient lambda at the pressure p.
+     *
+     * @param p the pressure p
+     * @return the Lame coefficient lambda
+     */
+    public double lambda(double p) {
+        memoize(p);
+        if (memoIndex == -1) {
+            return bulkModulusExtrap[0] * p - 2. / 3. * shearModulusExtrap[0][1] * Math.pow(p, shearModulusExtrap[0][0]);
+        } else if (memoIndex == N - 1) {
+            return bulkModulusExtrap[1] * p - 2. / 3. * shearModulusExtrap[1][1] * Math.pow(p, shearModulusExtrap[1][0]);
+        }
+        return Polynomials.interpolate(lambdaA[memoIndex], p);
+    }
+
+    /**
      * Returns the derivative of the energy per particle at the pressure p.
      *
      * @param p the pressure p
@@ -388,5 +456,28 @@ public class TabulatedHermite {
 
     public double getEdgeDensity() {
         return edgeDensity;
+    }
+
+    /**
+     * Returns the identifier of this equation of state.
+     *
+     * @return the identifier
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * Sets the identifier for this equation of state.
+     *
+     * @param identifier the identifier to set
+     */
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    @Override
+    public String toString() {
+        return identifier;
     }
 }

@@ -4,7 +4,6 @@
  */
 package ca.tonita.jawbreaker;
 
-import ca.tonita.jawbreaker.datasets.EOSDataset;
 import ca.tonita.jawbreaker.eoswindows.EOSPanel;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
 import ca.tonita.jawbreaker.tovwindows.TOVBuilderPanel;

@@ -47,6 +47,8 @@ public class TableReader {
         double[] logn = new double[tokenSet.size()];
         double[] logp = new double[tokenSet.size()];
         double[] energyPerParticle = new double[tokenSet.size()];
+        double[] A = new double[tokenSet.size()];
+        double[] Z = new double[tokenSet.size()];
         
         // Unit conversion
         double nConversion = Math.log10(UnitSystem.convert(1, Dimension.NUMBERDENSITY, CommonUnits.MEV, CommonUnits.GEOMETRICASTRO));
@@ -58,6 +60,8 @@ public class TableReader {
             String[] tokens = tokenSet.get(i);
             logn[i] = Double.valueOf(tokens[1]) + nConversion;
             logp[i] = Double.valueOf(tokens[13]) + pConversion;
+            A[i] = Double.valueOf(tokens[iA]);
+            Z[i] = Double.valueOf(tokens[iZ]);
             energyPerParticle[i] = Double.valueOf(tokens[4])*eConversion;
             if (i != 0) {
                 if (logp[i] < logp[i-1]) {
@@ -67,7 +71,7 @@ public class TableReader {
             }
         }
         
-        TabulatedHermite eos = new TabulatedHermite(logn, logp, energyPerParticle, particleMass);
+        TabulatedHermite eos = new TabulatedHermite(logn, logp, energyPerParticle, particleMass, A, Z);
         return eos;
     }
 }

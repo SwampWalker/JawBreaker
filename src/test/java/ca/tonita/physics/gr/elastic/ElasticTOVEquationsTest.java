@@ -43,13 +43,17 @@ public class ElasticTOVEquationsTest extends TestCase {
         double[] logn = new double[nPoints];
         double[] logp = new double[nPoints];
         double[] energyPerParticle = new double[nPoints];
+        double[] A = new double[nPoints];
+        double[] Z = new double[nPoints];
         for (int i = 0; i < nPoints; i++) {
             logn[i] = logNMin + i * (logNMax - logNMin) / (nPoints - 1);
             double n = Math.pow(10, logn[i]);
             logp[i] = Math.log10(poly.pressure(n));
             energyPerParticle[i] = poly.energyPerParticle(n);
+            A[i] = 56;
+            Z[i] = 26;
         }
-        eos = new TabulatedHermite(logn, logp, energyPerParticle, particleMass);
+        eos = new TabulatedHermite(logn, logp, energyPerParticle, particleMass, A, Z);
         TOVBuilder.evolve(background, eos, centralPressure, stepSize, 1, terminationPressure);
         body = new SphericalBodyManifoldRK4(background, eos);
         instance = new ElasticTOVEquations(body, eos);
@@ -65,7 +69,7 @@ public class ElasticTOVEquationsTest extends TestCase {
      */
     public void testDtracedxi() {
         System.out.println("dtracedxi");
-        double r = background.getRadius()*Math.random();
+        double r = background.getRadius() * Math.random();
         SphericalElasticBean bodyVars = body.getQuantities(r);
         double h = 1.0e-6;
         double xi = r;
@@ -75,7 +79,7 @@ public class ElasticTOVEquationsTest extends TestCase {
         SphericalElasticBean bodyVarsm = body.getQuantities(xi - h);
         double Hp = instance.trace(r, bodyVarsp, xi + h, xiPrime, m);
         double Hm = instance.trace(r, bodyVarsm, xi - h, xiPrime, m);
-        double expResult = (Hp - Hm)/(2*h);
+        double expResult = (Hp - Hm) / (2 * h);
         double result = instance.dtracedxi(r, bodyVars, xi, xiPrime, m);
         assertEquals(expResult, result, 1.0e-6);
     }
@@ -85,7 +89,7 @@ public class ElasticTOVEquationsTest extends TestCase {
      */
     public void testDtracedxiPrime() {
         System.out.println("dtracedxiPrime");
-        double r = background.getRadius()*Math.random();
+        double r = background.getRadius() * Math.random();
         SphericalElasticBean bodyVars = body.getQuantities(r);
         double xi = r;
         double xiPrime = 1;
@@ -93,7 +97,7 @@ public class ElasticTOVEquationsTest extends TestCase {
         double h = 1.0e-6;
         double Hp = instance.trace(r, bodyVars, xi, xiPrime + h, m);
         double Hm = instance.trace(r, bodyVars, xi, xiPrime - h, m);
-        double expResult = (Hp - Hm)/(2*h);
+        double expResult = (Hp - Hm) / (2 * h);
         double result = instance.dtracedxiPrime(r, bodyVars, xi, xiPrime, m);
         assertEquals(expResult, result, 1.0e-6);
     }
@@ -103,7 +107,7 @@ public class ElasticTOVEquationsTest extends TestCase {
      */
     public void testTrace() {
         System.out.println("trace");
-        double r = background.getRadius()*Math.random();
+        double r = background.getRadius() * Math.random();
         SphericalElasticBean bodyVars = body.getQuantities(r);
         double xi = r;
         double xiPrime = 1;
@@ -118,7 +122,7 @@ public class ElasticTOVEquationsTest extends TestCase {
      */
     public void testDtracedmass() {
         System.out.println("dtracedmass");
-        double r = background.getRadius()*Math.random();
+        double r = background.getRadius() * Math.random();
         SphericalElasticBean bodyVars = body.getQuantities(r);
         double xi = r;
         double xiPrime = 1;
@@ -126,7 +130,7 @@ public class ElasticTOVEquationsTest extends TestCase {
         double h = 1.0e-6;
         double Hp = instance.trace(r, bodyVars, xi, xiPrime, m + h);
         double Hm = instance.trace(r, bodyVars, xi, xiPrime, m - h);
-        double expResult = (Hp - Hm)/(2*h);
+        double expResult = (Hp - Hm) / (2 * h);
         double result = instance.dtracedmass(r, bodyVars, xi, xiPrime, m);
         assertEquals(expResult, result, 1.0e-6);
     }

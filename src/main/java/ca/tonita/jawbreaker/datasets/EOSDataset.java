@@ -29,7 +29,7 @@ public class EOSDataset extends MultiDataset<EOSBean> {
      * @param eos the equation of state to add.
      */
     public void add(int index, TabulatedHermite eos) {
-        double[][] table = new double[4][];
+        double[][] table = new double[6][];
         eos.cloneTable(table);
         EOSBean bean = new EOSBean();
         bean.setData(table);
