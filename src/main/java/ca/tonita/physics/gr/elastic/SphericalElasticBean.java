@@ -13,6 +13,8 @@ public class SphericalElasticBean {
     private double dMassPotential;
     private double energyPerParticle;
     private double denergyPerParticle;
+    private double lameLambda;
+    private double shearModulus;
 
     public double getEnergyPerParticle() {
         return energyPerParticle;
@@ -76,5 +78,21 @@ public class SphericalElasticBean {
 
     public void setdMassPotential(double dMassPotential) {
         this.dMassPotential = dMassPotential;
+    }
+
+    public double getLameLambda() {
+        return lameLambda;
+    }
+
+    public void setLameLambda(double lameLambda) {
+        this.lameLambda = lameLambda;
+    }
+
+    public double getShearModulus() {
+        return shearModulus;
+    }
+
+    public void setShearModulus(double shearModulus) {
+        this.shearModulus = shearModulus;
     }
 }

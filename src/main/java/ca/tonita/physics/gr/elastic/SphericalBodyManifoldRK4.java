@@ -62,6 +62,9 @@ public class SphericalBodyManifoldRK4 {
         bean.setEnergyPerParticle(eos.energyPerParticle(bean.getPressure()));
         bean.setDnumberDensity(eos.dnumberDensity(bean.getPressure()));
         bean.setDenergyPerParticle(eos.denergyPerParticle(bean.getPressure()));
+        
+        bean.setLameLambda(eos.lambda(bean.getPressure()));
+        bean.setShearModulus(eos.shearModulus(bean.getPressure()));
         return bean;
     }
 }

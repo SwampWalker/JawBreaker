@@ -22,7 +22,7 @@ public abstract class MultiDataset<T> extends AbstractXYDataset implements Domai
     protected ArrayList<T> datasets = new ArrayList<T>();
     protected int iX = 0;
     protected int iY = 1;
-    protected static String[] variableNames = null;
+    protected String[] variableNames = null;
 
     /**
      * Adds a dataset to this MultiDataset.

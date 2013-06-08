@@ -203,7 +203,7 @@ public class NewPolyPanel extends javax.swing.JPanel implements TabulatedEOSGene
         double gamma = Double.valueOf(gammaField.getText());
         
         double lognstep = (logNMax-logNMin)/(nPoints - 1);
-        TabulatedHermite eos = EOSHandler.polytrope(kappa, gamma, particleMass, nPoints, logNMax, lognstep);
+        TabulatedHermite eos = EOSHandler.polytrope(kappa, gamma, particleMass, nPoints, logNMin, lognstep);
         // TODO: add table parameters to name.
         eos.setIdentifier("Polytrope: Γ = " + gamma + ", k = " + kappa);
         return eos;

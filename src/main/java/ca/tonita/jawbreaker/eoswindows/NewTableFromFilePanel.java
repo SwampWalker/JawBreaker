@@ -4,6 +4,8 @@
  */
 package ca.tonita.jawbreaker.eoswindows;
 
+import ca.tonita.jawbreaker.equationsOfState.EOSHandler;
+import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,9 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.ScrollPaneConstants;
-import ca.tonita.jawbreaker.equationsOfState.TableReader;
-import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 
 /**
  *
@@ -64,7 +63,7 @@ public class NewTableFromFilePanel extends javax.swing.JPanel implements Tabulat
         filenameTextArea.setColumns(20);
         filenameTextArea.setLineWrap(true);
         filenameTextArea.setRows(5);
-        filenameTextArea.setText("F:\\Projects\\elasticity\\data\\eos2.shear.betaEquilibrium.2.t00");
+        filenameTextArea.setText("F:\\Projects\\JawBreaker\\data\\eos2.shear.betaEquilibrium.2.t00");
         filenameTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(filenameTextArea);
 
@@ -147,7 +146,7 @@ public class NewTableFromFilePanel extends javax.swing.JPanel implements Tabulat
         File eosFile = new File(filenameTextArea.getText());
         if (eosFile.exists()) {
             try {
-                TabulatedHermite eos = TableReader.readTableFromFile(eosFile);
+                TabulatedHermite eos = EOSHandler.readTableFromFile(eosFile);
                 if (useFilenameCheckbox.isSelected()) {
                     eos.setIdentifier(eosFile.getName());
                 } else {

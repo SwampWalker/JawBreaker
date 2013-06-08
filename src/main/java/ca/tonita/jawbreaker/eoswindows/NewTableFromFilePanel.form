@@ -96,7 +96,7 @@
             <Property name="columns" type="int" value="20"/>
             <Property name="lineWrap" type="boolean" value="true"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="F:\u005cProjects\u005celasticity\u005cdata\u005ceos2.shear.betaEquilibrium.2.t00" containsInvalidXMLChars="true"/>
+            <Property name="text" type="java.lang.String" value="F:\u005cProjects\u005cJawBreaker\u005cdata\u005ceos2.shear.betaEquilibrium.2.t00" containsInvalidXMLChars="true"/>
             <Property name="wrapStyleWord" type="boolean" value="true"/>
           </Properties>
         </Component>

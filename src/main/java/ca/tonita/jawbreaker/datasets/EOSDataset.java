@@ -13,9 +13,8 @@ import java.util.ArrayList;
  */
 public class EOSDataset extends MultiDataset<EOSBean> {
 
-    private final static String[] eosVariableNames = new String[]{"Number Density", "Pressure", "Total Energy Density", "Total Energy Density Derivative"};
-    private ArrayList<String> names = null;
-
+    private final static String[] eosVariableNames = new String[]{"Number Density", "Pressure", "Total Energy Density", "Total Energy Density Derivative", "Shear Modulus", "Lame lambda"};
+    
     public EOSDataset() {
         variableNames = eosVariableNames;
         iX = 1;
