@@ -85,7 +85,7 @@ public class ElasticTOVEquationsTest extends TestCase {
     }
 
     /**
-     * Test of dtracedxiPrime method, of class ElasticTOVEquations.
+     * Test of dtrace_dxiPrime method, of class ElasticTOVEquations.
      */
     public void testDtracedxiPrime() {
         System.out.println("dtracedxiPrime");
@@ -98,7 +98,7 @@ public class ElasticTOVEquationsTest extends TestCase {
         double Hp = instance.trace(r, bodyVars, xi, xiPrime + h, m);
         double Hm = instance.trace(r, bodyVars, xi, xiPrime - h, m);
         double expResult = (Hp - Hm) / (2 * h);
-        double result = instance.dtracedxiPrime(r, bodyVars, xi, xiPrime, m);
+        double result = instance.dtrace_dxiPrime(r, bodyVars, xi, xiPrime, m);
         assertEquals(expResult, result, 1.0e-6);
     }
 
@@ -132,6 +132,151 @@ public class ElasticTOVEquationsTest extends TestCase {
         double Hm = instance.trace(r, bodyVars, xi, xiPrime, m - h);
         double expResult = (Hp - Hm) / (2 * h);
         double result = instance.dtracedmass(r, bodyVars, xi, xiPrime, m);
+        assertEquals(expResult, result, 1.0e-6);
+    }
+
+    /**
+     * Test of dtrace_dxiPrime method, of class ElasticTOVEquations.
+     */
+    public void testDtrace_dxiPrime() {
+        System.out.println("dtrace_dxiPrime");
+        double r = background.getRadius() * Math.random();
+        SphericalElasticBean bodyVars = body.getQuantities(r);
+        double xi = r;
+        double xiPrime = 1.0;
+        double m = bodyVars.getMassPotential();
+        double h = 1.0e-6;
+        double Hp = instance.trace(r, bodyVars, xi, xiPrime + h, m);
+        double Hm = instance.trace(r, bodyVars, xi, xiPrime - h, m);
+        double expResult = (Hp - Hm)/(2*h);
+        double result = instance.dtrace_dxiPrime(r, bodyVars, xi, xiPrime, m);
+        assertEquals(expResult, result, h);
+    }
+
+    /**
+     * Test of pressureIsotropic method, of class ElasticTOVEquations.
+     */
+    public void testPressureIsotropic() {
+        System.out.println("pressureIsotropic");
+        double r = background.getRadius() * Math.random();
+        SphericalElasticBean bodyVars = body.getQuantities(r);
+        double xi = r;
+        double xiPrime = 1.0;
+        double m = bodyVars.getMassPotential();
+        double expResult = bodyVars.getPressure();
+        double result = instance.pressureIsotropic(r, bodyVars, xi, xiPrime, m);
+        assertEquals(expResult, result, 1.0e-6);
+    }
+
+    /**
+     * Test of dpressureIsotropic_dxiPrime method, of class ElasticTOVEquations.
+     */
+    public void testDpressureIsotropic_dxiPrime() {
+        System.out.println("dpressureIsotropic_dxiPrime");
+        double r = background.getRadius() * Math.random();
+        SphericalElasticBean bodyVars = body.getQuantities(r);
+        double xi = r;
+        double xiPrime = 1.0;
+        double m = bodyVars.getMassPotential();
+        double h = 1.0e-6;
+        double pp = instance.pressureIsotropic(r, bodyVars, xi, xiPrime + h, m);
+        double pm = instance.pressureIsotropic(r, bodyVars, xi, xiPrime - h, m);
+        double expResult = (pp - pm) / (2*h);
+        double result = instance.dpressureIsotropic_dxiPrime(r, bodyVars, xi, xiPrime, m);
+        assertEquals(expResult, result, h);
+    }
+
+    /**
+     * Test of volumeContractionFactor method, of class ElasticTOVEquations.
+     */
+    public void testVolumeContractionFactor() {
+        System.out.println("volumeContractionFactor");
+        double r = background.getRadius() * Math.random();
+        SphericalElasticBean bodyVars = body.getQuantities(r);
+        double xi = r;
+        double xiPrime = 1.0;
+        double m = bodyVars.getMassPotential();
+        double expResult = 1.0;
+        double result = instance.volumeContractionFactor(r, bodyVars, xi, xiPrime, m);
+        assertEquals(expResult, result, 1.0e-6);
+    }
+
+    /**
+     * Test of dvolumeContractionFactor_dxiPrime method, of class ElasticTOVEquations.
+     */
+    public void testDvolumeContractionFactor_dxiPrime() {
+        System.out.println("dvolumeContractionFactor_dxiPrime");
+        double r = background.getRadius() * Math.random();
+        SphericalElasticBean bodyVars = body.getQuantities(r);
+        double xi = r;
+        double xiPrime = Math.random();
+        double m = bodyVars.getMassPotential();
+        double expResult = instance.volumeContractionFactor(r, bodyVars, xi, xiPrime, m)/xiPrime;
+        double result = instance.dvolumeContractionFactor_dxiPrime(r, bodyVars, xi, xiPrime, m);
+        assertEquals(expResult, result, 1.e-6);
+    }
+
+    /**
+     * Test of pressureTangential method, of class ElasticTOVEquations.
+     */
+    public void testPressureTangential() {
+        System.out.println("pressureTangential");
+        double r = background.getRadius() * Math.random();
+        SphericalElasticBean bodyVars = body.getQuantities(r);
+        double xi = r;
+        double xiPrime = 1.0;
+        double m = bodyVars.getMassPotential();
+        double expResult = bodyVars.getPressure();
+        double result = instance.pressureTangential(r, bodyVars, xi, xiPrime, m);
+        assertEquals(expResult, result, 1.0e-6);
+    }
+
+    /**
+     * Test of pressureRadial method, of class ElasticTOVEquations.
+     */
+    public void testPressureRadial() {
+        System.out.println("pressureRadial");
+        double r = background.getRadius() * Math.random();
+        SphericalElasticBean bodyVars = body.getQuantities(r);
+        double xi = r;
+        double xiPrime = 1.0;
+        double m = bodyVars.getMassPotential();
+        double expResult = bodyVars.getPressure();
+        double result = instance.pressureRadial(r, bodyVars, xi, xiPrime, m);
+        assertEquals(expResult, result, 1.0e-6);
+    }
+
+    /**
+     * Test of dpressureRadial_dxiPrime method, of class ElasticTOVEquations.
+     */
+    public void testDpressureRadial_dxiPrime() {
+        System.out.println("dpressureRadial_dxiPrime");
+        double r = background.getRadius() * Math.random();
+        SphericalElasticBean bodyVars = body.getQuantities(r);
+        double xi = r;
+        double xiPrime = 1.0;
+        double m = bodyVars.getMassPotential();
+        double h = 1.0e-6;
+        double pp = instance.pressureRadial(r, bodyVars, xi, xiPrime + h, m);
+        double pm = instance.pressureRadial(r, bodyVars, xi, xiPrime - h, m);
+        double expResult = (pp - pm) / (2*h);
+        double result = instance.dpressureRadial_dxiPrime(r, bodyVars, xi, xiPrime, m);
+        assertEquals(expResult, result, h);
+    }
+
+    /**
+     * Test of xiPrime method, of class ElasticTOVEquations.
+     */
+    public void testXiPrime() {
+        System.out.println("xiPrime");
+        double r = background.getRadius() * Math.random();
+        SphericalElasticBean bodyVars = body.getQuantities(r);
+        double xi = r;
+        double xiPrime = 1.0 + 0.1*Math.random();
+        double m = bodyVars.getMassPotential();
+        double pRadial = instance.pressureRadial(r, bodyVars, xi, xiPrime, m);
+        double expResult = xiPrime;
+        double result = instance.xiPrime(r, bodyVars, xi, m, pRadial);
         assertEquals(expResult, result, 1.0e-6);
     }
 }

@@ -3,6 +3,9 @@ package ca.tonita.physics.gr.elastic;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 
 /**
+ * This particular set of the ElasticEquations assumes a specific equation of
+ * state in terms of the right Cauchy-Green tensor. See the notes for the
+ * precise formulation of the elastic equation of state assumed.
  *
  * @author atonita
  */
@@ -64,7 +67,7 @@ public final class ElasticTOVEquations {
      * @param m the mass potential
      * @return the normalized trace of the strain
      */
-    protected double dtracedxiPrime(double r, SphericalElasticBean bodyVars, double xi, double xiPrime, double m) {
+    protected double dtrace_dxiPrime(double r, SphericalElasticBean bodyVars, double xi, double xiPrime, double m) {
         double GrrOvergrr = (1 - 2 * m / r) / (1 - 2 * bodyVars.getMassPotential() / xi);
         return 2 * GrrOvergrr * xiPrime;
     }
@@ -99,6 +102,20 @@ public final class ElasticTOVEquations {
     }
 
     /**
+     * Returns the isotropic pressure component.
+     *
+     * @param r the radius
+     * @param bodyVars the quantities from the body manifold
+     * @param xi the configuration
+     * @param xiPrime the configuration gradient
+     * @param m the mass potential
+     * @return the isotropic component of the pressure.
+     */
+    protected double dpressureIsotropic_dxiPrime(double r, SphericalElasticBean bodyVars, double xi, double xiPrime, double m) {
+        return 0.25*bodyVars.getLameLambda() * dtrace_dxiPrime(r, bodyVars, xi, xiPrime, m);
+    }
+
+    /**
      * Returns the volume contraction factor: the ratio of the new number
      * density to the old number density.
      *
@@ -113,6 +130,23 @@ public final class ElasticTOVEquations {
         double xiOverR = xi / r;
         double M = bodyVars.getMassPotential();
         return xiOverR * xiOverR * xiPrime * Math.sqrt((1. - 2 * m / r) / (1. - 2 * M / xi));
+    }
+
+    /**
+     * Returns the volume contraction factor: the ratio of the new number
+     * density to the old number density.
+     *
+     * @param r the radius
+     * @param bodyVars the quantities from the body manifold
+     * @param xi the configuration
+     * @param xiPrime the configuration gradient
+     * @param m the mass potential
+     * @return the volume contraction factor.
+     */
+    protected double dvolumeContractionFactor_dxiPrime(double r, SphericalElasticBean bodyVars, double xi, double xiPrime, double m) {
+        double xiOverR = xi / r;
+        double M = bodyVars.getMassPotential();
+        return xiOverR * xiOverR * Math.sqrt((1. - 2 * m / r) / (1. - 2 * M / xi));
     }
 
     /**
@@ -152,5 +186,56 @@ public final class ElasticTOVEquations {
         double M = bodyVars.getMassPotential();
         double ratio = (1. - 2 * m / r) / (1. - 2 * M / xi) * xiPrime * xiPrime;
         return chi * (P_I + mu * 0.5 * (ratio - 1.)) * ratio;
+    }
+
+    /**
+     * Returns the radial pressure. This is the (r,r) component of the mixed
+     * pressure tensor.
+     *
+     * @param r the radius
+     * @param bodyVars the quantities from the body manifold
+     * @param xi the configuration
+     * @param xiPrime the configuration gradient
+     * @param m the mass potential
+     * @return the pressure, radial
+     */
+    public double dpressureRadial_dxiPrime(double r, SphericalElasticBean bodyVars, double xi, double xiPrime, double m) {
+        double chi = volumeContractionFactor(r, bodyVars, xi, xiPrime, m);
+        double dchi = dvolumeContractionFactor_dxiPrime(r, bodyVars, xi, xiPrime, m);
+        double P_I = pressureIsotropic(r, bodyVars, xi, xiPrime, m);
+        double dP_I = dpressureIsotropic_dxiPrime(r, bodyVars, xi, xiPrime, m);
+        double mu = bodyVars.getShearModulus();
+        double M = bodyVars.getMassPotential();
+        double dratioHalf = (1. - 2 * m / r) / (1. - 2 * M / xi) * xiPrime;
+        double ratio = dratioHalf * xiPrime;
+        double term1 = (2 * chi + xiPrime * dchi) * (P_I + mu * 0.5 * (ratio - 1.)) * ratio;
+        double term2 = chi * (dP_I + mu * dratioHalf) * ratio * xiPrime * xiPrime;
+        return term1 + term2;
+    }
+
+    /**
+     * Returns the xiPrime by inverting the constituent equation of the radial
+     * pressure. The inversion of the nonlinear constituent equation is
+     * performed via using Newton-Raphson iterations.
+     *
+     * @param r the radius
+     * @param bodyVars the quantities from the body manifold
+     * @param xi the configuration
+     * @param xiPrime the configuration gradient
+     * @param m the mass potential
+     * @return the pressure, radial
+     */
+    public double xiPrime(double r, SphericalElasticBean bodyVars, double xi, double m, double pRadial) {
+        double xiPrime = 1;
+        double tolerance = 1.0e-15;
+        double pressureGuess = pressureRadial(r, bodyVars, xi, xiPrime, m);
+        int i = 0;
+        while (Math.abs(pressureGuess - pRadial) > tolerance && i < 25) {
+            i++;
+            xiPrime = xiPrime + (pRadial - pressureGuess) / dpressureRadial_dxiPrime(r, bodyVars, xi, xiPrime, m);
+            pressureGuess = this.pressureRadial(r, bodyVars, xi, xiPrime, m);
+            System.out.println(i + " " + pressureGuess + " " + pRadial);
+        }
+        return xiPrime;
     }
 }
