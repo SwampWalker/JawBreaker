@@ -9,7 +9,7 @@ import ca.tonita.jawbreaker.eoswindows.ChartPanelCreator;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
 import ca.tonita.jawbreaker.models.TOVData;
-import ca.tonita.physics.gr.TOVBuilder;
+import ca.tonita.physics.gr.hydro.TOVBuilder;
 import java.awt.BorderLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.ChangeEvent;

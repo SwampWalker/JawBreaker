@@ -4,7 +4,7 @@ import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.jawbreaker.models.TOVData;
 import ca.tonita.math.numerical.QuasiLinearFirstOrderODESystem;
 import ca.tonita.math.numerical.RK4;
-import ca.tonita.physics.gr.TOVEquations;
+import ca.tonita.physics.gr.hydro.TOVEquations;
 
 /**
  * Implements the equations of the body manifold given an RK4 solution as the
@@ -66,5 +66,13 @@ public class SphericalBodyManifoldRK4 {
         bean.setLameLambda(eos.lambda(bean.getPressure()));
         bean.setShearModulus(eos.shearModulus(bean.getPressure()));
         return bean;
+    }
+
+    /**
+     * Returns the particle mass of the average particle in the body manifold.
+     * @return the particle mass
+     */
+    double particleMass() {
+        return eos.getParticleMass();
     }
 }

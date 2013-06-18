@@ -1,4 +1,4 @@
-package ca.tonita.physics.gr;
+package ca.tonita.physics.gr.hydro;
 
 import ca.tonita.jawbreaker.equationsOfState.Polytrope;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
