@@ -10,6 +10,7 @@ import javax.swing.event.ChangeListener;
 import ca.tonita.jawbreaker.datasets.EOSDataset;
 import ca.tonita.jawbreaker.eoswindows.EOSStorage;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
+import java.util.HashMap;
 
 /**
  *
@@ -17,6 +18,7 @@ import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
  */
 public class JawBreakerModel implements EOSStorage {
 
+    HashMap<String, ArrayList<TOVData>> tovFamilies;
     ArrayList<TabulatedHermite> eosStorage;
     ArrayList<ChangeListener> eosChangeListeners;
     EOSDataset eosDataset;
@@ -27,6 +29,7 @@ public class JawBreakerModel implements EOSStorage {
     public JawBreakerModel() {
         eosStorage = new ArrayList<TabulatedHermite>();
         eosChangeListeners = new ArrayList<ChangeListener>();
+        tovFamilies = new HashMap<String, ArrayList<TOVData>>();
     }
 
     /**

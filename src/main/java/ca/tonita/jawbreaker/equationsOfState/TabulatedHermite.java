@@ -4,7 +4,6 @@ import atonita.unitconversion.dimensionalanalysis.CommonUnits;
 import atonita.unitconversion.dimensionalanalysis.Dimension;
 import atonita.unitconversion.dimensionalanalysis.PhysicalQuantity;
 import atonita.unitconversion.dimensionalanalysis.SIConstants;
-import atonita.unitconversion.dimensionalanalysis.SIQuantity;
 import atonita.unitconversion.dimensionalanalysis.UnitSystem;
 import ca.tonita.jawbreaker.shenzerotemperature.drivers.interpolators.Polynomials;
 
@@ -14,6 +13,7 @@ import ca.tonita.jawbreaker.shenzerotemperature.drivers.interpolators.Polynomial
  */
 public class TabulatedHermite {
 
+    private static String method = "stencil3";
     /**
      * An identifier to differentiate this table from others.
      */
@@ -140,9 +140,9 @@ public class TabulatedHermite {
         }
 
         // The derivatives.
-        double[] drho = dvariable(rho);
-        double[] dn = dvariable(numberDensity);
-        double[] denergyPerParticle = dvariable(energyPerParticle);
+        double[] drho = dvariable(null, rho, null, false);
+        double[] dn = dvariable(logn, numberDensity, logp, true);
+        double[] denergyPerParticle = dvariable(null, energyPerParticle, null, false);
 
         // Elastic coefficients.
         PhysicalQuantity coeff = new PhysicalQuantity(SIConstants.k_c.times(SIConstants.e).times(SIConstants.e));
@@ -152,9 +152,14 @@ public class TabulatedHermite {
         for (int i = 0; i < N; i++) {
             shear[i] = shearCoefficient * Math.pow(numberDensity[i] / A[i], 2. / 3.) * Z[i] * Z[i];
             lambda[i] = numberDensity[i] / dn[i] - 2. / 3. * shear[i];
+            if (lambda[i] < 0) {
+                System.out.println(i + " " + numberDensity[i] + " " + dn[i] + " " + shear[i]);
+                System.out.println("\t" + numberDensity[i - 2] + " " + numberDensity[i - 1] + " " + numberDensity[i] + " " + numberDensity[i + 1] + " " + numberDensity[i + 2]);
+                System.out.println("\t" + pressure[i - 2] + " " + pressure[i - 1] + " " + pressure[i] + " " + pressure[i + 1] + " " + pressure[i + 2]);
+            }
         }
-        double[] dshear = dvariable(shear);
-        double[] dlambda = dvariable(lambda);
+        double[] dshear = dvariable(null, shear, null, false);
+        double[] dlambda = dvariable(null, lambda, null, false);
 
         // Now we compute the interpolating coefficients.
         energyDensityA = computeHermiteCoefficients(rho, drho);
@@ -316,7 +321,7 @@ public class TabulatedHermite {
      * @param variable the variable to differentiate
      * @return the derivative of the variable at the same points.
      */
-    private double[] dvariable(double[] variable) {
+    private double[] dvariableSpline(double[] variable, double[] pressure) {
         // drho/dpressure
         double[] dvariable = new double[N];
         dvariable[0] = (variable[1] - variable[0]) / (pressure[1] - pressure[0]);
@@ -343,6 +348,44 @@ public class TabulatedHermite {
                 new double[]{pressure[N - 3], pressure[N - 2], pressure[N - 1]}), pressure[N - 2]);
         dvariable[N - 1] = (variable[N - 1] - variable[N - 2]) / (pressure[N - 1] - pressure[N - 2]);
         return dvariable;
+    }
+
+    /**
+     * Computes the derivative of the input variable using 3 point stencils.
+     *
+     * @param variable the variable to differentiate
+     * @param independent the variable to differentiate with respect to
+     * @return the derivative of the variable at the same points.
+     */
+    private double[] dvariableStencil3(double[] variable, double[] independent) {
+        // drho/dpressure
+        double[] dvariable = new double[N];
+        dvariable[0] = stencil3Difference(variable[0], variable[1], variable[2], independent[1] - independent[0], independent[2] - independent[0]);
+        for (int i = 1; i < N - 1; i++) {
+            dvariable[i] = stencil3Difference(variable[i], variable[i - 1], variable[i + 1], independent[i - 1] - independent[i], independent[i + 1] - independent[i]);
+        }
+        dvariable[N - 1] = stencil3Difference(variable[N - 1], variable[N - 2], variable[N - 3], independent[N - 2] - independent[N - 1], independent[N - 3] - independent[N - 1]);
+        return dvariable;
+    }
+
+    /**
+     * In this case<br>
+     * <ol>
+     * <li>x_0: the point to take the derivative at.
+     * <li>f0 = f(x_0)</li>
+     * <li>f1 = f(x_0 + a)</li>
+     * <li>f2 = f(x_0 + b)</li>
+     * </ol>
+     *
+     * @param f0 The function value at the point to evaluate the derivative.
+     * @param f1 The function value at the nearest neighbours.
+     * @param f2 The function value at the second nearest neighbour.
+     * @param a The signed distance to the nearest neighbour.
+     * @param b The signed distance to the next nearest neighbour.
+     * @return The derivative.
+     */
+    protected double stencil3Difference(double f0, double f1, double f2, double a, double b) {
+        return (f1 - f0) / a - a / (a - b) * ((f1 - f0) / a - (f2 - f0) / b);
     }
 
     /**
@@ -479,5 +522,66 @@ public class TabulatedHermite {
     @Override
     public String toString() {
         return identifier;
+    }
+
+    /**
+     * Computes the derivative of a variable using the logarithms.
+     *
+     * @param logvariable the logarithm of the variable to differentiate
+     * @param variable the value of the variable
+     * @param logP the logarithm of pressure
+     * @return the derivative of the variable w.r.t pressure
+     */
+    private double[] dvariable(double[] logvariable, double[] variable, double[] logP, boolean logarithmic) {
+        if (method.equals("spline")) {
+            if (logarithmic) {
+                return dvariableLogarithmicSpline(logvariable, variable, logP);
+            } else {
+                return dvariableSpline(variable, pressure);
+            }
+        } else if (method.equals("stencil3")) {
+            if (logarithmic) {
+                return dvariableLogarithmicStencil3(logvariable, variable, logP);
+            } else {
+                return dvariableStencil3(variable, pressure);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Computes the derivative of a variable using splines through the
+     * logarithms.
+     *
+     * @param logvariable the logarithm of the variable to differentiate
+     * @param variable the value of the variable
+     * @param logP the logarithm of pressure
+     * @return the derivative of the variable w.r.t pressure
+     */
+    private double[] dvariableLogarithmicSpline(double[] logvariable, double[] variable, double[] logP) {
+        // drho/dpressure
+        double[] dvariable = dvariableSpline(logvariable, logP);
+        for (int i = 0; i < N; i++) {
+            dvariable[i] *= variable[i] / pressure[i];
+        }
+        return dvariable;
+    }
+
+    /**
+     * Computes the derivative of a variable using 3 point finite difference on
+     * the logarithms.
+     *
+     * @param logvariable the logarithm of the variable to differentiate
+     * @param variable the value of the variable
+     * @param logP the logarithm of pressure
+     * @return the derivative of the variable w.r.t pressure
+     */
+    private double[] dvariableLogarithmicStencil3(double[] logvariable, double[] variable, double[] logP) {
+        // drho/dpressure
+        double[] dvariable = dvariableStencil3(logvariable, logP);
+        for (int i = 0; i < N; i++) {
+            dvariable[i] *= variable[i] / pressure[i];
+        }
+        return dvariable;
     }
 }
