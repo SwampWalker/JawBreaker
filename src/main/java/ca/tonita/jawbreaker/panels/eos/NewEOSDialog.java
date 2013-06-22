@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.tonita.jawbreaker.eoswindows;
+package ca.tonita.jawbreaker.panels.eos;
 
+import ca.tonita.jawbreaker.models.EOSStorage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -57,8 +58,8 @@ public class NewEOSDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        newTableFromFilePanel1 = new ca.tonita.jawbreaker.eoswindows.NewTableFromFilePanel();
-        newPolyPanel1 = new ca.tonita.jawbreaker.eoswindows.NewPolyPanel();
+        newTableFromFilePanel1 = new ca.tonita.jawbreaker.panels.eos.NewTableFromFilePanel();
+        newPolyPanel1 = new ca.tonita.jawbreaker.panels.eos.NewPolyPanel();
         jButton1 = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
@@ -162,7 +163,7 @@ public class NewEOSDialog extends javax.swing.JDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private ca.tonita.jawbreaker.eoswindows.NewPolyPanel newPolyPanel1;
-    private ca.tonita.jawbreaker.eoswindows.NewTableFromFilePanel newTableFromFilePanel1;
+    private ca.tonita.jawbreaker.panels.eos.NewPolyPanel newPolyPanel1;
+    private ca.tonita.jawbreaker.panels.eos.NewTableFromFilePanel newTableFromFilePanel1;
     // End of variables declaration//GEN-END:variables
 }

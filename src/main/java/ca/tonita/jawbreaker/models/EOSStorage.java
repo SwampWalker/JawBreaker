@@ -1,4 +1,4 @@
-package ca.tonita.jawbreaker.eoswindows;
+package ca.tonita.jawbreaker.models;
 
 import javax.swing.event.ChangeListener;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;

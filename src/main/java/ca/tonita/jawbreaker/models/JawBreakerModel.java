@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import ca.tonita.jawbreaker.datasets.EOSDataset;
-import ca.tonita.jawbreaker.eoswindows.EOSStorage;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import java.util.HashMap;
 

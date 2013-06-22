@@ -255,7 +255,7 @@
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="massLabel" min="-2" max="-2" attributes="0"/>
-                                      <Component id="MassField" min="-2" pref="126" max="-2" attributes="0"/>
+                                      <Component id="massField" min="-2" pref="126" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -287,7 +287,7 @@
                               <Group type="102" attributes="0">
                                   <Component id="massLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="MassField" min="-2" max="-2" attributes="0"/>
+                                  <Component id="massField" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="radiusLabel" min="-2" max="-2" attributes="0"/>
@@ -320,7 +320,7 @@
                     <Property name="text" type="java.lang.String" value="Gravitational Mass"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="MassField">
+                <Component class="javax.swing.JTextField" name="massField">
                   <Properties>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>

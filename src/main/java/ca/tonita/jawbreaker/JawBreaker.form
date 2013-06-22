@@ -42,7 +42,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
-        <Component class="ca.tonita.jawbreaker.eoswindows.EOSPanel" name="eosPanel">
+        <Component class="ca.tonita.jawbreaker.panels.eos.EOSPanel" name="eosPanel">
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new EOSPanel(model)"/>
           </AuxValues>
@@ -54,7 +54,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="ca.tonita.jawbreaker.tovwindows.TOVBuilderPanel" name="tovBuilderPanel">
+        <Component class="ca.tonita.jawbreaker.panels.TOVBuilderPanel" name="tovBuilderPanel">
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new TOVBuilderPanel(model)"/>
           </AuxValues>

@@ -4,9 +4,9 @@
  */
 package ca.tonita.jawbreaker;
 
-import ca.tonita.jawbreaker.eoswindows.EOSPanel;
+import ca.tonita.jawbreaker.panels.EOSPanel;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
-import ca.tonita.jawbreaker.tovwindows.TOVBuilderPanel;
+import ca.tonita.jawbreaker.panels.TOVBuilderPanel;
 
 /**
  *
@@ -85,8 +85,8 @@ public class JawBreaker extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ca.tonita.jawbreaker.eoswindows.EOSPanel eosPanel;
+    private ca.tonita.jawbreaker.panels.EOSPanel eosPanel;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private ca.tonita.jawbreaker.tovwindows.TOVBuilderPanel tovBuilderPanel;
+    private ca.tonita.jawbreaker.panels.TOVBuilderPanel tovBuilderPanel;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,4 +1,4 @@
-package ca.tonita.jawbreaker.eoswindows;
+package ca.tonita.jawbreaker.panels;
 
 import java.awt.Color;
 import javax.swing.JPanel;
