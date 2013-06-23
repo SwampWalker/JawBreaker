@@ -584,4 +584,13 @@ public class TabulatedHermite {
         }
         return dvariable;
     }
+
+    /**
+     * Returns the minimum pressure and maximum pressure of the table.
+     *
+     * @return the min and max pressure
+     */
+    public double[] getPressureExtrema() {
+        return new double[]{pressure[0], pressure[N - 1]};
+    }
 }

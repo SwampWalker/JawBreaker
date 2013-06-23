@@ -140,4 +140,12 @@ public class JawBreakerModel implements EOSStorage {
     public ArrayList<TOVFamily> getTOVFamilies() {
         return tovFamilies;
     }
+
+    public TOVFamily getTOVFamily(int selectedIndex) {
+        return tovFamilies.get(selectedIndex);
+    }
+
+    public void setEOSDataset(EOSDataset eosDataset) {
+        this.eosDataset = eosDataset;
+    }
 }

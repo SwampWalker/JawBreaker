@@ -5,13 +5,18 @@
 package ca.tonita.jawbreaker.panels;
 
 import ca.tonita.jawbreaker.datasets.TOVFamilyDataset;
+import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
+import ca.tonita.jawbreaker.models.TOVData;
+import ca.tonita.jawbreaker.models.TOVFamily;
 import ca.tonita.jawbreaker.panels.eos.NewEOSDialog;
+import ca.tonita.physics.gr.hydro.TOVBuilder;
 import java.awt.BorderLayout;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -37,20 +42,21 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     public TOVFamilyPanel() {
         model = new JawBreakerModel();
         setModel(model);
-        
         // Set up GUI components.
         initComponents();
         chartPanel.setLayout(new BorderLayout());
-        ChartPanel panel = ChartPanelCreator.createChartPanel("TOV Family", tovFamilyDataset.getDomainName(), tovFamilyDataset.getRangeName(), tovFamilyDataset);
-        chart = panel.getChart();
-        chartPanel.add(panel, BorderLayout.CENTER);
+        initChart();
     }
-    
+
     public void setModel(JawBreakerModel model) {
         // Set up links to model.
         this.model = model;
         model.addEOSChangeListener(this);
         tovFamilyDataset = new TOVFamilyDataset(model);
+        if (chart != null) {
+            chartPanel.removeAll();
+            initChart();
+        }
     }
 
     private void updateChart() {
@@ -108,7 +114,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         familyMaxPressureLabel = new javax.swing.JLabel();
         matchEOSPressureButton = new javax.swing.JButton();
         familyMinPressureField = new javax.swing.JFormattedTextField();
-        familyMinPressureField1 = new javax.swing.JFormattedTextField();
+        familyMaxPressureField = new javax.swing.JFormattedTextField();
         familyNPointsLabel = new javax.swing.JLabel();
         familyNPointsSpinner = new javax.swing.JSpinner();
         createFamilyButton = new javax.swing.JButton();
@@ -210,6 +216,11 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
 
         matchEOSPressureButton.setText("Get pressure extrema from table");
         matchEOSPressureButton.setToolTipText("");
+        matchEOSPressureButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                matchEOSPressureButtonActionPerformed(evt);
+            }
+        });
 
         familyMinPressureField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
             new javax.swing.text.NumberFormatter(
@@ -218,12 +229,12 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         ));
         familyMinPressureField.setText("1.5E-4");
 
-        familyMinPressureField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
+        familyMaxPressureField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
             new javax.swing.text.NumberFormatter(
                 new java.text.DecimalFormat("0.00#############E0#")
             )
         ));
-        familyMinPressureField1.setText("1.5E-1");
+        familyMaxPressureField.setText("1.5E-1");
 
         familyNPointsLabel.setText("Number of TOVs");
 
@@ -248,7 +259,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
                         .addGap(18, 18, 18)
                         .addGroup(familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(familyMinPressureField, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                            .addComponent(familyMinPressureField1))))
+                            .addComponent(familyMaxPressureField))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         familyParameterPanelLayout.setVerticalGroup(
@@ -261,7 +272,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
                 .addGap(18, 18, 18)
                 .addGroup(familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(familyMaxPressureLabel)
-                    .addComponent(familyMinPressureField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(familyMaxPressureField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(matchEOSPressureButton)
                 .addGap(18, 18, 18)
@@ -272,6 +283,11 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         );
 
         createFamilyButton.setText("Create TOV family");
+        createFamilyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createFamilyButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout familyCreationControlPanelLayout = new javax.swing.GroupLayout(familyCreationControlPanel);
         familyCreationControlPanel.setLayout(familyCreationControlPanelLayout);
@@ -436,6 +452,45 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         updateChart();
     }//GEN-LAST:event_logarithmRangeActionPerformed
 
+    private void matchEOSPressureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matchEOSPressureButtonActionPerformed
+        TabulatedHermite eos = model.getEos(eosComboBox.getSelectedIndex());
+        double[] pressureExtrema = eos.getPressureExtrema();
+        familyMinPressureField.setText(pressureExtrema[0] + "");
+        familyMaxPressureField.setText(pressureExtrema[1] + "");
+    }//GEN-LAST:event_matchEOSPressureButtonActionPerformed
+
+    private void createFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createFamilyButtonActionPerformed
+        // Get EOS and TOV Family.
+        int i = eosComboBox.getSelectedIndex();
+        TabulatedHermite eos = model.getEos(i);
+        TOVFamily family = model.getTOVFamily(i);
+        family.clear();
+
+        // Get the parameters of the family to create.
+        double minFamilyPressure = Double.valueOf(familyMinPressureField.getText());
+        double maxFamilyPressure = Double.valueOf(familyMaxPressureField.getText());
+        int nTOVs = (Integer) familyNPointsSpinner.getValue();
+        double deltaP = (maxFamilyPressure - minFamilyPressure) / (nTOVs - 1);
+
+        // Get the RK4 parameters.
+        double stepSize = Double.valueOf(stepSizeField.getText());
+        int outputEvery = Integer.valueOf(outputEveryField.getText());
+        double minPressure = Double.valueOf(minPressureField.getText());
+
+        if (minPressure > minFamilyPressure) {
+            JOptionPane.showMessageDialog(this, "Family inconsistent", "The minimum pressure of the RK4 algorithm should be\nless than the minimum pressure of the family.", JOptionPane.WARNING_MESSAGE);
+        } else {
+            // Create TOVs
+            for (int iTOV = 0; iTOV < nTOVs; iTOV++) {
+                TOVData rk4TOV = new TOVData();
+                double centralPressure = minFamilyPressure + iTOV * deltaP;
+                TOVBuilder.evolve(rk4TOV, eos, centralPressure, stepSize, outputEvery, minPressure);
+                rk4TOV.computeSecondaries(eos);
+                family.add(rk4TOV);
+            }
+        }
+        updateChart();
+    }//GEN-LAST:event_createFamilyButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane chartControlSplitPane;
     private javax.swing.JPanel chartPanel;
@@ -447,9 +502,9 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     private javax.swing.JTabbedPane familyControlPanel;
     private javax.swing.JPanel familyCreationControlPanel;
     private javax.swing.JPanel familyExplorerControlPanel;
+    private javax.swing.JFormattedTextField familyMaxPressureField;
     private javax.swing.JLabel familyMaxPressureLabel;
     private javax.swing.JFormattedTextField familyMinPressureField;
-    private javax.swing.JFormattedTextField familyMinPressureField1;
     private javax.swing.JLabel familyMinPressureLabel;
     private javax.swing.JLabel familyNPointsLabel;
     private javax.swing.JSpinner familyNPointsSpinner;
@@ -472,8 +527,8 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     public void stateChanged(ChangeEvent e) {
         eosComboBox.setModel(new DefaultComboBoxModel(model.getEOSNames()));
     }
-    
-     /**
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -506,4 +561,9 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         });
     }
 
+    private void initChart() {
+        ChartPanel panel = ChartPanelCreator.createChartPanel("TOV Family", tovFamilyDataset.getDomainName(), tovFamilyDataset.getRangeName(), tovFamilyDataset);
+        chart = panel.getChart();
+        chartPanel.add(panel, BorderLayout.CENTER);
+    }
 }

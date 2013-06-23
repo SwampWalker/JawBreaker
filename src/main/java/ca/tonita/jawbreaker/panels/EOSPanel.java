@@ -39,6 +39,7 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
      * Creates new form EOSPanel
      */
     public EOSPanel() {
+        eosDataset = new EOSDataset();
         model = new JawBreakerModel();
         this.setModel(model);
         
@@ -53,7 +54,7 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
     public void setModel(JawBreakerModel model) {
         this.model = model;
         model.addEOSChangeListener(this);
-        eosDataset = model.getEOSDataset();
+        model.setEOSDataset(eosDataset);
     }
 
     /**
