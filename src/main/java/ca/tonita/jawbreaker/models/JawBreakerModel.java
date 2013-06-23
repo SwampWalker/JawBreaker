@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class JawBreakerModel implements EOSStorage {
 
-    HashMap<String, ArrayList<TOVData>> tovFamilies;
+    HashMap<TabulatedHermite, ArrayList<TOVData>> tovFamilies;
     ArrayList<TabulatedHermite> eosStorage;
     ArrayList<ChangeListener> eosChangeListeners;
     EOSDataset eosDataset;
@@ -28,7 +28,7 @@ public class JawBreakerModel implements EOSStorage {
     public JawBreakerModel() {
         eosStorage = new ArrayList<TabulatedHermite>();
         eosChangeListeners = new ArrayList<ChangeListener>();
-        tovFamilies = new HashMap<String, ArrayList<TOVData>>();
+        tovFamilies = new HashMap<TabulatedHermite, ArrayList<TOVData>>();
     }
 
     /**
@@ -59,6 +59,8 @@ public class JawBreakerModel implements EOSStorage {
                 eosDataset.add(index, eos);
             }
         }
+        
+        tovFamilies.put(eos, new ArrayList<TOVData>());
 
         fireEOSChange();
     }
@@ -106,9 +108,12 @@ public class JawBreakerModel implements EOSStorage {
     }
 
     public void removeEOS(int i) {
-        eosStorage.remove(i);
+        TabulatedHermite toRemove = eosStorage.remove(i);
         if (eosDataset != null) {
             eosDataset.remove(i);
+        }
+        if (tovFamilies != null) {
+            tovFamilies.remove(toRemove);
         }
         fireEOSChange();
     }

@@ -52,8 +52,8 @@ public class TOVData {
     public double getLambda(int i) {
         return variables.get(i)[2];
     }
-
-    public double getTotalMass() {
+    
+    public double getGravitationalMass() {
         return variables.get(variables.size() - 1)[1];
     }
 

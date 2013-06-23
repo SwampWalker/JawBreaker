@@ -4,6 +4,7 @@
  */
 package ca.tonita.jawbreaker.panels;
 
+import ca.tonita.jawbreaker.datasets.TOVFamilyDataset;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
 import java.awt.BorderLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -82,6 +83,13 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         chartPanel = new javax.swing.JPanel();
         familyControlPanel = new javax.swing.JTabbedPane();
         familyExplorerControlPanel = new javax.swing.JPanel();
+        rangeDomainPanel = new javax.swing.JPanel();
+        rangeComboBox = new javax.swing.JComboBox();
+        rangeLabel = new javax.swing.JLabel();
+        domainComboBox = new javax.swing.JComboBox();
+        domainLabel = new javax.swing.JLabel();
+        logarithmDomain = new javax.swing.JCheckBox();
+        logarithmRange = new javax.swing.JCheckBox();
         familyCreationControlPanel = new javax.swing.JPanel();
         eosLabel = new javax.swing.JLabel();
         eosComboBox = new javax.swing.JComboBox();
@@ -92,13 +100,6 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         minPressureField = new javax.swing.JFormattedTextField();
         outputEveryLabel = new javax.swing.JLabel();
         outputEveryField = new javax.swing.JFormattedTextField();
-        jPanel1 = new javax.swing.JPanel();
-        rangeComboBox = new javax.swing.JComboBox();
-        rangeLabel = new javax.swing.JLabel();
-        domainComboBox = new javax.swing.JComboBox();
-        domainLabel = new javax.swing.JLabel();
-        logarithmDomain = new javax.swing.JCheckBox();
-        logarithmRange = new javax.swing.JCheckBox();
 
         setMaximumSize(new java.awt.Dimension(1224, 768));
         setMinimumSize(new java.awt.Dimension(1224, 768));
@@ -119,15 +120,94 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
 
         chartControlSplitPane.setLeftComponent(chartPanel);
 
+        rangeDomainPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot properties"));
+
+        rangeComboBox.setModel(new DefaultComboBoxModel(tovFamilyDataset.getVariableNames()));
+        rangeComboBox.setSelectedIndex(1);
+        rangeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rangeComboBoxActionPerformed(evt);
+            }
+        });
+
+        rangeLabel.setText("Range Variable:");
+
+        domainComboBox.setModel(new DefaultComboBoxModel(tovFamilyDataset.getVariableNames()));
+        domainComboBox.setSelectedIndex(0);
+        domainComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                domainComboBoxActionPerformed(evt);
+            }
+        });
+
+        domainLabel.setText("Domain Variable:");
+
+        logarithmDomain.setText("logarithmic");
+        logarithmDomain.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logarithmDomainActionPerformed(evt);
+            }
+        });
+
+        logarithmRange.setText("logarithmic");
+        logarithmRange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logarithmRangeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout rangeDomainPanelLayout = new javax.swing.GroupLayout(rangeDomainPanel);
+        rangeDomainPanel.setLayout(rangeDomainPanelLayout);
+        rangeDomainPanelLayout.setHorizontalGroup(
+            rangeDomainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rangeDomainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(rangeDomainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rangeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(domainComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(rangeDomainPanelLayout.createSequentialGroup()
+                        .addComponent(domainLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                        .addComponent(logarithmDomain))
+                    .addGroup(rangeDomainPanelLayout.createSequentialGroup()
+                        .addComponent(rangeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logarithmRange)))
+                .addContainerGap())
+        );
+        rangeDomainPanelLayout.setVerticalGroup(
+            rangeDomainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rangeDomainPanelLayout.createSequentialGroup()
+                .addContainerGap(13, Short.MAX_VALUE)
+                .addGroup(rangeDomainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(domainLabel)
+                    .addComponent(logarithmDomain))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(domainComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(rangeDomainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rangeLabel)
+                    .addComponent(logarithmRange))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(rangeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout familyExplorerControlPanelLayout = new javax.swing.GroupLayout(familyExplorerControlPanel);
         familyExplorerControlPanel.setLayout(familyExplorerControlPanelLayout);
         familyExplorerControlPanelLayout.setHorizontalGroup(
             familyExplorerControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 356, Short.MAX_VALUE)
+            .addGroup(familyExplorerControlPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(rangeDomainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         familyExplorerControlPanelLayout.setVerticalGroup(
             familyExplorerControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 736, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, familyExplorerControlPanelLayout.createSequentialGroup()
+                .addContainerGap(551, Short.MAX_VALUE)
+                .addComponent(rangeDomainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         familyControlPanel.addTab("Family explorer", familyExplorerControlPanel);
@@ -194,79 +274,6 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot properties"));
-
-        rangeComboBox.setModel(new DefaultComboBoxModel(tovDataset.getVariableNames()));
-        rangeComboBox.setSelectedIndex(1);
-        rangeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rangeComboBoxActionPerformed(evt);
-            }
-        });
-
-        rangeLabel.setText("Range Variable:");
-
-        domainComboBox.setModel(new DefaultComboBoxModel(tovDataset.getVariableNames()));
-        domainComboBox.setSelectedIndex(0);
-        domainComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                domainComboBoxActionPerformed(evt);
-            }
-        });
-
-        domainLabel.setText("Domain Variable:");
-
-        logarithmDomain.setText("logarithmic");
-        logarithmDomain.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logarithmDomainActionPerformed(evt);
-            }
-        });
-
-        logarithmRange.setText("logarithmic");
-        logarithmRange.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logarithmRangeActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rangeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(domainComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(domainLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
-                        .addComponent(logarithmDomain))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(rangeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(logarithmRange)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(domainLabel)
-                    .addComponent(logarithmDomain))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(domainComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rangeLabel)
-                    .addComponent(logarithmRange))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rangeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
         javax.swing.GroupLayout familyCreationControlPanelLayout = new javax.swing.GroupLayout(familyCreationControlPanel);
         familyCreationControlPanel.setLayout(familyCreationControlPanelLayout);
         familyCreationControlPanelLayout.setHorizontalGroup(
@@ -283,9 +290,6 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
                         .addGap(7, 7, 7))
                     .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
                         .addComponent(rkPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, familyCreationControlPanelLayout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         familyCreationControlPanelLayout.setVerticalGroup(
@@ -297,9 +301,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
                 .addComponent(eosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(rkPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 264, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(525, Short.MAX_VALUE))
         );
 
         familyControlPanel.addTab("Family creation", familyCreationControlPanel);
@@ -344,7 +346,6 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     private javax.swing.JTabbedPane familyControlPanel;
     private javax.swing.JPanel familyCreationControlPanel;
     private javax.swing.JPanel familyExplorerControlPanel;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JCheckBox logarithmDomain;
     private javax.swing.JCheckBox logarithmRange;
     private javax.swing.JFormattedTextField minPressureField;
@@ -352,6 +353,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     private javax.swing.JFormattedTextField outputEveryField;
     private javax.swing.JLabel outputEveryLabel;
     private javax.swing.JComboBox rangeComboBox;
+    private javax.swing.JPanel rangeDomainPanel;
     private javax.swing.JLabel rangeLabel;
     private javax.swing.JPanel rkPanel;
     private javax.swing.JFormattedTextField stepSizeField;
