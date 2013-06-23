@@ -16,8 +16,8 @@ public class TOVFamilyDataset extends MultiDataset<TOVFamily> {
     private JawBreakerModel model;
 
     public TOVFamilyDataset(JawBreakerModel model) {
+        datasets = model.getTOVFamilies();
         variableNames = tovFamilyNames;
-        this.model = model;
     }
     
     private static final String[] tovFamilyNames = {"Radius", "Central pressure", "Gravitational mass", "Rest mass", "Core radius", "Core rest mass"};

@@ -21,6 +21,9 @@ public class JawBreaker extends javax.swing.JFrame {
     public JawBreaker() {
         model = new JawBreakerModel();
         initComponents();
+        eosPanel.setModel(model);
+        tovBuilderPanel.setModel(model);
+        tovFamilyPanel.setModel(model);
     }
 
     /**
@@ -33,14 +36,16 @@ public class JawBreaker extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane2 = new javax.swing.JTabbedPane();
-        eosPanel = new EOSPanel(model);
-        tovBuilderPanel = new TOVBuilderPanel(model);
+        eosPanel = new EOSPanel();
+        tovBuilderPanel = new TOVBuilderPanel();
+        tovFamilyPanel = new ca.tonita.jawbreaker.panels.TOVFamilyPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
         jTabbedPane2.addTab("EOS", eosPanel);
         jTabbedPane2.addTab("TOV Builder", tovBuilderPanel);
+        jTabbedPane2.addTab("TOV Family", tovFamilyPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -50,7 +55,7 @@ public class JawBreaker extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
         );
 
         jTabbedPane2.getAccessibleContext().setAccessibleName("TOV Builder");
@@ -88,5 +93,6 @@ public class JawBreaker extends javax.swing.JFrame {
     private ca.tonita.jawbreaker.panels.EOSPanel eosPanel;
     private javax.swing.JTabbedPane jTabbedPane2;
     private ca.tonita.jawbreaker.panels.TOVBuilderPanel tovBuilderPanel;
+    private ca.tonita.jawbreaker.panels.TOVFamilyPanel tovFamilyPanel;
     // End of variables declaration//GEN-END:variables
 }

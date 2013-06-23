@@ -8,9 +8,14 @@ import ca.tonita.jawbreaker.datasets.TOVDataset;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
 import ca.tonita.jawbreaker.models.TOVData;
+import ca.tonita.jawbreaker.panels.eos.NewEOSDialog;
 import ca.tonita.physics.gr.hydro.TOVBuilder;
 import java.awt.BorderLayout;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jfree.chart.ChartPanel;
@@ -33,10 +38,9 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
     /**
      * Creates new form TOVBuilderPanel
      */
-    public TOVBuilderPanel(JawBreakerModel model) {
-        // Set up links to model.
-        this.model = model;
-        model.addEOSChangeListener(this);
+    public TOVBuilderPanel() {
+        model = new JawBreakerModel();
+        this.setModel(model);
         tovDataset = new TOVDataset();
 
         // Set up GUI components.
@@ -45,6 +49,12 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         ChartPanel panel = ChartPanelCreator.createChartPanel("TOV Model", tovDataset.getDomainName(), tovDataset.getRangeName(), tovDataset);
         chart = panel.getChart();
         jPanelLeft.add(panel, BorderLayout.CENTER);
+    }
+    
+    public final void setModel(JawBreakerModel model) {
+        // Set up links to model.
+        this.model = model;
+        model.addEOSChangeListener(this);
     }
 
     private void updateChart() {
@@ -459,5 +469,38 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
 
     public void stateChanged(ChangeEvent e) {
         eosComboBox.setModel(new DefaultComboBoxModel(model.getEOSNames()));
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(NewEOSDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(NewEOSDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(NewEOSDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(NewEOSDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        /*
+         * Create and display the form
+         */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                JFrame aFrame = new JFrame();
+                aFrame.getContentPane().setLayout(new BorderLayout());
+                aFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+                TOVBuilderPanel tovBuilderPanel = new TOVBuilderPanel();
+                aFrame.add(tovBuilderPanel, BorderLayout.CENTER);
+                aFrame.setVisible(true);
+                aFrame.setSize(1024, 768);
+                aFrame.pack();
+            }
+        });
     }
 }

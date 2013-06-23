@@ -38,10 +38,9 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
     /**
      * Creates new form EOSPanel
      */
-    public EOSPanel(JawBreakerModel model) {
-        this.model = model;
-        model.addEOSChangeListener(this);
-        eosDataset = model.getEOSDataset();
+    public EOSPanel() {
+        model = new JawBreakerModel();
+        this.setModel(model);
         
         initComponents();
         jPanelLeft.setLayout(new BorderLayout());
@@ -49,6 +48,12 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
         chart = panel.getChart();
         jPanelLeft.add(panel, BorderLayout.CENTER);
         plotPropertyChangeHandler(null);
+    }
+    
+    public void setModel(JawBreakerModel model) {
+        this.model = model;
+        model.addEOSChangeListener(this);
+        eosDataset = model.getEOSDataset();
     }
 
     /**
@@ -75,7 +80,7 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
                 JFrame aFrame = new JFrame();
                 aFrame.getContentPane().setLayout(new BorderLayout());
                 aFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-                EOSPanel eosPanel = new EOSPanel(new JawBreakerModel());
+                EOSPanel eosPanel = new EOSPanel();
                 aFrame.add(eosPanel, BorderLayout.CENTER);
                 aFrame.setVisible(true);
                 aFrame.setSize(1024, 768);

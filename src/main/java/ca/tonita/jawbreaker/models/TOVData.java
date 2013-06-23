@@ -110,4 +110,12 @@ public class TOVData {
     public void setConservedMass(double mass) {
         conservedMass = mass;
     }
+
+    public double getCoreRadius() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public double getCoreRestMass() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -6,8 +6,13 @@ package ca.tonita.jawbreaker.panels;
 
 import ca.tonita.jawbreaker.datasets.TOVFamilyDataset;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
+import ca.tonita.jawbreaker.panels.eos.NewEOSDialog;
 import java.awt.BorderLayout;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jfree.chart.ChartPanel;
@@ -29,17 +34,23 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     /**
      * Creates new form TOVBuilderPanel
      */
-    public TOVFamilyPanel(JawBreakerModel model) {
-        // Set up links to model.
-        this.model = model;
-        model.addEOSChangeListener(this);
-
+    public TOVFamilyPanel() {
+        model = new JawBreakerModel();
+        setModel(model);
+        
         // Set up GUI components.
         initComponents();
         chartPanel.setLayout(new BorderLayout());
-        ChartPanel panel = ChartPanelCreator.createChartPanel("TOV Model", tovFamilyDataset.getDomainName(), tovFamilyDataset.getRangeName(), tovFamilyDataset);
+        ChartPanel panel = ChartPanelCreator.createChartPanel("TOV Family", tovFamilyDataset.getDomainName(), tovFamilyDataset.getRangeName(), tovFamilyDataset);
         chart = panel.getChart();
         chartPanel.add(panel, BorderLayout.CENTER);
+    }
+    
+    public void setModel(JawBreakerModel model) {
+        // Set up links to model.
+        this.model = model;
+        model.addEOSChangeListener(this);
+        tovFamilyDataset = new TOVFamilyDataset(model);
     }
 
     private void updateChart() {
@@ -82,14 +93,6 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         chartControlSplitPane = new javax.swing.JSplitPane();
         chartPanel = new javax.swing.JPanel();
         familyControlPanel = new javax.swing.JTabbedPane();
-        familyExplorerControlPanel = new javax.swing.JPanel();
-        rangeDomainPanel = new javax.swing.JPanel();
-        rangeComboBox = new javax.swing.JComboBox();
-        rangeLabel = new javax.swing.JLabel();
-        domainComboBox = new javax.swing.JComboBox();
-        domainLabel = new javax.swing.JLabel();
-        logarithmDomain = new javax.swing.JCheckBox();
-        logarithmRange = new javax.swing.JCheckBox();
         familyCreationControlPanel = new javax.swing.JPanel();
         eosLabel = new javax.swing.JLabel();
         eosComboBox = new javax.swing.JComboBox();
@@ -100,6 +103,23 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         minPressureField = new javax.swing.JFormattedTextField();
         outputEveryLabel = new javax.swing.JLabel();
         outputEveryField = new javax.swing.JFormattedTextField();
+        familyParameterPanel = new javax.swing.JPanel();
+        familyMinPressureLabel = new javax.swing.JLabel();
+        familyMaxPressureLabel = new javax.swing.JLabel();
+        matchEOSPressureButton = new javax.swing.JButton();
+        familyMinPressureField = new javax.swing.JFormattedTextField();
+        familyMinPressureField1 = new javax.swing.JFormattedTextField();
+        familyNPointsLabel = new javax.swing.JLabel();
+        familyNPointsSpinner = new javax.swing.JSpinner();
+        createFamilyButton = new javax.swing.JButton();
+        familyExplorerControlPanel = new javax.swing.JPanel();
+        rangeDomainPanel = new javax.swing.JPanel();
+        rangeComboBox = new javax.swing.JComboBox();
+        rangeLabel = new javax.swing.JLabel();
+        domainComboBox = new javax.swing.JComboBox();
+        domainLabel = new javax.swing.JLabel();
+        logarithmDomain = new javax.swing.JCheckBox();
+        logarithmRange = new javax.swing.JCheckBox();
 
         setMaximumSize(new java.awt.Dimension(1224, 768));
         setMinimumSize(new java.awt.Dimension(1224, 768));
@@ -115,10 +135,184 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         );
         chartPanelLayout.setVerticalGroup(
             chartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 766, Short.MAX_VALUE)
+            .addGap(0, 842, Short.MAX_VALUE)
         );
 
         chartControlSplitPane.setLeftComponent(chartPanel);
+
+        eosLabel.setText("Equation of State");
+
+        rkPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Runge-Kutta 4 Parameters"));
+
+        stepSizeLabel.setText("Step Size:");
+
+        stepSizeField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
+            new javax.swing.text.NumberFormatter(
+                new java.text.DecimalFormat("0.00#############E0#")
+            )
+        ));
+        stepSizeField.setText("1.0E-3");
+
+        minPressureLabel.setText("Minimum pressure:");
+
+        minPressureField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
+            new javax.swing.text.NumberFormatter(
+                new java.text.DecimalFormat("0.00#############E0#")
+            )
+        ));
+        minPressureField.setText("1.5E-8");
+
+        outputEveryLabel.setText("Save data every N steps:");
+
+        outputEveryField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
+        outputEveryField.setText("1");
+
+        javax.swing.GroupLayout rkPanelLayout = new javax.swing.GroupLayout(rkPanel);
+        rkPanel.setLayout(rkPanelLayout);
+        rkPanelLayout.setHorizontalGroup(
+            rkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rkPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(rkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(stepSizeField)
+                    .addComponent(minPressureField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(rkPanelLayout.createSequentialGroup()
+                        .addGroup(rkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(stepSizeLabel)
+                            .addComponent(minPressureLabel)
+                            .addComponent(outputEveryLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(outputEveryField))
+                .addContainerGap())
+        );
+        rkPanelLayout.setVerticalGroup(
+            rkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rkPanelLayout.createSequentialGroup()
+                .addComponent(stepSizeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(stepSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(minPressureLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(minPressureField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(outputEveryLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(outputEveryField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        familyParameterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Family parameters"));
+
+        familyMinPressureLabel.setText("Minimum pressure");
+
+        familyMaxPressureLabel.setText("Maximum pressure");
+
+        matchEOSPressureButton.setText("Get pressure extrema from table");
+        matchEOSPressureButton.setToolTipText("");
+
+        familyMinPressureField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
+            new javax.swing.text.NumberFormatter(
+                new java.text.DecimalFormat("0.00#############E0#")
+            )
+        ));
+        familyMinPressureField.setText("1.5E-4");
+
+        familyMinPressureField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
+            new javax.swing.text.NumberFormatter(
+                new java.text.DecimalFormat("0.00#############E0#")
+            )
+        ));
+        familyMinPressureField1.setText("1.5E-1");
+
+        familyNPointsLabel.setText("Number of TOVs");
+
+        familyNPointsSpinner.setValue(50);
+
+        javax.swing.GroupLayout familyParameterPanelLayout = new javax.swing.GroupLayout(familyParameterPanel);
+        familyParameterPanel.setLayout(familyParameterPanelLayout);
+        familyParameterPanelLayout.setHorizontalGroup(
+            familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(familyParameterPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, familyParameterPanelLayout.createSequentialGroup()
+                        .addComponent(familyNPointsLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(familyNPointsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(matchEOSPressureButton)
+                    .addGroup(familyParameterPanelLayout.createSequentialGroup()
+                        .addGroup(familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(familyMaxPressureLabel)
+                            .addComponent(familyMinPressureLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(familyMinPressureField, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                            .addComponent(familyMinPressureField1))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        familyParameterPanelLayout.setVerticalGroup(
+            familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(familyParameterPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(familyMinPressureLabel)
+                    .addComponent(familyMinPressureField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(familyMaxPressureLabel)
+                    .addComponent(familyMinPressureField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(matchEOSPressureButton)
+                .addGap(18, 18, 18)
+                .addGroup(familyParameterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(familyNPointsLabel)
+                    .addComponent(familyNPointsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        createFamilyButton.setText("Create TOV family");
+
+        javax.swing.GroupLayout familyCreationControlPanelLayout = new javax.swing.GroupLayout(familyCreationControlPanel);
+        familyCreationControlPanel.setLayout(familyCreationControlPanelLayout);
+        familyCreationControlPanelLayout.setHorizontalGroup(
+            familyCreationControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(familyCreationControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
+                        .addGroup(familyCreationControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(eosComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
+                                .addComponent(eosLabel)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(7, 7, 7))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, familyCreationControlPanelLayout.createSequentialGroup()
+                        .addGroup(familyCreationControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(familyParameterPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(rkPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
+                        .addComponent(createFamilyButton)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+        familyCreationControlPanelLayout.setVerticalGroup(
+            familyCreationControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(eosLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(eosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(rkPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(familyParameterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(createFamilyButton)
+                .addContainerGap(268, Short.MAX_VALUE))
+        );
+
+        familyControlPanel.addTab("Family creation", familyCreationControlPanel);
 
         rangeDomainPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot properties"));
 
@@ -205,106 +399,12 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         familyExplorerControlPanelLayout.setVerticalGroup(
             familyExplorerControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, familyExplorerControlPanelLayout.createSequentialGroup()
-                .addContainerGap(551, Short.MAX_VALUE)
+                .addContainerGap(627, Short.MAX_VALUE)
                 .addComponent(rangeDomainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         familyControlPanel.addTab("Family explorer", familyExplorerControlPanel);
-
-        eosLabel.setText("Equation of State");
-
-        rkPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Runge-Kutta 4 Parameters"));
-
-        stepSizeLabel.setText("Step Size:");
-
-        stepSizeField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
-            new javax.swing.text.NumberFormatter(
-                new java.text.DecimalFormat("0.00#############E0#")
-            )
-        ));
-        stepSizeField.setText("1.0E-3");
-
-        minPressureLabel.setText("Minimum pressure:");
-
-        minPressureField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
-            new javax.swing.text.NumberFormatter(
-                new java.text.DecimalFormat("0.00#############E0#")
-            )
-        ));
-        minPressureField.setText("1.5E-8");
-
-        outputEveryLabel.setText("Save data every N steps:");
-
-        outputEveryField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
-        outputEveryField.setText("1");
-
-        javax.swing.GroupLayout rkPanelLayout = new javax.swing.GroupLayout(rkPanel);
-        rkPanel.setLayout(rkPanelLayout);
-        rkPanelLayout.setHorizontalGroup(
-            rkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rkPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(rkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(stepSizeField)
-                    .addComponent(minPressureField, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(rkPanelLayout.createSequentialGroup()
-                        .addGroup(rkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(stepSizeLabel)
-                            .addComponent(minPressureLabel)
-                            .addComponent(outputEveryLabel))
-                        .addGap(0, 153, Short.MAX_VALUE))
-                    .addComponent(outputEveryField))
-                .addContainerGap())
-        );
-        rkPanelLayout.setVerticalGroup(
-            rkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rkPanelLayout.createSequentialGroup()
-                .addComponent(stepSizeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(stepSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(minPressureLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(minPressureField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(outputEveryLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(outputEveryField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout familyCreationControlPanelLayout = new javax.swing.GroupLayout(familyCreationControlPanel);
-        familyCreationControlPanel.setLayout(familyCreationControlPanelLayout);
-        familyCreationControlPanelLayout.setHorizontalGroup(
-            familyCreationControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(familyCreationControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
-                        .addGroup(familyCreationControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(eosComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
-                                .addComponent(eosLabel)
-                                .addGap(0, 239, Short.MAX_VALUE)))
-                        .addGap(7, 7, 7))
-                    .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
-                        .addComponent(rkPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
-        );
-        familyCreationControlPanelLayout.setVerticalGroup(
-            familyCreationControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(familyCreationControlPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(eosLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(rkPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(525, Short.MAX_VALUE))
-        );
-
-        familyControlPanel.addTab("Family creation", familyCreationControlPanel);
 
         chartControlSplitPane.setRightComponent(familyControlPanel);
 
@@ -339,6 +439,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane chartControlSplitPane;
     private javax.swing.JPanel chartPanel;
+    private javax.swing.JButton createFamilyButton;
     private javax.swing.JComboBox domainComboBox;
     private javax.swing.JLabel domainLabel;
     private javax.swing.JComboBox eosComboBox;
@@ -346,8 +447,16 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     private javax.swing.JTabbedPane familyControlPanel;
     private javax.swing.JPanel familyCreationControlPanel;
     private javax.swing.JPanel familyExplorerControlPanel;
+    private javax.swing.JLabel familyMaxPressureLabel;
+    private javax.swing.JFormattedTextField familyMinPressureField;
+    private javax.swing.JFormattedTextField familyMinPressureField1;
+    private javax.swing.JLabel familyMinPressureLabel;
+    private javax.swing.JLabel familyNPointsLabel;
+    private javax.swing.JSpinner familyNPointsSpinner;
+    private javax.swing.JPanel familyParameterPanel;
     private javax.swing.JCheckBox logarithmDomain;
     private javax.swing.JCheckBox logarithmRange;
+    private javax.swing.JButton matchEOSPressureButton;
     private javax.swing.JFormattedTextField minPressureField;
     private javax.swing.JLabel minPressureLabel;
     private javax.swing.JFormattedTextField outputEveryField;
@@ -363,4 +472,38 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     public void stateChanged(ChangeEvent e) {
         eosComboBox.setModel(new DefaultComboBoxModel(model.getEOSNames()));
     }
+    
+     /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(NewEOSDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(NewEOSDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(NewEOSDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(NewEOSDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        /*
+         * Create and display the form
+         */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                JFrame aFrame = new JFrame();
+                aFrame.getContentPane().setLayout(new BorderLayout());
+                aFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+                TOVFamilyPanel tovFamilyPanel = new TOVFamilyPanel();
+                aFrame.add(tovFamilyPanel, BorderLayout.CENTER);
+                aFrame.setVisible(true);
+                aFrame.setSize(1024, 768);
+                aFrame.pack();
+            }
+        });
+    }
+
 }
