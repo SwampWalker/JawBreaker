@@ -124,7 +124,7 @@
                           <Component id="familyParameterPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="createFamilyButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="268" max="32767" attributes="0"/>
+                          <EmptySpace pref="228" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -249,25 +249,31 @@
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="familyNPointsLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="familyNPointsSpinner" min="-2" pref="183" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="matchEOSPressureButton" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="familyMaxPressureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="familyMinPressureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="1" attributes="0">
+                                              <Component id="familyNPointsLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="familyNPointsSpinner" min="-2" pref="183" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Component id="matchEOSPressureButton" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="familyMaxPressureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="familyMinPressureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="familyMinPressureField" pref="169" max="32767" attributes="0"/>
+                                                  <Component id="familyMaxPressureField" max="32767" attributes="0"/>
+                                              </Group>
+                                          </Group>
                                       </Group>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="familyMinPressureField" pref="169" max="32767" attributes="0"/>
-                                          <Component id="familyMaxPressureField" max="32767" attributes="0"/>
-                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
+                                  <Component id="spacingComboBox" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -291,6 +297,8 @@
                                   <Component id="familyNPointsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="familyNPointsSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="spacingComboBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -309,7 +317,7 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="matchEOSPressureButton">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Get pressure extrema from table"/>
+                        <Property name="text" type="java.lang.String" value="Get pressure maximum from table"/>
                         <Property name="toolTipText" type="java.lang.String" value=""/>
                       </Properties>
                       <Events>
@@ -321,7 +329,7 @@
                         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="new javax.swing.text.DefaultFormatterFactory(&#xd;&#xa;    new javax.swing.text.NumberFormatter(&#xd;&#xa;        new java.text.DecimalFormat(&quot;0.00#############E0#&quot;)&#xd;&#xa;    )&#xd;&#xa;)" type="code"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="1.5E-4"/>
+                        <Property name="text" type="java.lang.String" value="1.0E-5"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JFormattedTextField" name="familyMaxPressureField">
@@ -342,6 +350,18 @@
                         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="50" type="code"/>
                         </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="spacingComboBox">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="3">
+                            <StringItem index="0" value="Linearly spaced"/>
+                            <StringItem index="1" value="Logarithmically spaced"/>
+                            <StringItem index="2" value="Quadraticly spaced"/>
+                          </StringArray>
+                        </Property>
+                        <Property name="selectedIndex" type="int" value="1"/>
                       </Properties>
                     </Component>
                   </SubComponents>
@@ -452,7 +472,7 @@
                           <Connection code="new DefaultComboBoxModel(tovFamilyDataset.getVariableNames())" type="code"/>
                         </Property>
                         <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="1" type="code"/>
+                          <Connection code="2" type="code"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -470,7 +490,7 @@
                           <Connection code="new DefaultComboBoxModel(tovFamilyDataset.getVariableNames())" type="code"/>
                         </Property>
                         <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="0" type="code"/>
+                          <Connection code="1" type="code"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -484,6 +504,7 @@
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="logarithmDomain">
                       <Properties>
+                        <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="logarithmic"/>
                       </Properties>
                       <Events>
