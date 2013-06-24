@@ -32,7 +32,6 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
 
     private EOSDataset eosDataset = null;
     private JawBreakerModel model = null;
-    private ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
     private JFreeChart chart;
 
     /**
@@ -104,7 +103,7 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
         newEOSButton = new javax.swing.JButton();
         eosDisplayOuterPanel = new javax.swing.JPanel();
         eosDisplayPanel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        plotControlPanel = new javax.swing.JPanel();
         domainComboBox = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -133,7 +132,7 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
         eosDisplayPanel.setLayout(new java.awt.GridBagLayout());
         eosDisplayOuterPanel.add(eosDisplayPanel);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot Properties"));
+        plotControlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot Properties"));
 
         domainComboBox.setModel(new DefaultComboBoxModel(eosDataset.getVariableNames()));
         domainComboBox.setSelectedIndex(1);
@@ -171,17 +170,17 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout plotControlPanelLayout = new javax.swing.GroupLayout(plotControlPanel);
+        plotControlPanel.setLayout(plotControlPanelLayout);
+        plotControlPanelLayout.setHorizontalGroup(
+            plotControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plotControlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(plotControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(domainComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(rangeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(plotControlPanelLayout.createSequentialGroup()
+                        .addGroup(plotControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(logarithmRange)
                             .addComponent(logarithmDomain)
                             .addComponent(jLabel1)
@@ -189,9 +188,9 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
                         .addGap(0, 157, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        plotControlPanelLayout.setVerticalGroup(
+            plotControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plotControlPanelLayout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(domainComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -220,7 +219,7 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
             .addGroup(jPanelRightLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(plotControlPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(newEOSButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(eosDisplayOuterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
                     .addGroup(jPanelRightLayout.createSequentialGroup()
@@ -238,7 +237,7 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteUnselectedButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(plotControlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -322,13 +321,13 @@ public class EOSPanel extends javax.swing.JPanel implements ChangeListener {
     private javax.swing.JPanel eosDisplayPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelLeft;
     private javax.swing.JPanel jPanelRight;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JCheckBox logarithmDomain;
     private javax.swing.JCheckBox logarithmRange;
     private javax.swing.JButton newEOSButton;
+    private javax.swing.JPanel plotControlPanel;
     private javax.swing.JComboBox rangeComboBox;
     // End of variables declaration//GEN-END:variables
 

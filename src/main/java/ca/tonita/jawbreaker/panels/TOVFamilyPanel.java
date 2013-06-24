@@ -12,9 +12,14 @@ import ca.tonita.jawbreaker.models.TOVFamily;
 import ca.tonita.jawbreaker.panels.eos.NewEOSDialog;
 import ca.tonita.physics.gr.hydro.TOVBuilder;
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -35,6 +40,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     JFreeChart chart = null;
     private JawBreakerModel model;
     private TOVFamilyDataset tovFamilyDataset;
+    ArrayList<JCheckBox> eosCheckBoxes = new ArrayList<JCheckBox>();
 
     /**
      * Creates new form TOVBuilderPanel
@@ -52,7 +58,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         // Set up links to model.
         this.model = model;
         model.addEOSChangeListener(this);
-        tovFamilyDataset = new TOVFamilyDataset(model);
+        tovFamilyDataset = model.getTOVFamilies();
         if (chart != null) {
             chartPanel.removeAll();
             initChart();
@@ -126,6 +132,8 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         domainLabel = new javax.swing.JLabel();
         logarithmDomain = new javax.swing.JCheckBox();
         logarithmRange = new javax.swing.JCheckBox();
+        familyDisplayOuterPanel = new javax.swing.JPanel();
+        familyDisplayPanel = new javax.swing.JPanel();
 
         setMaximumSize(new java.awt.Dimension(1224, 768));
         setMinimumSize(new java.awt.Dimension(1224, 768));
@@ -403,19 +411,29 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
                 .addContainerGap())
         );
 
+        familyDisplayOuterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Available families"));
+        familyDisplayOuterPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEADING));
+
+        familyDisplayPanel.setLayout(new java.awt.GridBagLayout());
+        familyDisplayOuterPanel.add(familyDisplayPanel);
+
         javax.swing.GroupLayout familyExplorerControlPanelLayout = new javax.swing.GroupLayout(familyExplorerControlPanel);
         familyExplorerControlPanel.setLayout(familyExplorerControlPanelLayout);
         familyExplorerControlPanelLayout.setHorizontalGroup(
             familyExplorerControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(familyExplorerControlPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, familyExplorerControlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rangeDomainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(familyExplorerControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(familyDisplayOuterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rangeDomainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         familyExplorerControlPanelLayout.setVerticalGroup(
             familyExplorerControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, familyExplorerControlPanelLayout.createSequentialGroup()
-                .addContainerGap(627, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(familyDisplayOuterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
                 .addComponent(rangeDomainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -501,6 +519,8 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     private javax.swing.JLabel eosLabel;
     private javax.swing.JTabbedPane familyControlPanel;
     private javax.swing.JPanel familyCreationControlPanel;
+    private javax.swing.JPanel familyDisplayOuterPanel;
+    private javax.swing.JPanel familyDisplayPanel;
     private javax.swing.JPanel familyExplorerControlPanel;
     private javax.swing.JFormattedTextField familyMaxPressureField;
     private javax.swing.JLabel familyMaxPressureLabel;
@@ -526,6 +546,71 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
 
     public void stateChanged(ChangeEvent e) {
         eosComboBox.setModel(new DefaultComboBoxModel(model.getEOSNames()));
+        String[] eosNames = model.getEOSNames();
+        // Get currently active eosModels.
+        ArrayList<String> inactive = new ArrayList<String>();
+        for (int i = 0; i < eosCheckBoxes.size(); i++) {
+            if (!eosCheckBoxes.get(i).isSelected()) {
+                inactive.add(eosCheckBoxes.get(i).getText());
+            }
+        }
+        // Empty and refill eosCheckBoxes.
+        eosCheckBoxes.clear();
+        for (int i = 0; i < eosNames.length; i++) {
+            JCheckBox eosBox = createEOSCheckBox(eosNames[i]);
+            if (inactive.contains(eosNames[i])) {
+                eosBox.setSelected(false);
+            } else {
+                eosBox.setSelected(true);
+            }
+            eosCheckBoxes.add(eosBox);
+        }
+        renderEOSDisplay();
+    }
+    
+    
+    /**
+     * Adds all the equations of state check boxes to the eosDisplayPanel.
+     */
+    private void renderEOSDisplay() {
+        // Empty...
+        familyDisplayPanel.removeAll();
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridwidth = 1;
+        c.gridheight = 1;
+        c.weighty = 1.0;
+        c.weightx = .1;
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.HORIZONTAL;
+
+        for (int i = 0; i < eosCheckBoxes.size(); i++) {
+            c.gridy = i;
+            familyDisplayPanel.add(eosCheckBoxes.get(i), c);
+            familyDisplayOuterPanel.validate();
+        }
+
+        chart.getXYPlot().datasetChanged(null);
+    }
+
+    /**
+     * Creates an equation of state check box adding this as an action listener.
+     *
+     * @param id the name of the equation of state.
+     * @return the created checkbox
+     */
+    private JCheckBox createEOSCheckBox(String id) {
+        JCheckBox eosBox = new JCheckBox(id);
+        eosBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int index = eosCheckBoxes.indexOf(e.getSource());
+                tovFamilyDataset.setActivated(index, eosCheckBoxes.get(index).isSelected());
+                chart.getXYPlot().datasetChanged(null);
+            }
+        });
+        eosBox.setSelected(false);
+        return eosBox;
     }
 
     /**

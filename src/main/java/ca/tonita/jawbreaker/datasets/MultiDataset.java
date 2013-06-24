@@ -32,6 +32,7 @@ public abstract class MultiDataset<T> extends AbstractXYDataset implements Domai
      */
     public void add(int index, T dataset) {
         datasets.add(index, dataset);
+        System.out.println("Setting activated.");
         activated.add(index, Boolean.TRUE);
     }
 

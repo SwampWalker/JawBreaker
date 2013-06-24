@@ -5,15 +5,20 @@
 package ca.tonita.jawbreaker.panels;
 
 import ca.tonita.jawbreaker.datasets.TOVDataset;
+import ca.tonita.jawbreaker.datasets.TOVFamilyDataset;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
 import ca.tonita.jawbreaker.models.TOVData;
 import ca.tonita.jawbreaker.panels.eos.NewEOSDialog;
 import ca.tonita.physics.gr.hydro.TOVBuilder;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;

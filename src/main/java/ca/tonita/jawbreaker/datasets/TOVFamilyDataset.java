@@ -16,7 +16,6 @@ public class TOVFamilyDataset extends MultiDataset<TOVFamily> {
     private JawBreakerModel model;
 
     public TOVFamilyDataset(JawBreakerModel model) {
-        datasets = model.getTOVFamilies();
         variableNames = tovFamilyNames;
     }
     
@@ -55,5 +54,9 @@ public class TOVFamilyDataset extends MultiDataset<TOVFamily> {
 
     public int getItemCount(int series) {
         return datasets.get(getDatasetIndex(series)).size();
+    }
+    
+    public TOVFamily get(int i) {
+        return datasets.get(i);
     }
 }

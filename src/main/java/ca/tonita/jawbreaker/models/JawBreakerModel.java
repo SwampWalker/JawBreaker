@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import ca.tonita.jawbreaker.datasets.EOSDataset;
+import ca.tonita.jawbreaker.datasets.TOVFamilyDataset;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 
 /**
@@ -16,7 +17,7 @@ import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
  */
 public class JawBreakerModel implements EOSStorage {
 
-    ArrayList<TOVFamily> tovFamilies;
+    TOVFamilyDataset tovFamilies;
     ArrayList<TabulatedHermite> eosStorage;
     ArrayList<ChangeListener> eosChangeListeners;
     EOSDataset eosDataset;
@@ -27,7 +28,7 @@ public class JawBreakerModel implements EOSStorage {
     public JawBreakerModel() {
         eosStorage = new ArrayList<TabulatedHermite>();
         eosChangeListeners = new ArrayList<ChangeListener>();
-        tovFamilies = new ArrayList<TOVFamily>();
+        tovFamilies = new TOVFamilyDataset(this);
     }
 
     /**
@@ -58,6 +59,7 @@ public class JawBreakerModel implements EOSStorage {
                 eosDataset.add(index, eos);
             }
             if (tovFamilies != null) {
+                System.out.println("Adding TOV Family.");
                 tovFamilies.add(index, new TOVFamily(eos));
             }
         }
@@ -137,12 +139,12 @@ public class JawBreakerModel implements EOSStorage {
         return eosDataset;
     }
 
-    public ArrayList<TOVFamily> getTOVFamilies() {
+    public TOVFamilyDataset getTOVFamilies() {
         return tovFamilies;
     }
 
-    public TOVFamily getTOVFamily(int selectedIndex) {
-        return tovFamilies.get(selectedIndex);
+    public TOVFamily getTOVFamily(int iFamily) {
+        return tovFamilies.get(iFamily);
     }
 
     public void setEOSDataset(EOSDataset eosDataset) {
