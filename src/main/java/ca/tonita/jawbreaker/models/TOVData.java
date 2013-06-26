@@ -1,6 +1,8 @@
 package ca.tonita.jawbreaker.models;
 
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
+import ca.tonita.math.numerical.RK4;
+import ca.tonita.physics.gr.hydro.TOVEquations;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +13,8 @@ public class TOVData {
 
     private ArrayList<double[]> variables;
     private ArrayList<double[]> secondaries;
+    private double coreRadius;
+    private double[] coreVariables;
     private ArrayList<Double> radii;
     private String name = "Unset name";
     private double conservedMass;
@@ -81,6 +85,27 @@ public class TOVData {
             z[2] = z[0]*eos.getParticleMass();
             secondaries.add(z);
         }
+        
+        // Compute the core quantities.
+        int iLower = 0;
+        double coreP = eos.getEdgePressure();
+        while (variables.get(iLower + 1)[0] < coreP) {
+            iLower++;
+        }
+        TOVEquations eqns = new TOVEquations(eos);
+        double dpdr = eqns.dpdr(radii.get(iLower), variables.get(iLower));
+        double h = (coreP - variables.get(iLower)[0])/dpdr;
+        coreVariables = RK4.step(variables.get(iLower), radii.get(iLower), eqns, h);
+        coreRadius = radii.get(iLower) + h;
+        int i = 0;
+        while (Math.abs(coreVariables[0] - coreP) > 1.0E-12 && i < 10) {
+            i++;
+            dpdr = eqns.dpdr(coreRadius, coreVariables);
+            h = (coreP - coreVariables[0])/dpdr;
+            coreVariables = RK4.step(coreVariables, coreRadius, eqns, h);
+            coreRadius += h;
+            System.out.println(i + " " + coreP + " " + coreVariables[0]);
+        }
     }
 
     public double[] getSecondaries(int i) {
@@ -112,10 +137,10 @@ public class TOVData {
     }
 
     public double getCoreRadius() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return coreRadius;
     }
 
     public double getCoreRestMass() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return coreVariables[3];
     }
 }
