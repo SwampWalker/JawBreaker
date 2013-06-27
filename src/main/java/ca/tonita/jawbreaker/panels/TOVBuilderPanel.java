@@ -8,7 +8,7 @@ import ca.tonita.jawbreaker.datasets.TOVDataset;
 import ca.tonita.jawbreaker.datasets.TOVFamilyDataset;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.jawbreaker.models.JawBreakerModel;
-import ca.tonita.jawbreaker.gr.hydro.TOVData;
+import ca.tonita.physics.gr.hydro.TOVData;
 import ca.tonita.jawbreaker.panels.eos.NewEOSDialog;
 import ca.tonita.physics.gr.hydro.TOVBuilder;
 import java.awt.BorderLayout;

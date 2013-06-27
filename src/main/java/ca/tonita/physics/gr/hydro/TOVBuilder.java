@@ -5,7 +5,6 @@
 package ca.tonita.physics.gr.hydro;
 
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
-import ca.tonita.jawbreaker.gr.hydro.TOVData;
 import ca.tonita.math.numerical.RK4;
 import ca.tonita.math.numerical.spectral.SpectralSolver1D;
 import ca.tonita.math.polynomials.ChebyshevExtrema;

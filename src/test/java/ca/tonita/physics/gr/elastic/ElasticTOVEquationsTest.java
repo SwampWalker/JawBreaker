@@ -2,7 +2,7 @@ package ca.tonita.physics.gr.elastic;
 
 import ca.tonita.jawbreaker.equationsOfState.Polytrope;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
-import ca.tonita.jawbreaker.gr.hydro.TOVData;
+import ca.tonita.physics.gr.hydro.TOVData;
 import ca.tonita.physics.gr.hydro.TOVBuilder;
 import junit.framework.TestCase;
 

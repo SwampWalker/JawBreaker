@@ -257,7 +257,6 @@ public final class ElasticTOVEquations {
             i++;
             xiPrime = xiPrime + (pRadial - pressureGuess) / dpressureRadial_dxiPrime(r, bodyVars, xi, xiPrime, m);
             pressureGuess = this.pressureRadial(r, bodyVars, xi, xiPrime, m);
-            System.out.println(i + " " + pressureGuess + " " + pRadial);
         }
         return xiPrime;
     }

@@ -1,7 +1,7 @@
 package ca.tonita.physics.gr.elastic;
 
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
-import ca.tonita.jawbreaker.gr.hydro.TOVData;
+import ca.tonita.physics.gr.hydro.TOVData;
 import ca.tonita.math.numerical.QuasiLinearFirstOrderODESystem;
 import ca.tonita.math.numerical.RK4;
 import ca.tonita.physics.gr.hydro.TOVEquations;
