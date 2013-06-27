@@ -1,5 +1,6 @@
 package ca.tonita.jawbreaker.models;
 
+import ca.tonita.jawbreaker.gr.hydro.TOVData;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import java.util.ArrayList;
 

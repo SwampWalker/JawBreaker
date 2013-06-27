@@ -1,7 +1,7 @@
 package ca.tonita.physics.gr.elastic;
 
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
-import ca.tonita.jawbreaker.models.TOVData;
+import ca.tonita.jawbreaker.gr.hydro.TOVData;
 import ca.tonita.math.numerical.QuasiLinearFirstOrderODESystem;
 import ca.tonita.math.numerical.RK4;
 import ca.tonita.physics.gr.hydro.TOVEquations;
@@ -12,9 +12,9 @@ import ca.tonita.physics.gr.hydro.TOVEquations;
  *
  * @author atonita
  */
-public class SphericalBodyManifoldRK4 {
+public class SphericalBodyManifoldRK4 implements QuasiLinearFirstOrderODESystem {
 
-    private final TOVData solution;
+    private final TOVData background;
     private final double radius;
     private final double inverseStepSize;
     private final TabulatedHermite eos;
@@ -27,7 +27,7 @@ public class SphericalBodyManifoldRK4 {
      * equally spaced.
      */
     public SphericalBodyManifoldRK4(TOVData solution, TabulatedHermite eos) {
-        this.solution = solution;
+        this.background = solution;
         this.eos = eos;
         radius = solution.getRadius();
         inverseStepSize = 1./solution.getRadius(1);
@@ -37,26 +37,26 @@ public class SphericalBodyManifoldRK4 {
     /**
      * Returns all the quantities of interest at the given radius.
      *
-     * @param r The radius to compute elastic terms at.
+     * @param xi The radius to compute elastic terms at.
      * @return a <code>SphericalElasticBean</code> containing the elastic values
      */
-    public SphericalElasticBean getQuantities(double r) {
-        if (r > radius) {
-            throw new UnsupportedOperationException("Radius out of bounds: maximum radius is " + radius + " received " + r);
-        } else if (r < 0) {
-            throw new UnsupportedOperationException("Radius out of bounds: must be greater than zero, received " + r);
+    public SphericalElasticBean getQuantities(double xi) {
+        if (xi > radius) {
+            throw new UnsupportedOperationException("Radius out of bounds: maximum radius is " + radius + " received " + xi);
+        } else if (xi < 0) {
+            throw new UnsupportedOperationException("Radius out of bounds: must be greater than zero, received " + xi);
         }
         SphericalElasticBean bean = new SphericalElasticBean();
-        int iLowerBound = (int)(r * inverseStepSize);
-        if (solution.getRadius(iLowerBound) > r) {
+        int iLowerBound = (int)(xi * inverseStepSize);
+        if (background.getRadius(iLowerBound) > xi) {
             iLowerBound--;
         }
-        double h = r - solution.getRadius(iLowerBound);
-        double[] newPoint = RK4.step(solution.getVariables(iLowerBound), solution.getRadius(iLowerBound), eqns, h);
+        double h = xi - background.getRadius(iLowerBound);
+        double[] newPoint = RK4.step(background.getVariables(iLowerBound), background.getRadius(iLowerBound), eqns, h);
         bean.setPressure(newPoint[0]);
-        bean.setDpressure(eqns.dmdr(r, newPoint));
+        bean.setDpressure(eqns.dmdr(xi, newPoint));
         bean.setMassPotential(newPoint[1]);
-        bean.setdMassPotential(eqns.dmdr(r, newPoint));
+        bean.setdMassPotential(eqns.dmdr(xi, newPoint));
         
         bean.setNumberDensity(eos.numberDensity(bean.getPressure()));
         bean.setEnergyPerParticle(eos.energyPerParticle(bean.getPressure()));
@@ -72,7 +72,15 @@ public class SphericalBodyManifoldRK4 {
      * Returns the particle mass of the average particle in the body manifold.
      * @return the particle mass
      */
-    double particleMass() {
+    public double particleMass() {
         return eos.getParticleMass();
+    }
+    
+    public TOVData getBackground() {
+        return background;
+    }
+
+    public double[] rightHandSide(double t, double[] y) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

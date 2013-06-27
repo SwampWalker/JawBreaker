@@ -4,7 +4,7 @@
  */
 package ca.tonita.jawbreaker.datasets;
 
-import ca.tonita.jawbreaker.models.TOVData;
+import ca.tonita.jawbreaker.gr.hydro.TOVData;
 
 /**
  *

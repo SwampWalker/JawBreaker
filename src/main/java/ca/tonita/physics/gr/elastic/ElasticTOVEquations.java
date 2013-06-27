@@ -18,9 +18,8 @@ public final class ElasticTOVEquations {
      * equation of state.
      *
      * @param body
-     * @param eos
      */
-    public ElasticTOVEquations(SphericalBodyManifoldRK4 body, TabulatedHermite eos) {
+    public ElasticTOVEquations(SphericalBodyManifoldRK4 body) {
         this.body = body;
     }
 

@@ -18,9 +18,6 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
     private TabulatedHermite eos;
     private NonLinearFirstOrderODEBean bean;
     private double centralPressure;
-    private int iPressure = 0;
-    private int iMass = 1;
-    private int iLambda = 2;
     private int nEquations = 3;
 
     public TOVEquations(TabulatedHermite eos) {
@@ -58,11 +55,11 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
      * @return the derivative of particle number wrt r
      */
     public double dndr(double r, double[] y) {
-        double n = eos.numberDensity(y[iPressure]);
+        double n = eos.numberDensity(y[TOVIndex.PRESSURE]);
         if (r == 0) {
             return 0;
         }
-        return 4 * Math.PI * n * r * r / Math.sqrt(1 - 2 * y[iMass] / r);
+        return eos.getParticleMass()*4 * Math.PI * n * r * r / Math.sqrt(1 - 2 * y[TOVIndex.MASS] / r);
     }
 
     /**
@@ -73,7 +70,7 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
      * @return the derivative of mass wrt r
      */
     public double dmdr(double r, double[] y) {
-        double rho = eos.energyDensity(y[iPressure]);
+        double rho = eos.energyDensity(y[TOVIndex.PRESSURE]);
         return 4 * Math.PI * rho * r * r;
     }
 
@@ -88,8 +85,8 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
         if (r == 0.0) {
             return 0;
         }
-        double mass = y[1];
-        double pressure = y[0];
+        double mass = y[TOVIndex.MASS];
+        double pressure = y[TOVIndex.PRESSURE];
         return (mass + 4 * Math.PI * Math.pow(r, 3) * pressure)
                 / (r * (r - 2 * mass));
     }
@@ -105,8 +102,8 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
         if (r == 0.0) {
             return 0;
         }
-        double mass = y[1];
-        double pressure = y[0];
+        double mass = y[TOVIndex.MASS];
+        double pressure = y[TOVIndex.PRESSURE];
         double dlambdadr = (mass + 4 * Math.PI * Math.pow(r, 3) * pressure)
                 / (r * (r - 2 * mass));
         double rho = eos.energyDensity(pressure);
@@ -133,12 +130,12 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
                     jacobian[i][j] = 0;
                 }
             }
-            residue[iPressure] = y[iPressure] - centralPressure;
-            residue[iMass] = y[iMass];
-            residue[iLambda] = y[iLambda];
-            jacobian[iPressure][iPressure] = 1;
-            jacobian[iMass][iMass] = 1;
-            jacobian[iLambda][iLambda] = 1;
+            residue[TOVIndex.PRESSURE] = y[TOVIndex.PRESSURE] - centralPressure;
+            residue[TOVIndex.MASS] = y[TOVIndex.MASS];
+            residue[TOVIndex.LAMBDA] = y[TOVIndex.LAMBDA];
+            jacobian[TOVIndex.PRESSURE][TOVIndex.PRESSURE] = 1;
+            jacobian[TOVIndex.MASS][TOVIndex.MASS] = 1;
+            jacobian[TOVIndex.LAMBDA][TOVIndex.LAMBDA] = 1;
         } else if (type == NonLinearFirstOrderODESystem.RIGHTBOUNDARY) {
             for (int i = 0; i < residue.length; i++) {
                 residue[i] = dy[i];
@@ -147,26 +144,26 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
                 }
                 jacobian[i][nEquations + i] = 1;
             }
-            double mass = y[1];
+            double mass = y[TOVIndex.MASS];
             double dlambdadr = mass / (r * (r - 2 * mass));
             double d2lambdadrdm = (1. + 2 * r * dlambdadr) / (r * (r - 2 * mass));
-            residue[iLambda] = dy[iLambda] - dlambdadr;
-            jacobian[iLambda][iMass] = -d2lambdadrdm;
+            residue[TOVIndex.LAMBDA] = dy[TOVIndex.LAMBDA] - dlambdadr;
+            jacobian[TOVIndex.LAMBDA][TOVIndex.MASS] = -d2lambdadrdm;
             double d2lambdadr2 = -(2 * r - 2 * mass) * mass / Math.pow(r * (r - 2 * mass), 2);
-            jacobian[iPressure][2 * nEquations] = -dy[iPressure] / parameters[0];
-            jacobian[iMass][2 * nEquations] = -dy[iMass] / parameters[0];
-            jacobian[iLambda][2 * nEquations] = (-dy[iLambda] - d2lambdadr2 * r) / parameters[0];
+            jacobian[TOVIndex.PRESSURE][2 * nEquations] = -dy[TOVIndex.PRESSURE] / parameters[0];
+            jacobian[TOVIndex.MASS][2 * nEquations] = -dy[TOVIndex.MASS] / parameters[0];
+            jacobian[TOVIndex.LAMBDA][2 * nEquations] = (-dy[TOVIndex.LAMBDA] - d2lambdadr2 * r) / parameters[0];
 
         } else {
             // Residue.
-            double mass = y[1];
-            double pressure = y[0];
+            double mass = y[TOVIndex.MASS];
+            double pressure = y[TOVIndex.PRESSURE];
             double dlambdadr = (mass + 4 * Math.PI * Math.pow(r, 3) * pressure)
                     / (r * (r - 2 * mass));
             double rho = eos.energyDensity(pressure);
-            residue[iPressure] = dy[iPressure] + (pressure + rho) * dlambdadr;
-            residue[iMass] = dy[iMass] - 4 * Math.PI * rho * r * r;
-            residue[iLambda] = dy[iLambda] - dlambdadr;
+            residue[TOVIndex.PRESSURE] = dy[TOVIndex.PRESSURE] + (pressure + rho) * dlambdadr;
+            residue[TOVIndex.MASS] = dy[TOVIndex.MASS] - 4 * Math.PI * rho * r * r;
+            residue[TOVIndex.LAMBDA] = dy[TOVIndex.LAMBDA] - dlambdadr;
 
             // Jacobian.
             double drho = eos.denergyDensity(pressure);
@@ -177,29 +174,29 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
                     - (2 * r - 2 * mass) * (mass + 4 * Math.PI * Math.pow(r, 3) * pressure)
                     / Math.pow(r * (r - 2 * mass), 2);
             // Pressure equation.
-            jacobian[iPressure][iPressure] = (1 + drho) * dlambdadr + (pressure + rho) * d2lambdadrdp;
-            jacobian[iPressure][iMass] = (pressure + rho) * d2lambdadrdm;
-            jacobian[iPressure][iLambda] = 0;
-            jacobian[iPressure][nEquations + iPressure] = 1;
-            jacobian[iPressure][nEquations + iMass] = 0;
-            jacobian[iPressure][nEquations + iLambda] = 0;
-            jacobian[iPressure][2 * nEquations] = (-dy[iPressure] + (pressure + rho) * d2lambdadr2 * r) / parameters[0];
+            jacobian[TOVIndex.PRESSURE][TOVIndex.PRESSURE] = (1 + drho) * dlambdadr + (pressure + rho) * d2lambdadrdp;
+            jacobian[TOVIndex.PRESSURE][TOVIndex.MASS] = (pressure + rho) * d2lambdadrdm;
+            jacobian[TOVIndex.PRESSURE][TOVIndex.LAMBDA] = 0;
+            jacobian[TOVIndex.PRESSURE][nEquations + TOVIndex.PRESSURE] = 1;
+            jacobian[TOVIndex.PRESSURE][nEquations + TOVIndex.MASS] = 0;
+            jacobian[TOVIndex.PRESSURE][nEquations + TOVIndex.LAMBDA] = 0;
+            jacobian[TOVIndex.PRESSURE][2 * nEquations] = (-dy[TOVIndex.PRESSURE] + (pressure + rho) * d2lambdadr2 * r) / parameters[0];
             // Mass equation.
-            jacobian[iMass][iPressure] = - 4 * Math.PI * drho * r * r;
-            jacobian[iMass][iMass] = 0;
-            jacobian[iMass][iLambda] = 0;
-            jacobian[iMass][nEquations + iPressure] = 0;
-            jacobian[iMass][nEquations + iMass] = 1;
-            jacobian[iMass][nEquations + iLambda] = 0;
-            jacobian[iMass][2 * nEquations] = (-dy[iMass] - 8 * Math.PI * rho * r * r) / parameters[0];
+            jacobian[TOVIndex.MASS][TOVIndex.PRESSURE] = - 4 * Math.PI * drho * r * r;
+            jacobian[TOVIndex.MASS][TOVIndex.MASS] = 0;
+            jacobian[TOVIndex.MASS][TOVIndex.LAMBDA] = 0;
+            jacobian[TOVIndex.MASS][nEquations + TOVIndex.PRESSURE] = 0;
+            jacobian[TOVIndex.MASS][nEquations + TOVIndex.MASS] = 1;
+            jacobian[TOVIndex.MASS][nEquations + TOVIndex.LAMBDA] = 0;
+            jacobian[TOVIndex.MASS][2 * nEquations] = (-dy[TOVIndex.MASS] - 8 * Math.PI * rho * r * r) / parameters[0];
             // Lambda equation.
-            jacobian[iLambda][iPressure] = -d2lambdadrdp;
-            jacobian[iLambda][iMass] = -d2lambdadrdm;
-            jacobian[iLambda][iLambda] = 0;
-            jacobian[iLambda][nEquations + iPressure] = 0;
-            jacobian[iLambda][nEquations + iMass] = 0;
-            jacobian[iLambda][nEquations + iLambda] = 1;
-            jacobian[iLambda][2 * nEquations] = (-dy[iLambda] - d2lambdadr2 * r) / parameters[0];
+            jacobian[TOVIndex.LAMBDA][TOVIndex.PRESSURE] = -d2lambdadrdp;
+            jacobian[TOVIndex.LAMBDA][TOVIndex.MASS] = -d2lambdadrdm;
+            jacobian[TOVIndex.LAMBDA][TOVIndex.LAMBDA] = 0;
+            jacobian[TOVIndex.LAMBDA][nEquations + TOVIndex.PRESSURE] = 0;
+            jacobian[TOVIndex.LAMBDA][nEquations + TOVIndex.MASS] = 0;
+            jacobian[TOVIndex.LAMBDA][nEquations + TOVIndex.LAMBDA] = 1;
+            jacobian[TOVIndex.LAMBDA][2 * nEquations] = (-dy[TOVIndex.LAMBDA] - d2lambdadr2 * r) / parameters[0];
         }
         bean.setResidue(residue);
         bean.setJacobian(jacobian);
@@ -222,8 +219,8 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
             dconstraint[i] = 0;
         }
         int rank = vector.getRank(0);
-        dconstraint[indexer.index(0, iPressure, rank - 1)] = 1;
-        return vector.getVariable(0, iPressure)[rank - 1];
+        dconstraint[indexer.index(0, TOVIndex.PRESSURE, rank - 1)] = 1;
+        return vector.getVariable(0, TOVIndex.PRESSURE)[rank - 1];
     }
 
     @Override
@@ -262,9 +259,9 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
     public void postStepProcessing(SpectralVector1D vector, LinearlyMappedBasis[] bases) {
         double[][][] variables = vector.getVariables();
         double[] parameters = vector.getParameters();
-        for (int iAbscissa = 0; iAbscissa < variables[0][iPressure].length; iAbscissa++) {
-            if (variables[0][iPressure][iAbscissa] < 0) {
-                variables[0][iPressure][iAbscissa] = -variables[0][iPressure][iAbscissa];
+        for (int iAbscissa = 0; iAbscissa < variables[0][TOVIndex.PRESSURE].length; iAbscissa++) {
+            if (variables[0][TOVIndex.PRESSURE][iAbscissa] < 0) {
+                variables[0][TOVIndex.PRESSURE][iAbscissa] = -variables[0][TOVIndex.PRESSURE][iAbscissa];
             }
         }
         bases[0].setRight(parameters[0]);

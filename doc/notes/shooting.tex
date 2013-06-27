@@ -24,3 +24,66 @@ Rearranging this formula, a sufficient condition for the radial and tangential p
 
 
 The shooting method is only convenient because one can use explicit time-stepping evolution algorithms, chiefly 4th order Runge-Kutta. In order to make use of this method, the constituent equation for the pressure \eqref{eq:functionalelastic} must be inverted using Newton-Raphson algorithm to compute $\xi'$. This can then be used to compute $p^\theta{}_\theta$ and the other derivatives.
+
+\subsection{Core collapse to black hole}
+In the case that the core collapses completely to form a black hole then the interior surface must be at equilibrium with an interior vacuum. Since,
+\begin{equation}
+p^\theta{}_\theta = \chi\left(P_I + \frac{\mu}{2} \left(\frac{\xi^2}{r^2} - 1\right) \right) \frac{\xi^2}{r^2} = 0,
+\label{eq:tangentialPressureVanishes}
+\end{equation}
+\begin{equation}
+p^r{}_r = \chi\left(P_I + \frac{\mu}{2}\left(\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2 - 1\right)\right)\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2 = 0
+\label{eq:radialPressureVanishes}
+\end{equation}
+and both $r\ne 0$ and $\xi' \ne 0$ (both refer to singular situations), then
+\begin{equation}
+P + \frac{\lambda_l}{4}\left( \frac{1 - \frac{2m}{r}}{1 - \frac{2M(\xi)}{\xi}}\xi'^2 + 2\frac{\xi^2}{r^2} - 3 \right)+ \frac{\mu}{2} \left(\frac{\xi^2}{r^2} - 1\right) = 0,
+\label{eq:tangentialBHCondition}
+\end{equation}
+\begin{equation}
+P + \frac{\lambda_l}{4}\left( \frac{1 - \frac{2m}{r}}{1 - \frac{2M(\xi)}{\xi}}\xi'^2 + 2\frac{\xi^2}{r^2} - 3 \right) + \frac{\mu}{2}\left(\frac{1-\frac{2m}{r}}{1-\frac{2M}{\xi}}\xi'^2 - 1\right) = 0.
+\label{eq:radialBHCondition}
+\end{equation}
+Rearranging the equations for $\xi'^2$,
+\begin{equation}
+P + \frac{\lambda_l}{4}\left(2\frac{\xi^2}{r^2} - 3 \right) + \frac{\mu}{2} \left(\frac{\xi^2}{r^2} - 1\right) + \frac{\lambda_l}{4} \left( \frac{1 - \frac{2m}{r}}{1 - \frac{2M(\xi)}{\xi}}\right)\xi'^2 = 0,
+\label{eq:tangentialBHCondition2}
+\end{equation}
+\begin{equation}
+P + \frac{\lambda_l}{4}\left(2\frac{\xi^2}{r^2} - 3 \right) - \frac{\mu}{2} + \frac{2\mu + \lambda_l}{4} \left( \frac{1 - \frac{2m}{r}}{1 - \frac{2M(\xi)}{\xi}}\right)\xi'^2 = 0.
+\label{eq:radialBHCondition2}
+\end{equation}
+The two equations can then be combined to eliminate $\xi'^2$,
+\begin{equation}
+P + \frac{\lambda_l}{4}\left(2\frac{\xi^2}{r^2} - 3 \right) + \frac{\mu}{2} \left(\frac{\xi^2}{r^2} - 1\right) - \frac{\lambda_l}{2\mu + \lambda_l}\left( P + \frac{\lambda_l}{4}\left(2\frac{\xi^2}{r^2} - 3 \right) - \frac{\mu}{2} \right) = 0.
+\label{eq:quadraticBHRadius}
+\end{equation}
+This yields a simple quadratic equation in $1/r^2$
+\begin{equation}
+\frac{\xi^2}{2}\left(\lambda_l + \mu - \frac{\lambda_l^2}{2\mu + \lambda_l}\right)\frac{1}{r^2} = \left(\frac{\lambda_l}{2\mu + \lambda_l} - 1\right)\left(P - 3\frac{\lambda_l}{4} - \frac{\mu}{2}\right)
+\label{eq:quadraticBHRadius2}
+\end{equation}
+or
+\begin{equation}
+r = \sqrt{
+\frac{\frac{\xi^2}{2}\left(\lambda_l + \mu - \frac{\lambda_l^2}{2\mu + \lambda_l}\right)}{\left(1 - \frac{\lambda_l}{2\mu + \lambda_l}\right)\left(3\frac{\lambda_l}{4} + \frac{\mu}{2} - P\right)}
+}.
+\label{eq:quadraticBHRadius2}
+\end{equation}
+Since $mu\ll\lambda_l$ the above equation is catastrophically inaccurate. Modifying it to make a more clear appoximation apparent,
+\begin{equation}
+r = \sqrt{
+\frac{\xi^2\lambda_l\left(\frac{\mu}{2\mu + \lambda_l} + \frac{\mu}{\lambda_l}\right)}{2\frac{\mu}{2\mu + \lambda_l}\left(3\frac{\lambda_l}{4} + \frac{\mu}{2} - P\right)}
+},
+\label{eq:quadraticBHRadius3}
+\end{equation}
+\begin{equation}
+r = \sqrt{\frac{\xi^2\lambda_l}{3\frac{\lambda_l}{2} + \mu - 2P}}\sqrt{1 + \frac{\mu}{\lambda_l}\frac{2\mu + \lambda_l}{\mu}},
+\label{eq:quadraticBHRadius4}
+\end{equation}
+finally giving
+\begin{equation}
+r = \sqrt{\frac{4\xi^2\lambda_l}{3\lambda_l + 2\mu - 4P}}\sqrt{1 + \frac{\mu}{\lambda_l}}.
+\label{eq:quadraticBHRadius5}
+\end{equation}
+Note that this only has a solution when $\lambda_l > 4/3P$, this inequality is generally (but not generically) true.

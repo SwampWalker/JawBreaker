@@ -2,7 +2,7 @@ package ca.tonita.physics.gr.elastic;
 
 import ca.tonita.jawbreaker.equationsOfState.Polytrope;
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
-import ca.tonita.jawbreaker.models.TOVData;
+import ca.tonita.jawbreaker.gr.hydro.TOVData;
 import ca.tonita.physics.gr.hydro.TOVBuilder;
 import junit.framework.TestCase;
 
@@ -56,7 +56,7 @@ public class ElasticTOVEquationsTest extends TestCase {
         eos = new TabulatedHermite(logn, logp, energyPerParticle, particleMass, A, Z);
         TOVBuilder.evolve(background, eos, centralPressure, stepSize, 1, terminationPressure);
         body = new SphericalBodyManifoldRK4(background, eos);
-        instance = new ElasticTOVEquations(body, eos);
+        instance = new ElasticTOVEquations(body);
     }
 
     @Override

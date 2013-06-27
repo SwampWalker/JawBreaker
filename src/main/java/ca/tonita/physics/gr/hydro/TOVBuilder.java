@@ -5,7 +5,7 @@
 package ca.tonita.physics.gr.hydro;
 
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
-import ca.tonita.jawbreaker.models.TOVData;
+import ca.tonita.jawbreaker.gr.hydro.TOVData;
 import ca.tonita.math.numerical.RK4;
 import ca.tonita.math.numerical.spectral.SpectralSolver1D;
 import ca.tonita.math.polynomials.ChebyshevExtrema;
@@ -46,7 +46,7 @@ public class TOVBuilder {
         int maxSteps = Integer.MAX_VALUE;
         TOVTerminator terminator = new TOVTerminator(maxSteps * stepSize, maxSteps, minPressure);
         RK4.evolve(points, radii, eqns, stepSize, outputEvery, terminator);
-        tov.setConservedMass(eos.getParticleMass()*points.get(points.size()-1)[3]);
+        tov.computeSecondaries(eos);
     }
 
     /**
