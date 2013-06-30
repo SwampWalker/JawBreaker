@@ -490,7 +490,6 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
     private void createFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createFamilyButtonActionPerformed
         // Get EOS and TOV Family.
         int i = eosComboBox.getSelectedIndex();
-        TabulatedHermite eos = model.getEos(i);
         TOVFamily family = model.getTOVFamily(i);
         family.clear();
 
@@ -508,14 +507,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         if (minPressure > minFamilyPressure) {
             JOptionPane.showMessageDialog(this, "Family inconsistent", "The minimum pressure of the RK4 algorithm should be\nless than the minimum pressure of the family.", JOptionPane.WARNING_MESSAGE);
         } else {
-            // Create TOVs
-            for (int iTOV = 0; iTOV < nTOVs; iTOV++) {
-                TOVData rk4TOV = new TOVData();
-                double centralPressure = getCentralPressure(minFamilyPressure, maxFamilyPressure, nTOVs, iTOV, method);
-                TOVBuilder.evolve(rk4TOV, eos, centralPressure, stepSize, outputEvery, minPressure);
-                rk4TOV.computeSecondaries(eos);
-                family.add(rk4TOV);
-            }
+            TOVBuilder.fillFamily(family, nTOVs, minFamilyPressure, maxFamilyPressure, method, stepSize, outputEvery, minPressure);
         }
         updateChart();
     }//GEN-LAST:event_createFamilyButtonActionPerformed
@@ -661,24 +653,5 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         ChartPanel panel = ChartPanelCreator.createChartPanel("TOV Family", tovFamilyDataset.getDomainName(), tovFamilyDataset.getRangeName(), tovFamilyDataset);
         chart = panel.getChart();
         chartPanel.add(panel, BorderLayout.CENTER);
-    }
-
-    private double getCentralPressure(double minFamilyPressure, double maxFamilyPressure, int nTOVs, int iTOV, int method) {
-        if (method == 1) { // Log.
-            double logMin = Math.log10(minFamilyPressure);
-            double logMax = Math.log10(maxFamilyPressure);
-            double deltaLog = (logMax - logMin) /(nTOVs - 1);
-            double logPc = logMin + iTOV*deltaLog;
-            return Math.pow(10, logPc);
-        } else if (method == 2) { // Quadratic
-            double sqrtMin = Math.sqrt(minFamilyPressure);
-            double sqrtMax = Math.sqrt(maxFamilyPressure);
-            double deltaSqrt = (sqrtMax - sqrtMin) /(nTOVs - 1);
-            double sqrtPc = sqrtMin + iTOV*deltaSqrt;
-            return sqrtPc*sqrtPc;
-        } else {
-            double deltaP = (maxFamilyPressure - minFamilyPressure)/(nTOVs - 1);
-            return minFamilyPressure + iTOV * deltaP;
-        }
     }
 }

@@ -5,6 +5,7 @@
 package ca.tonita.physics.gr.hydro;
 
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
+import ca.tonita.jawbreaker.models.TOVFamily;
 import ca.tonita.math.numerical.RK4;
 import ca.tonita.math.numerical.spectral.SpectralSolver1D;
 import ca.tonita.math.polynomials.ChebyshevExtrema;
@@ -83,23 +84,23 @@ public class TOVBuilder {
         }
         // Last point we read off.
         newPoints.add(guess.getVariables(radii.size() - 1));
-        
+
         // Set the guess data.
         ArrayList<Double> newRadii = new ArrayList<Double>();
-        for (double r: spectralRadii) {
+        for (double r : spectralRadii) {
             newRadii.add(r);
         }
-        
+
         // Solve.
         SpectralSolver1D solver = new SpectralSolver1D(eqns, new LinearlyMappedBasis[]{basis});
         ArrayList[] variables = new ArrayList[]{newPoints};
         solver.setGuess(variables, new double[]{basis.getDomain()[1]});
         solver.solve(1.0e-19, 20);
-        
+
         // Reset the data.
         newRadii.clear();
         spectralRadii = basis.getAbscissas();
-        for (double r: spectralRadii) {
+        for (double r : spectralRadii) {
             newRadii.add(r);
         }
         newPoints.clear();
@@ -108,13 +109,13 @@ public class TOVBuilder {
             double[] y = new double[]{solution[0][0][i], solution[0][1][i], solution[0][2][i], 1};
             newPoints.add(y);
         }
-        
+
         tov.setRadii(newRadii);
         tov.setVariables(newPoints);
         tov.computeSecondaries(eos);
     }
-    
-    public ArrayList<TOVData> continuation(TabulatedHermite eos, TOVData base, int maxRank) {
+
+    public static ArrayList<TOVData> continuation(TabulatedHermite eos, TOVData base, int maxRank) {
         // Set up the system.
         TOVEquations eqns = new TOVEquations(eos);
         ArrayList<TOVData> solutions = new ArrayList<TOVData>();
@@ -122,12 +123,149 @@ public class TOVBuilder {
         basis.setDomain(new double[]{0, base.getRadius()});
         basis.setRank(base.getNPoints());
         SpectralSolver1D solver = new SpectralSolver1D(eqns, new LinearlyMappedBasis[]{basis});
-        
+
         // Continuation.
         while (basis.getRank() < maxRank) {
             int newRank = basis.getRank() + 1;
             double[] newX = basis.getAbscissas();
         }
         return solutions;
+    }
+    public static final int LINEARLY_SPACED = 0;
+    public static final int LOGARITHMICALLY_SPACED = 1;
+    public static final int QUADRATICLY_SPACED = 2;
+
+    /**
+     * Fills the given TOVFamily with TOVData. The equation of state is
+     * retrieved from the TOVFamily.
+     *
+     * @param family The TOVFamily to add the TOVData objects to.
+     * @param nTOVs The number of TOVs to create the family with
+     * @param minFamilyPressure The central pressure of the first star in the
+     * family.
+     * @param maxFamilyPressure The central pressure of the last star in the
+     * family.
+     * @param method The method to use for spacing (Linear, Log, Quadratic).
+     * @param stepSize the step size to use for the RK4
+     * @param outputEvery how often to output data
+     * @param minPressure the value of pressure to terminate evolution at (the
+     * effective surface pressure)
+     */
+    public static void fillFamily(TOVFamily family, int nTOVs, double minFamilyPressure, double maxFamilyPressure, int method, double stepSize, int outputEvery, double minPressure) {
+        TabulatedHermite eos = family.getEos();
+        family.clear();
+        for (int iTOV = 0; iTOV < nTOVs; iTOV++) {
+            TOVData rk4TOV = new TOVData();
+            double centralPressure = getCentralPressure(minFamilyPressure, maxFamilyPressure, nTOVs, iTOV, method);
+            TOVBuilder.evolve(rk4TOV, eos, centralPressure, stepSize, outputEvery, minPressure);
+            rk4TOV.computeSecondaries(eos);
+            family.add(rk4TOV);
+        }
+    }
+
+    /**
+     * Returns the next central pressure in the TOV Family filling.
+     *
+     * @param minFamilyPressure The minimum pressure of the TOV Family.
+     * @param maxFamilyPressure The maximum pressure of the TOV family.
+     * @param nTOVs The number of TOVs to create the family with.
+     * @param iTOV The current TOV index being created (begins at 0).
+     * @param method The method to use (Linear, Log, quadratic)
+     * @return The central pressure of the current TOV being created.
+     */
+    private static double getCentralPressure(double minFamilyPressure, double maxFamilyPressure, int nTOVs, int iTOV, int method) {
+        if (method == 1) { // Log.
+            double logMin = Math.log10(minFamilyPressure);
+            double logMax = Math.log10(maxFamilyPressure);
+            double deltaLog = (logMax - logMin) / (nTOVs - 1);
+            double logPc = logMin + iTOV * deltaLog;
+            return Math.pow(10, logPc);
+        } else if (method == 2) { // Quadratic
+            double sqrtMin = Math.sqrt(minFamilyPressure);
+            double sqrtMax = Math.sqrt(maxFamilyPressure);
+            double deltaSqrt = (sqrtMax - sqrtMin) / (nTOVs - 1);
+            double sqrtPc = sqrtMin + iTOV * deltaSqrt;
+            return sqrtPc * sqrtPc;
+        } else {
+            double deltaP = (maxFamilyPressure - minFamilyPressure) / (nTOVs - 1);
+            return minFamilyPressure + iTOV * deltaP;
+        }
+    }
+
+    /**
+     * Finds the maximum rest mass TOV of the equation of state and adds it to
+     * the TOV family.
+     *
+     * @param family The current TOVFamily to find the maximum in.
+     * @param stepSize the step size to use for the RK4
+     * @param outputEvery how often to output data
+     * @param minPressure the value of pressure to terminate evolution at (the
+     * effective surface pressure)
+     * @param deltaMass The tolerance on the rest mass with which to consider
+     * the maximum converged.
+     * @throws IllegalArgumentException If the current TOVFamily does not go
+     * past the maximum central pressure for the equation of state.
+     */
+    public static void findMaxima(TOVFamily family, double stepSize, int outputEvery, double minPressure, double deltaMass) throws IllegalArgumentException {
+        // Find the index of the current maxima.
+        int iMaxima = 0;
+        double maximumRestMass = 0;
+        for (int i = 0; i < family.size(); i++) {
+            if (family.get(i).getConservedMass() > maximumRestMass) {
+                iMaxima = i;
+                maximumRestMass = family.get(i).getConservedMass();
+            } else if (family.get(i).getConservedMass() == maximumRestMass) {
+                throw new UnsupportedOperationException("Unable to handle rare case of equal mass points.");
+            } else {
+                i = family.size();
+            }
+        }
+        if (iMaxima + 1 == family.size()) {
+            throw new IllegalArgumentException("Family's maximum is right end point: family does not straddle maximum.");
+        }
+
+        // Start refining.
+        TOVData max = family.get(iMaxima);
+        TOVData left = family.get(iMaxima - 1);
+        TOVData right = family.get(iMaxima + 1);
+        // Estimate the delta mass by taking the maximum current delta.
+        double delta = maximumRestMass - right.getConservedMass();
+        if (left.getConservedMass() < right.getConservedMass()) {
+            delta = maximumRestMass - left.getConservedMass();
+        }
+        TabulatedHermite eos = family.getEos();
+        while (delta > deltaMass) {
+            double centralPleft = 0.5 * (left.getPressure(0) + max.getPressure(0));
+            TOVData newLeft = new TOVData();
+            evolve(newLeft, eos, centralPleft, stepSize, outputEvery, minPressure);
+            double centralPRight = 0.5 * (right.getPressure(0) + max.getPressure(0));
+            TOVData newRight = new TOVData();
+            evolve(newRight, eos, centralPRight, stepSize, outputEvery, minPressure);
+            // Handle cases.
+            if (newLeft.getConservedMass() > maximumRestMass) {
+                // Case 1, newLeft is new maxima.
+                maximumRestMass = newLeft.getConservedMass();
+                right = max;
+                max = newLeft;
+            } else if (newRight.getConservedMass() > maximumRestMass) {
+                // Case 2, newRight is new max.
+                maximumRestMass = newRight.getConservedMass();
+                left = max;
+                max = newRight;
+            } else {
+                // Case 3, maxima is still central point.
+                left = newLeft;
+                right = newRight;
+            }
+            delta = maximumRestMass - right.getConservedMass();
+            if (left.getConservedMass() < right.getConservedMass()) {
+                delta = maximumRestMass - left.getConservedMass();
+            }
+        }
+        if (max.getPressure(0) > family.get(iMaxima).getPressure(0)) {
+            family.setMaximum(iMaxima+1, max);
+        } else {
+            family.setMaximum(iMaxima, max);
+        }
     }
 }
