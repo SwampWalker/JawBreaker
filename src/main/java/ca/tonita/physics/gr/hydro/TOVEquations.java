@@ -44,17 +44,17 @@ public class TOVEquations implements QuasiLinearFirstOrderODESystem, NonLinearFi
     }
 
     public double[] rightHandSide(double r, double[] y) {
-        return new double[]{dpdr(r, y), dmdr(r, y), dlambdadr(r, y), dndr(r, y)};
+        return new double[]{dpdr(r, y), dmdr(r, y), dlambdadr(r, y), dm0dr(r, y)};
     }
 
     /**
-     * Derivative of conserved number of particles.
+     * Derivative of rest mass.
      *
      * @param r The areal radial coordinate r.
      * @param y The TOV variables {p,m,lambda}
-     * @return the derivative of particle number wrt r
+     * @return the derivative of rest mass wrt r
      */
-    public double dndr(double r, double[] y) {
+    public double dm0dr(double r, double[] y) {
         double n = eos.numberDensity(y[TOVIndex.PRESSURE]);
         if (r == 0) {
             return 0;

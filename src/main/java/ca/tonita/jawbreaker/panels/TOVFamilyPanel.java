@@ -507,7 +507,11 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         if (minPressure > minFamilyPressure) {
             JOptionPane.showMessageDialog(this, "Family inconsistent", "The minimum pressure of the RK4 algorithm should be\nless than the minimum pressure of the family.", JOptionPane.WARNING_MESSAGE);
         } else {
-            TOVBuilder.fillFamily(family, nTOVs, minFamilyPressure, maxFamilyPressure, method, stepSize, outputEvery, minPressure);
+            try {
+                TOVBuilder.fillFamily(family, nTOVs, minFamilyPressure, maxFamilyPressure, method, stepSize, outputEvery, minPressure, true);
+            } catch (IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Family creation error.", JOptionPane.ERROR_MESSAGE);
+            }
         }
         updateChart();
     }//GEN-LAST:event_createFamilyButtonActionPerformed
@@ -570,8 +574,7 @@ public class TOVFamilyPanel extends javax.swing.JPanel implements ChangeListener
         }
         renderEOSDisplay();
     }
-    
-    
+
     /**
      * Adds all the equations of state check boxes to the eosDisplayPanel.
      */

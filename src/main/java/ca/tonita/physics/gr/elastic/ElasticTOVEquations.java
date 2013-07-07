@@ -10,7 +10,7 @@ import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
  * @author atonita
  */
 public final class ElasticTOVEquations {
-
+    
     private final SphericalBodyManifoldRK4 body;
 
     /**
@@ -37,7 +37,7 @@ public final class ElasticTOVEquations {
         double GrrOvergrr = (1 - 2 * m / r) / (1 - 2 * bodyVars.getMassPotential() / xi);
         return GrrOvergrr * xiPrime * xiPrime + 2 * xi * xi / (r * r) - 3;
     }
-    
+
     /**
      * Returns the trace of the square of the stress tensor minus the delta.
      *
@@ -56,9 +56,9 @@ public final class ElasticTOVEquations {
     public double energyPerParticle(double r, SphericalElasticBean bodyVars, double xi, double xiPrime, double m) {
         double trace = trace(r, bodyVars, xi, xiPrime, m);
         double traceOfSquare = traceOfSquare(r, bodyVars, xi, xiPrime, m);
-        return body.particleMass()*(1 + bodyVars.getEnergyPerParticle()) + bodyVars.getPressure()*trace/bodyVars.getNumberDensity()
-                + bodyVars.getLameLambda()*0.125/bodyVars.getNumberDensity()*trace*trace
-                + bodyVars.getShearModulus()*0.25/bodyVars.getNumberDensity()*traceOfSquare;
+        return body.particleMass() * (1 + bodyVars.getEnergyPerParticle()) + bodyVars.getPressure() * trace / bodyVars.getNumberDensity()
+                + bodyVars.getLameLambda() * 0.125 / bodyVars.getNumberDensity() * trace * trace
+                + bodyVars.getShearModulus() * 0.25 / bodyVars.getNumberDensity() * traceOfSquare;
     }
 
     /**
@@ -273,7 +273,7 @@ public final class ElasticTOVEquations {
      * @return the derivative of mass wrt r
      */
     public double dmdr(double r, SphericalElasticBean bodyVars, double xi, double m, double pRadial) {
-        double rho = volumeContractionFactor(r, bodyVars, xi, xi, m)*bodyVars.getNumberDensity()*energyPerParticle(r, bodyVars, xi, xi, m);
+        double rho = volumeContractionFactor(r, bodyVars, xi, xi, m) * bodyVars.getNumberDensity() * energyPerParticle(r, bodyVars, xi, xi, m);
         return 4 * Math.PI * rho * r * r;
     }
 
@@ -315,7 +315,23 @@ public final class ElasticTOVEquations {
         double pTangential = pressureTangential(r, bodyVars, xi, xiPrime, m);
         double dlambdadr = (m + 4 * Math.PI * Math.pow(r, 3) * pRadial)
                 / (r * (r - 2 * m));
-        double rho = volumeContractionFactor(r, bodyVars, xi, xi, m)*bodyVars.getNumberDensity()*energyPerParticle(r, bodyVars, xi, xi, m);
+        double rho = volumeContractionFactor(r, bodyVars, xi, xi, m) * bodyVars.getNumberDensity() * energyPerParticle(r, bodyVars, xi, xi, m);
         return -(pRadial + rho) * dlambdadr + 2. / r * (pTangential - pRadial);
+    }
+
+    /**
+     * Returns the value of xi' of the interior surface of the elastic crust for
+     * which the tangential pressure equals the radial pressure.
+     *
+     * @param r The areal radius of the core's inner surface in the spacetime
+     * manifold.
+     * @param m The mass potential of the space time at the core's inner
+     * surface.
+     * @return The necessary value of xi' to ensure isotropy.
+     */
+    public double xiPrimeCoreIsotropic(double r, double m) {
+        double R = body.getBackground().getCoreRadius();
+        double M = body.getBackground().getCoreMass();
+        return Math.sqrt((R * (R - 2 * M)) / (r * (r - 2 * m)));
     }
 }

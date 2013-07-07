@@ -150,16 +150,23 @@ public class TOVBuilder {
      * @param outputEvery how often to output data
      * @param minPressure the value of pressure to terminate evolution at (the
      * effective surface pressure)
+     * @param findMaxima Whether to include the maxima in the family, or just
+     * the outlined sequence above.
+     * @throws IllegalArgumentException If the findMaxima is set to true but the
+     * described family doesn't straddle the maximum
      */
-    public static void fillFamily(TOVFamily family, int nTOVs, double minFamilyPressure, double maxFamilyPressure, int method, double stepSize, int outputEvery, double minPressure) {
+    public static void fillFamily(TOVFamily family, int nTOVs, double minFamilyPressure, double maxFamilyPressure, int method, double stepSize, int outputEvery, double minPressure, boolean findMaxima) throws IllegalArgumentException {
         TabulatedHermite eos = family.getEos();
         family.clear();
         for (int iTOV = 0; iTOV < nTOVs; iTOV++) {
-            TOVData rk4TOV = new TOVData();
+            TOVData rk4TOV = new TOVData(eos);
             double centralPressure = getCentralPressure(minFamilyPressure, maxFamilyPressure, nTOVs, iTOV, method);
             TOVBuilder.evolve(rk4TOV, eos, centralPressure, stepSize, outputEvery, minPressure);
             rk4TOV.computeSecondaries(eos);
             family.add(rk4TOV);
+        }
+        if (findMaxima) {
+            TOVBuilder.findMaxima(family, stepSize, outputEvery, minPressure, minPressure);
         }
     }
 
@@ -211,17 +218,17 @@ public class TOVBuilder {
         int iMaxima = 0;
         double maximumRestMass = 0;
         for (int i = 0; i < family.size(); i++) {
-            if (family.get(i).getConservedMass() > maximumRestMass) {
+            if (family.get(i).getRestMass() > maximumRestMass) {
                 iMaxima = i;
-                maximumRestMass = family.get(i).getConservedMass();
-            } else if (family.get(i).getConservedMass() == maximumRestMass) {
+                maximumRestMass = family.get(i).getRestMass();
+            } else if (family.get(i).getRestMass() == maximumRestMass) {
                 throw new UnsupportedOperationException("Unable to handle rare case of equal mass points.");
             } else {
                 i = family.size();
             }
         }
         if (iMaxima + 1 == family.size()) {
-            throw new IllegalArgumentException("Family's maximum is right end point: family does not straddle maximum.");
+            throw new IllegalArgumentException("Cannot find maximum mass point: family does not straddle maximum.\nTry increasing the maximum pressure of the family.");
         }
 
         // Start refining.
@@ -229,27 +236,29 @@ public class TOVBuilder {
         TOVData left = family.get(iMaxima - 1);
         TOVData right = family.get(iMaxima + 1);
         // Estimate the delta mass by taking the maximum current delta.
-        double delta = maximumRestMass - right.getConservedMass();
-        if (left.getConservedMass() < right.getConservedMass()) {
-            delta = maximumRestMass - left.getConservedMass();
+        double delta = maximumRestMass - right.getRestMass();
+        if (left.getRestMass() < right.getRestMass()) {
+            delta = maximumRestMass - left.getRestMass();
         }
         TabulatedHermite eos = family.getEos();
-        while (delta > deltaMass) {
+        int iStep = 0;
+        while (delta > deltaMass && iStep < 30) {
+            iStep++;
             double centralPleft = 0.5 * (left.getPressure(0) + max.getPressure(0));
-            TOVData newLeft = new TOVData();
+            TOVData newLeft = new TOVData(eos);
             evolve(newLeft, eos, centralPleft, stepSize, outputEvery, minPressure);
             double centralPRight = 0.5 * (right.getPressure(0) + max.getPressure(0));
-            TOVData newRight = new TOVData();
+            TOVData newRight = new TOVData(eos);
             evolve(newRight, eos, centralPRight, stepSize, outputEvery, minPressure);
             // Handle cases.
-            if (newLeft.getConservedMass() > maximumRestMass) {
+            if (newLeft.getRestMass() > maximumRestMass) {
                 // Case 1, newLeft is new maxima.
-                maximumRestMass = newLeft.getConservedMass();
+                maximumRestMass = newLeft.getRestMass();
                 right = max;
                 max = newLeft;
-            } else if (newRight.getConservedMass() > maximumRestMass) {
+            } else if (newRight.getRestMass() > maximumRestMass) {
                 // Case 2, newRight is new max.
-                maximumRestMass = newRight.getConservedMass();
+                maximumRestMass = newRight.getRestMass();
                 left = max;
                 max = newRight;
             } else {
@@ -257,13 +266,13 @@ public class TOVBuilder {
                 left = newLeft;
                 right = newRight;
             }
-            delta = maximumRestMass - right.getConservedMass();
-            if (left.getConservedMass() < right.getConservedMass()) {
-                delta = maximumRestMass - left.getConservedMass();
+            delta = maximumRestMass - right.getRestMass();
+            if (left.getRestMass() < right.getRestMass()) {
+                delta = maximumRestMass - left.getRestMass();
             }
         }
         if (max.getPressure(0) > family.get(iMaxima).getPressure(0)) {
-            family.setMaximum(iMaxima+1, max);
+            family.setMaximum(iMaxima + 1, max);
         } else {
             family.setMaximum(iMaxima, max);
         }

@@ -36,7 +36,7 @@ public class TOVFamilyDataset extends MultiDataset<TOVFamily> {
         } else if (iVariable == 2) {
             variable = getDataset(iSeries).get(iItem).getGravitationalMass();
         } else if (iVariable == 3) {
-            variable = getDataset(iSeries).get(iItem).getConservedMass();
+            variable = getDataset(iSeries).get(iItem).getRestMass();
         } else if (iVariable == 4) {
             variable = getDataset(iSeries).get(iItem).getCoreRadius();
         } else if (iVariable == 5) {

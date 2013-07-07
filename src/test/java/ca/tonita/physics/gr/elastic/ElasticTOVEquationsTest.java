@@ -26,7 +26,7 @@ public class ElasticTOVEquationsTest extends TestCase {
     private double centralPressure = 1.0e-4;
     private double stepSize = 1.0e-3;
     private double terminationPressure = 1.0e-10;
-    private TOVData background = new TOVData();
+    private TOVData background = new TOVData(eos);
     // Body manifold.
     private SphericalBodyManifoldRK4 body;
     private ElasticTOVEquations instance;

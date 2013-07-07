@@ -31,7 +31,7 @@ import org.jfree.chart.axis.StandardTickUnitSource;
 public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListener {
 
     JFreeChart chart = null;
-    private TOVData rk4TOV = new TOVData();
+    private TOVData rk4TOV = new TOVData(null);
     private JawBreakerModel model;
     private final TOVDataset tovDataset;
 
@@ -407,6 +407,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
     private void createTOVButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createTOVButtonActionPerformed
         double centralPressure = Double.valueOf(centralPressureField.getText());
         TabulatedHermite eos = model.getEos(eosComboBox.getSelectedIndex());
+        rk4TOV.setEos(eos);
         double stepSize = Double.valueOf(stepSizeField.getText());
         int outputEvery = Integer.valueOf(outputEveryField.getText());
         double minPressure = Double.valueOf(minPressureField.getText());
@@ -415,7 +416,7 @@ public class TOVBuilderPanel extends javax.swing.JPanel implements ChangeListene
         if (tovDataset.getSeriesCount() == 0) {
             tovDataset.add(0, rk4TOV);
         }
-        massField.setText(String.format("%.6f", rk4TOV.getConservedMass()));
+        massField.setText(String.format("%.6f", rk4TOV.getRestMass()));
         radiusField.setText(String.format("%.6f",rk4TOV.getRadius()));
         chart.getXYPlot().datasetChanged(null);
     }//GEN-LAST:event_createTOVButtonActionPerformed
