@@ -1,6 +1,8 @@
 package ca.tonita.physics.gr.elastic;
 
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
+import ca.tonita.math.numerical.QuasiLinearFirstOrderODESystem;
+import ca.tonita.physics.gr.hydro.TOVIndex;
 
 /**
  * This particular set of the ElasticEquations assumes a specific equation of
@@ -9,9 +11,10 @@ import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
  *
  * @author atonita
  */
-public final class ElasticTOVEquations {
-    
+public final class ElasticTOVEquations implements QuasiLinearFirstOrderODESystem {
+
     private final SphericalBodyManifoldRK4 body;
+    boolean debug;
 
     /**
      * Constructs the ElasticTOVEquations. It needs a body manifold and an
@@ -52,7 +55,7 @@ public final class ElasticTOVEquations {
         double GrrOvergrr = (1 - 2 * m / r) / (1 - 2 * bodyVars.getMassPotential() / xi);
         return Math.pow(GrrOvergrr * xiPrime * xiPrime - 1, 2) + 2 * Math.pow(xi * xi / (r * r) - 1, 2);
     }
-    
+
     public double energyPerParticle(double r, SphericalElasticBean bodyVars, double xi, double xiPrime, double m) {
         double trace = trace(r, bodyVars, xi, xiPrime, m);
         double traceOfSquare = traceOfSquare(r, bodyVars, xi, xiPrime, m);
@@ -270,10 +273,11 @@ public final class ElasticTOVEquations {
      * @param xiPrime the configuration gradient
      * @param m the mass potential
      * @param pRadial The radial pressure.
+     * @param xiPrime The configuration gradient.
      * @return the derivative of mass wrt r
      */
-    public double dmdr(double r, SphericalElasticBean bodyVars, double xi, double m, double pRadial) {
-        double rho = volumeContractionFactor(r, bodyVars, xi, xi, m) * bodyVars.getNumberDensity() * energyPerParticle(r, bodyVars, xi, xi, m);
+    public double dmdr(double r, SphericalElasticBean bodyVars, double xi, double m, double pRadial, double xiPrime) {
+        double rho = volumeContractionFactor(r, bodyVars, xi, xiPrime, m) * bodyVars.getNumberDensity() * energyPerParticle(r, bodyVars, xi, xi, m);
         return 4 * Math.PI * rho * r * r;
     }
 
@@ -333,5 +337,46 @@ public final class ElasticTOVEquations {
         double R = body.getBackground().getCoreRadius();
         double M = body.getBackground().getCoreMass();
         return Math.sqrt((R * (R - 2 * M)) / (r * (r - 2 * m)));
+    }
+
+    /**
+     * Returns the right hand side of the equations y' = rhs.
+     *
+     * @param r The radius.
+     * @param y The variables.
+     * @return The derivatives computed from the differential equations.
+     */
+    public double[] rightHandSide(double r, double[] y) {
+        double[] yPrime = new double[y.length];
+        SphericalElasticBean quantities = body.getQuantities(y[ElasticTOVIndex.XI]);
+        yPrime[ElasticTOVIndex.XI] = xiPrime(r, quantities, y[ElasticTOVIndex.XI], y[ElasticTOVIndex.MASS], y[ElasticTOVIndex.PRESSURE]);
+        yPrime[ElasticTOVIndex.LAMBDA] = dlambdadr(r, quantities, y[ElasticTOVIndex.XI], y[ElasticTOVIndex.MASS], y[ElasticTOVIndex.PRESSURE]);
+        yPrime[ElasticTOVIndex.MASS] = dmdr(r, quantities, y[ElasticTOVIndex.XI], y[ElasticTOVIndex.MASS], y[ElasticTOVIndex.PRESSURE], yPrime[ElasticTOVIndex.XI]);
+        yPrime[ElasticTOVIndex.RESTMASS] = dm0dr(r, quantities, y[ElasticTOVIndex.XI], y[ElasticTOVIndex.MASS], y[ElasticTOVIndex.PRESSURE], yPrime[ElasticTOVIndex.XI]);
+        yPrime[ElasticTOVIndex.PRESSURE] = dpdr(r, quantities, y[ElasticTOVIndex.XI], y[ElasticTOVIndex.MASS], y[ElasticTOVIndex.PRESSURE], yPrime[ElasticTOVIndex.XI]);
+        if (debug) {
+            System.out.print("rhs: ");
+            for (int i = 0;i < yPrime.length; i++) {
+                System.out.print(yPrime[i] + " ");
+            }
+            System.out.println("");
+        }
+        return yPrime;
+    }
+
+    /* Returns the derivative of rest mass with respect to r.
+     *
+     * @param r The areal radial coordinate r.
+     * @param bodyVars the quantities from the body manifold
+     * @param xi the configuration
+     * @param xiPrime the configuration gradient
+     * @param m the mass potential
+     * @param pRadial The radial pressure.
+     * @param xiPrime The configuration gradient.
+     * @return the derivative of rest mass wrt r
+     */
+    public double dm0dr(double r, SphericalElasticBean bodyVars, double xi, double m, double pRadial, double xiPrime) {
+        double n = volumeContractionFactor(r, bodyVars, xi, xiPrime, m) * bodyVars.getNumberDensity();
+        return body.getBackground().getEos().getParticleMass() * 4 * Math.PI * n * r * r / Math.sqrt(1 - 2 * m / r);
     }
 }

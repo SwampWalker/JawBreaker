@@ -2,7 +2,6 @@ package ca.tonita.physics.gr.elastic;
 
 import ca.tonita.jawbreaker.equationsOfState.TabulatedHermite;
 import ca.tonita.physics.gr.hydro.TOVData;
-import ca.tonita.math.numerical.QuasiLinearFirstOrderODESystem;
 import ca.tonita.math.numerical.RK4;
 import ca.tonita.physics.gr.hydro.TOVEquations;
 import ca.tonita.physics.gr.hydro.TOVIndex;
@@ -13,7 +12,7 @@ import ca.tonita.physics.gr.hydro.TOVIndex;
  *
  * @author atonita
  */
-public class SphericalBodyManifoldRK4 implements QuasiLinearFirstOrderODESystem {
+public class SphericalBodyManifoldRK4 {
 
     private final TOVData background;
     private final double radius;
@@ -103,9 +102,5 @@ public class SphericalBodyManifoldRK4 implements QuasiLinearFirstOrderODESystem 
 
     public TOVData getBackground() {
         return background;
-    }
-
-    public double[] rightHandSide(double t, double[] y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

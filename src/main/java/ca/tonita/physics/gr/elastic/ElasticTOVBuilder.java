@@ -96,9 +96,9 @@ public final class ElasticTOVBuilder {
         //      until prr = p
         TOVData left = eosFamily.get(iLeft);
         TOVData right = eosFamily.get(iLeft + 1);
-        TOVData middle; // For storing the final solution.
+        TOVData middle = left; // For storing the final solution.
         int iterations = 0;
-        while (Math.abs(prr - variables[TOVIndex.PRESSURE]) > 1.0e-8*prr && iterations < 30) { // TODO: parameterise these numeric parameters.
+        while (Math.abs(prr - variables[TOVIndex.PRESSURE]) > 1.0e-8 * prr && iterations < 30) { // TODO: parameterise these numeric parameters.
             iterations++;
             middle = new TOVData(eos);
             TOVBuilder.evolve(middle, eos, 0.5 * (left.getPressure(0) + right.getPressure(0)), stepSize, outputEvery, minPressure);
@@ -114,6 +114,30 @@ public final class ElasticTOVBuilder {
                 right = middle;
             }
         }
+
+        // Evolve the elastic equations.
+        double[] y = new double[5];
+        y[ElasticTOVIndex.MASS] = variables[TOVIndex.MASS];
+        y[ElasticTOVIndex.PRESSURE] = variables[TOVIndex.PRESSURE];
+        y[ElasticTOVIndex.LAMBDA] = variables[TOVIndex.LAMBDA];
+        y[ElasticTOVIndex.RESTMASS] = variables[TOVIndex.RESTMASS];
+        y[ElasticTOVIndex.XI] = body.getBackground().getCoreRadius();
+        ArrayList<double[]> crustPoints = new ArrayList<double[]>();
+        crustPoints.add(y);
+        ArrayList<Double> crustRadii = new ArrayList<Double>();
+        crustRadii.add(r);
+        ElasticTOVCrustTerminator elasticTOVCrustTerminator = new ElasticTOVCrustTerminator(body.getBackground().getRadius());
+        RK4.debug = true;
+        elasticEqns.debug = true;
+        System.out.println("Evolving:");
+        try {
+            RK4.evolve(crustPoints, crustRadii, elasticEqns, stepSize/100, outputEvery, elasticTOVCrustTerminator);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println(crustPoints.get(crustPoints.size() - 1)[ElasticTOVIndex.XI] + " " + body.getBackground().getRadius());
+        System.out.println(middle.getGravitationalMass() + " " + crustPoints.get(crustPoints.size()-1)[ElasticTOVIndex.MASS] + " " + variables[TOVIndex.MASS] + " " + body.getBackground().getGravitationalMass());
+        System.out.println(crustPoints.get(crustPoints.size()-1)[ElasticTOVIndex.RESTMASS] + " " + body.getBackground().getRestMass()) ;
         throw new UnsupportedOperationException("Not finished yet.");
     }
 
@@ -129,8 +153,8 @@ public final class ElasticTOVBuilder {
         TOVData background = new TOVData(eos2);
         double centralPressure = 1.1e-4;
         double stepSize = 1.0e-3;
-        int outputEvery = 1;
-        double minPressure = 1.0e-8;
+        int outputEvery = 10;
+        double minPressure = 6.0e-9;
         TOVBuilder.evolve(background, eos2, centralPressure, stepSize, outputEvery, minPressure);
         SphericalBodyManifoldRK4 body = new SphericalBodyManifoldRK4(background, eos2);
         TOVFamily family = new TOVFamily(eos3);
